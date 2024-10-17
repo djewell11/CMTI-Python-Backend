@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "cmtitools"
+version = "0.1.0"
+license = "All Rights Reserved"
+repository = "https://github.com/djewell11/CMTI"
+description = "Tools for generating and editing the Canadian Mine Tailings Database (CMTI). The CMTI is a product of CanmetMINING. All rights reserved - not for distribution without express permission from the authors."
+authors = ["djewell11 <djewell11@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.13.0"
+pandas = "^2.2.2"
+sqlalchemy = "^2.0.35"
+unit_converter = "^1.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
