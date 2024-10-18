@@ -1,6 +1,7 @@
 from sqlalchemy import select
 
 from ..tables import Mine
+from .. import session
 
 class ProvID:
   # Holds the highest ID for a prov_terr and can generate a new one
