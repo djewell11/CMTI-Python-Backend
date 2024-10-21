@@ -8,7 +8,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import IntegrityError
 
-from . import CmtiIDManager
+from . import idmanager
 from .tables import Mine, Owner, Alias, TailingsFacility, Impoundment, CommodityRecord, Reference
 
 # Load data files from config parser
