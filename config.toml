@@ -1,7 +1,0 @@
-[sources]
-cmlist = "D:\Google Drive\NRCan\Projects\CMDB\Data\cmList.csv"
-metals = "D:\Google Drive\NRCan\Projects\CMDB\Data\metalList.csv"
-elements = "D:\Google Drive\NRCan\Projects\CMDB\Data\elements.csv"
-
-[engine]
-engine = "postgresql+psycopg2://postgres:postgres@localhost:5432/cmti"

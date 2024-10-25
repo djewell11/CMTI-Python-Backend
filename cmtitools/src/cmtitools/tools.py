@@ -1,5 +1,7 @@
 import csv
-from configparser import ConfigParser, Error
+import pathlib
+from configparser import ConfigParser
+from configparser import Error as ConfigError
 import pandas as pd
 from warnings import warn
 from math import ceil
@@ -8,33 +10,36 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import IntegrityError
 
-from . import idmanager
-from .tables import Mine, Owner, Alias, TailingsFacility, Impoundment, CommodityRecord, Reference
+from cmtitools import idmanager
+# from cmtitools.tables import Mine, Owner, Alias, TailingsFacility, Impoundment, CommodityRecord, Reference
+from cmtitools.tables import *
 
 # Load data files from config parser
-if __name__ == '__main__':
-  def create_module_variables() -> dict:
-    config = ConfigParser()
-    config.read('../config.toml')
+def create_module_variables() -> dict:
+  config = ConfigParser()
+  config_path = pathlib.Path(__file__).parent.absolute() / "config.toml"
+  config.read(config_path)
 
-    cmList = config.get('cmlist')
-    metalsDict = config.get('metalsdict')
-    elements = config.get('elements')
+  with open(config.get('sources', 'cmlist'), mode='r') as critical_minerals_file:
+    critical_minerals = pd.read_csv(critical_minerals_file, header=0)
+  with open(config.get('sources', 'metals'), mode='r') as metals_file:
+    metals = pd.read_csv(metals_file, header=0, encoding='utf-8')
+    metals_dict = dict(zip(metals['Commodity'], metals['Name']))
+  with open(config.get('sources', 'elements'), mode='r') as elements_file:
+    elements = pd.read_csv(elements_file)
     convert_dict = dict(zip(elements['symbol'], elements['name']))
+  return {"cmList":critical_minerals, "metalsDict":metals, "convert_dict":convert_dict}
+try:
+  data_tables = create_module_variables()
+except ConfigError as config_error:
+  print(config_error)
 
-
-    return {cmList:cmList, metalsDict:metalsDict, convert_dict:convert_dict}
-  try:
-    data_tables = create_module_variables()
-  except Error as config_error:
-    print(config_error)
-
-  try:
-    engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost:5432/cmti')
-  except:
-    print("Failed")
-  Session = sessionmaker(bind=engine)
-  session = Session()
+# try:
+#   engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost:5432/cmti')
+# except:
+#   print("Create Engine Failed")
+# Session = sessionmaker(bind=engine)
+# session = Session()
 
 
 def get_digits(value: str, output: str = 'float'):
@@ -111,8 +116,7 @@ def convert_commodity_name(name: str, convert_dict:dict, output_type:str="full",
   else:
     raise ValueError("output_type must be either 'full' or 'symbol'")
   
-def get_commodities(row, commodity_columns, mine, cmList, convert_dict, name_type="full", name_warning=False, metalsDict=data_tables['metalsDict'],
-                  session=session):
+def get_commodities(row, commodity_columns, mine, cmList, convert_dict, session, name_type="full", name_warning=False, metalsDict=data_tables['metalsDict']):
   """
   Takes multiple commodity columns from the spreadsheet and creates a Commodity object.
   Adds that object to the database. #TODO: Make this return a commodity rather than add it to session.
@@ -245,7 +249,7 @@ def lon_to_utm_zone(lon_deg):
   zone = ceil(((float(lon_deg) + 180)/6) % 60)
   return zone
 
-def assign_totals(mine_site, column_name, session=session):
+def assign_totals(mine_site, column_name, session):
   """
   Queries the DB for all child TSFs and Impoundments and sums a numeric property.
 
@@ -295,7 +299,7 @@ def convert_worksheet_to_db(session, dataframe, cmList=data_tables['cmList'], au
       session.rollback()
 
   if auto_generate_cmdb_ids:
-    id_manager = CmtiIDManager()
+    id_manager = idmanager.ID_Manager()
 
   # Tables have to be created in the order of hierarchy. Mines first
   mines = dataframe[dataframe["Site_Type"] == "Mine"]
@@ -506,7 +510,7 @@ def merge_to_session(session, row, orm_class, column_dict):
   newEntry = orm_class(**newValues)
   session.merge(newEntry)
 
-def orm_to_csv(orm_class, out_name, session=session):
+def orm_to_csv(orm_class, out_name, session):
   """
   Exports an ORM class object as a csv.
 
@@ -534,7 +538,7 @@ def orm_to_csv(orm_class, out_name, session=session):
     [writer.writerow([getattr(row, column.name) for column in orm_class.__mapper__.columns]) for row in query]
   session.close()
 
-def db_to_sheet(worksheet:pd.DataFrame, ignore_default_records=True, session=session):
+def db_to_sheet(worksheet:pd.DataFrame, session, ignore_default_records=True):
   # new_records = pd.DataFrame(columns=worksheet.columns)
   new_rows = []
   existing_ids = worksheet['CMIM_ID'].tolist()

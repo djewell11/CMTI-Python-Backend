@@ -2,15 +2,15 @@ import pandas as pd
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
-from . import get_digits
-from . import get_table_values
-from . import convert_commodity_name
-from . import lon_to_utm_zone
-from ..tables import Mine, Owner, Alias, TailingsFacility, Impoundment, CommodityRecord, Reference, Orebody
-from ..idmanager import ProvID
-from ..idmanager import CmtiIDManager
-from .. import data_tables
-from .. import session
+from cmtitools.tools import get_digits
+from cmtitools.tools import get_table_values
+from cmtitools.tools import convert_commodity_name
+from cmtitools.tools import lon_to_utm_zone
+from cmtitools.tools import data_tables
+from cmtitools.tools import session
+from cmtitools.tables import Mine, Owner, Alias, TailingsFacility, Impoundment, CommodityRecord, Reference, Orebody
+from cmtitools.idmanager import ProvID
+from cmtitools.idmanager import CmtiIDManager
 
 # Bulk import functions
 

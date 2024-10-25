@@ -1,7 +1,7 @@
 from sqlalchemy import select
 
-from ..tables import Mine
-from .. import session
+from cmtitools.tables import Mine
+from cmtitools.tools import session
 
 class ProvID:
   # Holds the highest ID for a prov_terr and can generate a new one
@@ -48,7 +48,7 @@ class ProvID:
     self.max_id += 1
     self.formatted_id = self.format_id()
 
-class CmtiIDManager:
+class ID_Manager:
 
   def __init__(self):
     # Initialize highest ID for each prov_terr
