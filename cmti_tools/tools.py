@@ -10,9 +10,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import IntegrityError
 
-from cmtitools import idmanager
-# from cmtitools.tables import Mine, Owner, Alias, TailingsFacility, Impoundment, CommodityRecord, Reference
-from cmtitools.tables import *
+from cmti_tools.tables import *
+from cmti_tools.idmanager import *
 
 # Load data files from config parser
 def create_module_variables() -> dict:

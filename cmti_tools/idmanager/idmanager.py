@@ -1,7 +1,7 @@
 from sqlalchemy import select
 
-from cmtitools.tables import Mine
-from cmtitools.tools import session
+from ..tables import Mine
+from ..tools import session
 
 class ProvID:
   # Holds the highest ID for a prov_terr and can generate a new one
