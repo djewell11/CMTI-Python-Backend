@@ -19,15 +19,15 @@ def create_module_variables() -> dict:
   config_path = pathlib.Path(__file__).parent.absolute() / "config.toml"
   config.read(config_path)
 
-  with open(config.get('sources', 'cmlist'), mode='r') as critical_minerals_file:
+  with open(config.get('sources', 'critical_minerals'), mode='r') as critical_minerals_file:
     critical_minerals = pd.read_csv(critical_minerals_file, header=0)
   with open(config.get('sources', 'metals'), mode='r') as metals_file:
     metals = pd.read_csv(metals_file, header=0, encoding='utf-8')
     metals_dict = dict(zip(metals['Commodity'], metals['Name']))
   with open(config.get('sources', 'elements'), mode='r') as elements_file:
     elements = pd.read_csv(elements_file)
-    convert_dict = dict(zip(elements['symbol'], elements['name']))
-  return {"cmList":critical_minerals, "metalsDict":metals, "convert_dict":convert_dict}
+    name_convert_dict = dict(zip(elements['symbol'], elements['name']))
+  return {"_l":critical_minerals, "metals_dict":metals, "name_convert_dict":name_convert_dict}
 try:
   data_tables = create_module_variables()
 except ConfigError as config_error:
@@ -65,23 +65,23 @@ def get_digits(value: str, output: str = 'float'):
   except ValueError as e:
     pass
 
-def convert_commodity_name(name: str, convert_dict:dict, output_type:str="full", show_warning=True):
+def convert_commodity_name(name:str, name_convert_dict:dict, output_type:str="full", show_warning=True):
   """
-  Takes element names and converts them to either symbol or full name. Ignores names not found in convert_dict.
+  Takes element names and converts them to either symbol or full name. Ignores names not found in name_convert_dict.
 
   :param name: The commodity name.
   :type value: str.
 
-  :param convert_dict: A dictionary where keys are symbols and values are full names.
-  :type convert_dict: dict.
+  :param name_convert_dict: A dictionary where keys are symbols and values are full names.
+  :type name_convert_dict: dict.
 
   :param output_type: The type of output desired. Default: "full".
   :type output_type: str.
 
   :param show_warning:
-    Determines whether or not a warning is printed when "name" isn't present in "convert_dict".
+    Determines whether or not a warning is printed when "name" isn't present in "name_convert_dict".
     Absences are expected for non-element commodities. Default: True
-  :type convert_dict: bool.
+  :type name_convert_dict: bool.
 
   :return: None
   """
@@ -89,7 +89,7 @@ def convert_commodity_name(name: str, convert_dict:dict, output_type:str="full",
   name = name.strip().capitalize()
 
   cap_dict = {}
-  for symbol, comm in convert_dict.items():
+  for symbol, comm in name_convert_dict.items():
     cap_dict[symbol.capitalize()] = comm
 
   if output_type == "full":
@@ -115,7 +115,7 @@ def convert_commodity_name(name: str, convert_dict:dict, output_type:str="full",
   else:
     raise ValueError("output_type must be either 'full' or 'symbol'")
   
-def get_commodities(row, commodity_columns, mine, cmList, convert_dict, session, name_type="full", name_warning=False, metalsDict=data_tables['metalsDict']):
+def get_commodities(row:pd.Series, commodity_columns:list, critical_mineral_list:list, name_convert_dict:dict, metals_dict:dict, mine:Mine, session:sessionmaker.Session, name_type:str="full"):
   """
   Takes multiple commodity columns from the spreadsheet and creates a Commodity object.
   Adds that object to the database. #TODO: Make this return a commodity rather than add it to session.
@@ -123,28 +123,27 @@ def get_commodities(row, commodity_columns, mine, cmList, convert_dict, session,
   :param row: A dataframe row.
   :type row: pandas.Series.
 
-  :param dataframe: A dataframe version of the CMDB.
-  :type dataframe: pandas.DataFrame.
+  :param commodity_columns: A list of column names containing commodity values.
+  :type commodity_columns: list.
+
+  :param critical_mineral_list: A list of critical minerals.
+  :type critical_mineral_list: list.
+
+  :param name_convert_dict: A dictionary that can convert commodity element symbols to full names or vice versa.
+  :type name_convert_dict: dict.
+
+  :param metals_dict: A dictionary that determines whether a commodity is a non-metal, metal, or REE.
+  :type metals_dict: dict.
 
   :param mine: An sqlalchemy ORM class of type Mine.
   :type mine: sqlalchemy.orm.DeclarativeBase.
 
-  :param name_type:
-  The output style for the commodity name, as entered in convert_commodity_name.
-  Either "full" or "symbol. Default: "full".
-  :type name_type: str.
-
-  :param name_warning: Whether a warning should be printed when commodity names are converted. Default: False.
-  :type name_warning: bool.
-
-  :param metalsDict: A dictionary that determines whether a commodity is a non-metal, metal, or REE.
-  :type metalsDict: dict.
-
-  :param cmList: A list of critical minerals to inform the "is_critical" parameter.
-  :type cmList: list.
-
   :param session: The database session.
-  :type session: sqlalchemy.orm.Session
+  :type session: sqlalcheny.sessionmaker.Session
+
+  :param name_type: The output style for the commodity name, as entered in convert_commodity_name.
+    Either "full" or "symbol". Default: "full".
+  :type name_type: str.
 
   :return: None
   """
@@ -154,14 +153,14 @@ def get_commodities(row, commodity_columns, mine, cmList, convert_dict, session,
     # If it has a value, create an ORM object. This commodity does not necessarily need to have quantities
     comm = row[col]
     if pd.notna(row[col]):
-      commName = convert_commodity_name(comm.capitalize(), convert_dict, name_type, name_warning)
+      commName = convert_commodity_name(comm.capitalize(), name_convert_dict, name_type)
       commodity = CommodityRecord(mine=mine, commodity=commName)
       # Check if metal and critical
       try:
-        commodity.metal_type = metalsDict.get(commName)
+        commodity.metal_type = metals_dict.get(commName)
       except KeyError:
         pass
-      commodity.is_critical = True if commName in cmList else False
+      commodity.is_critical = True if commName in critical_mineral_list else False
       # Now try and attach quantities, if present
       try:
         # grade = get_comm_value(row, valCol)
@@ -193,7 +192,7 @@ def get_commodities(row, commodity_columns, mine, cmList, convert_dict, session,
       session.merge(commodity)
       session.flush()
 
-def get_table_values(row, columnDict, default_null=pd.NA):
+def get_table_values(row:pd.Series, columnDict:dict, default_null:object=None):
   """
   Takes column values, set out in columnDict, and produces a new dictionary where key = database column and
   value = original (dataframe/excel) value. This dictionary can be used to create an ORM object via dict unpacking.
@@ -225,19 +224,37 @@ def get_table_values(row, columnDict, default_null=pd.NA):
   # Returns a dict where key = database column name and value = dataframe (pandas/excel) column value
   return valueDict
 
-def value_to_range(value, intervals=[1, 10, 100, 1000, 10_000, 100_000, 1_000_000]):
-    ranges = [range(intervals[i], intervals[i+1]) for i in range(0, len(intervals) - 1)]
-    if value < intervals[0]:
-        unit = "tonne" if intervals[0] == 1 else "tonnes"
-        return f"Under {intervals[0]} {unit}"
-    elif value > intervals[-1]:
-        return f"Over {intervals[-1]} tonnes"
-    else:
-        for r in ranges:
-            if value in r:
-                return f"{r[0]:,} to {r[-1]:,} tonnes"
+def value_to_range(value:int|float, unit_singular:str, unit_plural:str=None, intervals:list=[1, 10, 100, 1000, 10_000, 100_000, 1_000_000]):
+  """
+  Converts a single value to a string representing range.
 
-def lon_to_utm_zone(lon_deg):
+  :param value: A numerical value.
+  :type value: int or float.
+
+  :param unit_singular: Name of unit if quantity is 1.
+  :type unit_singular: str.
+
+  :param unit_plural: Name of unit is quantity is more than 1.
+  :type unit_plural: str. Default: None.
+
+  :param intervals: A list of cutoff values to create range categories.
+  :type intervals: list.
+  """
+
+  if unit_plural == None:
+    unit_plural = unit_singular
+  ranges = [range(intervals[i], intervals[i+1]) for i in range(0, len(intervals) - 1)]
+  if value < intervals[0]:
+      unit = unit_singular if intervals[0] == 1 else unit_plural
+      return f"Under {intervals[0]} {unit}"
+  elif value > intervals[-1]:
+      return f"Over {intervals[-1]} {unit_plural}"
+  else:
+      for r in ranges:
+          if value in r:
+              return f"{r[0]:,} to {r[-1]:,} {unit_plural}"
+
+def lon_to_utm_zone(lon_deg:float):
   """
   Takes the longitude in decimal degrees and returns the UTM zone as an int.
   Assumes coordinates are in the northern hemisphere.
@@ -248,7 +265,7 @@ def lon_to_utm_zone(lon_deg):
   zone = ceil(((float(lon_deg) + 180)/6) % 60)
   return zone
 
-def assign_totals(mine_site, column_name, session):
+def assign_totals(mine_site:Mine, column_name:str, session:sessionmaker.Session):
   """
   Queries the DB for all child TSFs and Impoundments and sums a numeric property.
 
@@ -259,7 +276,7 @@ def assign_totals(mine_site, column_name, session):
   :type column_name: str.
 
   :param session: The database session.
-  :type session: sqlalchemy.orm.Session
+  :type session: sqlalchemy.sessionmaker.Session
 
   :return: None
   """
@@ -276,7 +293,7 @@ def assign_totals(mine_site, column_name, session):
   print(categorized)
 
 
-def convert_worksheet_to_db(session, dataframe, cmList=data_tables['cmList'], auto_generate_cmdb_ids=False):
+def convert_worksheet_to_db(session:sessionmaker.Session, dataframe:pd.DataFrame, auto_generate_cmdb_ids=False):
 
   """
   Take the excel version of the CMDB as a pandas dataframe and convert to a database.
@@ -290,7 +307,7 @@ def convert_worksheet_to_db(session, dataframe, cmList=data_tables['cmList'], au
   :return: None
   """
 
-  def commit_object(obj):
+  def _commit_object(obj):
     try:
       session.add(obj)
       session.commit()
@@ -337,7 +354,7 @@ def convert_worksheet_to_db(session, dataframe, cmList=data_tables['cmList'], au
     #   # Override dict value for construction year
     #   mineVals['Construction_Year'] = lowestYear
     mine = Mine(**mineVals)
-    commit_object(mine)
+    _commit_object(mine)
 
     # Mine alias (alternative names)
     # There are often multiple comma-separated aliases. Split them up
@@ -348,11 +365,11 @@ def convert_worksheet_to_db(session, dataframe, cmList=data_tables['cmList'], au
       for aliasName in aliasesList:
         alias = Alias(alias=aliasName)
         alias.mine=mine
-        commit_object(alias)
+        _commit_object(alias)
 
     # Commodities
     commodityCols = list(filter(lambda x: x.startswith("Commodity"), dataframe.columns))
-    get_commodities(row, commodityCols, mine, cmList['Commodity'].to_list())
+    get_commodities(row, commodityCols, mine, name_convert_dict=data_tables['Commodity'].to_list())
 
     # Owners
     ownerVals = get_table_values(row, {"Owner_Operator": "name"})
@@ -360,7 +377,7 @@ def convert_worksheet_to_db(session, dataframe, cmList=data_tables['cmList'], au
     if pd.notna(owner.name):
       owner.mine = mine
       mine.owners.append(owner)
-      commit_object(owner)
+      _commit_object(owner)
 
     #References and links
     source_quantity = 4 # Number of source columns
@@ -371,7 +388,7 @@ def convert_worksheet_to_db(session, dataframe, cmList=data_tables['cmList'], au
         source_id = row[f"{col}_ID"]
         link = row[f"{col}_Link"]
         reference = Reference(mine=mine, source=source, source_id=source_id, link=link)
-        commit_object(reference)
+        _commit_object(reference)
 
     # Default tailings facility. Every mine gets one
     defaultTSFVals = get_table_values(row, {
@@ -382,7 +399,7 @@ def convert_worksheet_to_db(session, dataframe, cmList=data_tables['cmList'], au
     defaultTSFVals["default"] = True
     defaultTSF = TailingsFacility(**defaultTSFVals)
     mine.tailings_facilities.append(defaultTSF)
-    commit_object(defaultTSF)
+    _commit_object(defaultTSF)
 
     # Default impoundment. Every default tailings facility gets one
     defaultImpoundmentVals = get_table_values(row, {
@@ -409,7 +426,7 @@ def convert_worksheet_to_db(session, dataframe, cmList=data_tables['cmList'], au
           del(defaultImpoundmentVals[key])
     defaultImpoundmentVals["name"] = f"{defaultTSF.name}_impoundment"
     defaultImpoundment = Impoundment(parentTsf=defaultTSF, **defaultImpoundmentVals)
-    commit_object(defaultImpoundment)
+    _commit_object(defaultImpoundment)
 
     # orebodyVals = get_table_values(row, {
     #   "Orebody_Type": "ore_type",
@@ -439,7 +456,7 @@ def convert_worksheet_to_db(session, dataframe, cmList=data_tables['cmList'], au
     mine = session.query(Mine).filter(Mine.cmdb_id == id).first()
     if pd.notna(mine):
         mine.tailings_facilities.append(tsf)
-    commit_object(tsf)
+    _commit_object(tsf)
     # Add impoundments last
     impoundments = dataframe[(dataframe["Site_Type"] == "Impoundment") & (pd.notna(dataframe['Parent_ID']))]
     # Create impoundment
@@ -471,7 +488,7 @@ def convert_worksheet_to_db(session, dataframe, cmList=data_tables['cmList'], au
               # If value can't be converted (i.e., doesn't contain digits), remove it. Property in table will be blank
               del(impoundmentVals[key])
         impoundment = Impoundment(parentTsf=parentTsf, **impoundmentVals)
-        commit_object(impoundment)
+        _commit_object(impoundment)
 
   # # Finally, commit session
   # try:
@@ -485,7 +502,7 @@ def convert_worksheet_to_db(session, dataframe, cmList=data_tables['cmList'], au
   #   print(f"Duplicate entry at {e}")
   session.close()
 
-def merge_to_session(session, row, orm_class, column_dict):
+def merge_to_session(session:sessionmaker.Session, row:pd.Series, orm_class:object, column_dict:dict):
   """
   Generate a table entry (ORM object) and add to an existing session. For adding data to the CMTI that doesn't come
   from the data-entry spreadsheet.
@@ -509,7 +526,7 @@ def merge_to_session(session, row, orm_class, column_dict):
   newEntry = orm_class(**newValues)
   session.merge(newEntry)
 
-def orm_to_csv(orm_class, out_name, session):
+def orm_to_csv(orm_class:object, out_name:str, session:sessionmaker.Session):
   """
   Exports an ORM class object as a csv.
 
@@ -537,7 +554,21 @@ def orm_to_csv(orm_class, out_name, session):
     [writer.writerow([getattr(row, column.name) for column in orm_class.__mapper__.columns]) for row in query]
   session.close()
 
-def db_to_sheet(worksheet:pd.DataFrame, session, ignore_default_records=True):
+def db_to_dataframe(worksheet:pd.DataFrame, session:sessionmaker.Session, ignore_default_records:bool=True):
+
+  """
+  Converts database (in form of sqlalchemy Session) to a Pandas dataframe.
+
+  :param worksheet: The original worksheet table used to generate the database, or a table with the desired columns.
+  :type worksheet: pandas.Dataframe.
+
+  :param session: An existing sqlalchemy session.
+  :type session: sqlalchemy.orm.Session.
+
+  :param ignore_default_records: Whether to ignore or use the "default" TSF and Impoundment values generated in the database. Default: true.
+  :type ignore_default_records: bool.
+  """
+
   # new_records = pd.DataFrame(columns=worksheet.columns)
   new_rows = []
   existing_ids = worksheet['CMIM_ID'].tolist()
@@ -572,7 +603,7 @@ def db_to_sheet(worksheet:pd.DataFrame, session, ignore_default_records=True):
         # Maintain list of existing commodities to avoid duplicates
         row_commodities = [new_row[f'Commodity{n}'] for n in range(1, comm_number)]
         comm_col = f'Commodity{comm_number}'
-        code = convert_commodity_name(comm.commodity, data_tables['convert_dict'], 'symbol', show_warning=False)
+        code = convert_commodity_name(comm.commodity, data_tables['name_convert_dict'], 'symbol', show_warning=False)
         if code not in row_commodities:
           new_row[comm_col] = code
           new_row[f'{code}_Grade'] = comm.grade
