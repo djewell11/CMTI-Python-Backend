@@ -1,0 +1,17 @@
+import pytest
+from cmti_tools.idmanager import ProvID
+
+def test_prov_id_init():
+    # Verify ProvID works as intended
+    prov = ProvID('ON')
+    assert prov.code == "ON"
+    assert prov.max_id >= 0
+    assert isinstance(prov._formatted_id, str)
+
+def test_update_id():
+    # Verify update_id() works as intended
+    prov = ProvID('ON')
+    original_id = prov.max_id
+    prov.update_id()
+    assert prov.max_id == original_id + 1
+    assert prov.formatted_id == f"{prov.code}{prov.max_id:06d}"
