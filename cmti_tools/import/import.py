@@ -3,21 +3,22 @@ import pandas as pd
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
-from cmtitools.tools import get_digits
-from cmtitools.tools import get_table_values
-from cmtitools.tools import convert_commodity_name
-from cmtitools.tools import lon_to_utm_zone
-from cmtitools.tools import data_tables
-from cmtitools.tools import session
-from cmtitools.tables import Mine, Owner, Alias, TailingsFacility, Impoundment, CommodityRecord, Reference, Orebody
-from cmtitools.idmanager import ProvID
-from cmtitools.idmanager import CmtiIDManager
+from cmti_tools.tools import get_digits
+from cmti_tools.tools import get_table_values
+from cmti_tools.tools import convert_commodity_name
+from cmti_tools.tools import lon_to_utm_zone
+from cmti_tools.tools import data_tables
+from cmti_tools.tools import session
+from cmti_tools.tables import Mine, Owner, Alias, TailingsFacility, Impoundment, CommodityRecord, Reference, Orebody
+from cmti_tools.idmanager import ProvID
+from cmti_tools.idmanager import CmtiIDManager
 
 # Bulk import functions
 
 # OMI
 
-def omi_row_to_cmti(row, cmdb_id, production_df, production_comm_df, cmList=data_tables['cmList'], metalsDict=data_tables['metalsDict'], session=session):
+def omi_row_to_cmti(row:pd.Series, cmdb_id:str, production_df:pd.DataFrame, production_comm_df:pd.DataFrame, cmList:list=data_tables['cmList'],
+                     metalsDict:dict=data_tables['metalsDict'], session=session):
   # For each row in the OMI dataframe, extract necessary values for each object
 
   # Mine object
