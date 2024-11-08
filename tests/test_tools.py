@@ -1,4 +1,3 @@
-import pytest
 from cmti_tools.tools import get_digits, convert_commodity_name, lon_to_utm_zone
 
 def test_get_digits():

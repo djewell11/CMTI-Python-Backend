@@ -1,14 +1,14 @@
 from sqlalchemy import select
 
-from ..tables import Mine
-from ..tools import session
+from cmti_tools.tables import Mine
 
 class ProvID:
   # Holds the highest ID for a prov_terr and can generate a new one
-  def __init__(self, code, session=session):
+  def __init__(self, code, session):
     self._code = code
     self._max_id = self.get_highest_id()
     self._formatted_id = self.format_id()
+    self.session = session
 
   @property
   def code(self):
@@ -35,7 +35,7 @@ class ProvID:
     # Query the session to get the highest ID for a given prov_terr
     stmt = select(Mine.cmdb_id).filter(Mine.prov_terr==self.code)
     ids = []
-    with session.execute(stmt).scalars() as q:
+    with self.session.execute(stmt).scalars() as q:
       for r in q:
         id_num = r[2:]
         ids.append(int(id_num))

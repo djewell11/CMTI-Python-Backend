@@ -1,6 +1,6 @@
 import pytest
 import pandas as pd
-from cmti_tools.qualitycontrol import check_categorical_values, check_units
+from cmti_tools.qualitycontrol.qualitycontrol import check_categorical_values, check_units
 
 def test_categorical_vals(capfd):
     # Create a row with incorrect category vals
