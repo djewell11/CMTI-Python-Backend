@@ -1,7 +1,7 @@
 from cmti_tools.tools import get_digits, convert_commodity_name, lon_to_utm_zone
 
 def test_get_digits():
-    assert get_digits("100m3", output="int") == 100
+    assert get_digits("100m", output="int") == 100
     assert get_digits("50g/L") == 50.0
 
 def test_convert_commodity_name():

@@ -1,5 +1,5 @@
-import pytest
-from cmti_tools._import import ingest_omi
+import pandas as pd
+from cmti_tools.importdata import ingest_omi
 from cmti_tools.tables import Mine
 
 def test_ingest_omi(session):
