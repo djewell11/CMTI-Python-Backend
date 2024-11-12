@@ -17,6 +17,6 @@ def test_check_units():
     row = pd.Series({"Capacity": "100 m3"})
     column_units = {"Capacity": "liter"}
     # Convert units using check_units
-    check_units(row, column_units)
+    converted = check_units(row)
     # Check if units were properly converted, allowing for rounding error
-    assert row.Capacity == pytest.approx(100000, 0.1)
+    assert converted == pytest.approx(100000, 0.1)

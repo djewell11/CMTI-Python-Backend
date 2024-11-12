@@ -8,7 +8,6 @@ from cmti_tools.tools import get_table_values
 from cmti_tools.tools import convert_commodity_name
 from cmti_tools.tools import lon_to_utm_zone
 from cmti_tools.tools import data_tables
-from cmti_tools.tools import session
 from cmti_tools.tables import Mine, Owner, Alias, TailingsFacility, Impoundment, CommodityRecord, Reference, Orebody
 from cmti_tools.idmanager import ProvID
 from cmti_tools.idmanager import CmtiIDManager
@@ -17,7 +16,7 @@ from cmti_tools.idmanager import CmtiIDManager
 
 # OMI
 
-def omi_row_to_cmti(row, cmdb_id, production_df, production_comm_df, cmList=data_tables['cmList'], metalsDict=data_tables['metalsDict'], session=session):
+def omi_row_to_cmti(row, cmdb_id, production_df, production_comm_df, session, cmList=data_tables['cmList'], metalsDict=data_tables['metalsDict']):
   # For each row in the OMI dataframe, extract necessary values for each object
 
   # Mine object
@@ -74,7 +73,7 @@ def omi_row_to_cmti(row, cmdb_id, production_df, production_comm_df, cmList=data
   session.add(mine)
   session.commit()
 
-def ingest_omi(omi_dataframe, omi_production_dataframe, omi_prod_comm_df):
+def ingest_omi(omi_dataframe, omi_production_dataframe, omi_prod_comm_df, session):
 
   prov_id = ProvID('ON')
   for i, row in omi_dataframe.iterrows():
@@ -118,7 +117,7 @@ def ingest_omi(omi_dataframe, omi_production_dataframe, omi_prod_comm_df):
 
 # OAM
 
-def oam_row_to_cmti(row, cmdb_id, oam_comm_names, cmList=data_tables['cmList'], metalsDict=data_tables['metalsDict'], convert_dict=['convert_dict'], session=session):
+def oam_row_to_cmti(row, cmdb_id, oam_comm_names, session, cmList=data_tables['cmList'], metalsDict=data_tables['metalsDict'], convert_dict=['convert_dict']):
 
   def commit_object(obj):
     try:
@@ -207,7 +206,7 @@ def oam_row_to_cmti(row, cmdb_id, oam_comm_names, cmList=data_tables['cmList'], 
 
   commit_object(mine)
 
-def ingest_oam(oam_dataframe, session=session):
+def ingest_oam(oam_dataframe, session):
   id_manager = CmtiIDManager()
   comm_name_lut = pd.read_csv("/content/gdrive/MyDrive/NRCan/Projects/CMDB/Data/OAM_commodity_names.csv")
   oam_convert_dict = dict(zip(comm_name_lut['Symbol'], comm_name_lut['Full_Name']))
@@ -223,7 +222,7 @@ def ingest_oam(oam_dataframe, session=session):
 
 # BC AHM
 
-def bc_ahm_row_to_cmti(row, id_manager, session=session):
+def bc_ahm_row_to_cmti(row, id_manager, session):
 
   def commit_object(obj):
     try:
@@ -306,7 +305,7 @@ def bc_ahm_row_to_cmti(row, id_manager, session=session):
 
   commit_object(mine)
 
-def ingest_bc_ahm(bc_ahm_dataframe, session=session):
+def ingest_bc_ahm(bc_ahm_dataframe, session):
   id_manager = CmtiIDManager()
   for i, row in bc_ahm_dataframe.iterrows():
       bc_ahm_row_to_cmti(row, id_manager)
