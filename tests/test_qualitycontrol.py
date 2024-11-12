@@ -15,7 +15,7 @@ def test_categorical_vals(capfd):
 
 def test_check_units():
     row = pd.Series({"Capacity": "100 m3"})
-    column_units = {"Capacity": "litres"}
+    column_units = {"Capacity": "liter"}
     # Convert units using check_units
     check_units(row, column_units)
     # Check if units were properly converted, allowing for rounding error
