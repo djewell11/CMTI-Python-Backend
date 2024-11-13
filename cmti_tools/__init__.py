@@ -1,4 +1,6 @@
+from cmti_tools import *
 from importlib.metadata import version
 
 __version__ = version("cmti_tools")
-__all__ = ['tools', 'export', 'import', 'qualitycontrol', 'tables', 'idmanager']
+# __version__ = "0.1.3"
+__all__ = ['tools', 'export', 'importdata', 'qualitycontrol', 'tables', 'idmanager']

@@ -1,1 +1,1 @@
-__all__ = ["idmanager"]
+from cmti_tools.idmanager import idmanager

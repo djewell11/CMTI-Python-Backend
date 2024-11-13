@@ -1,5 +1,8 @@
 import pandas as pd
-from unit_converter import convert
+from pint import UnitRegistry
+
+ureg = UnitRegistry()
+ureg.define('m3 = meter ** 3')
 
 def check_categorical_values(row, qa_dict, ignore_unknown=True, ignore_na=True, ignore_blank=True):
   # qa_dict keys are columns, values are allowed values
@@ -21,14 +24,14 @@ def check_categorical_values(row, qa_dict, ignore_unknown=True, ignore_na=True, 
           else:
             print_bad_value(col_key, col_value)
 
-
 def check_units(row, column_units: dict, ignore_unknown=True, ignore_na=True, ignore_blank=True):
   # Conforms units for quantified values, removes unit from string, and returns a numerical value
   for col, unit in column_units.items():
     # Check for units
     try:
       val = str(row[col]).replace(' ', '')
-      converted = convert(val, unit)
-      row.col = converted
+      quantity = ureg(val)
+      converted = quantity.to(unit)
+      row[col] = converted.magnitude
     except Exception as e:
       pass
