@@ -24,14 +24,12 @@ def check_categorical_values(row, qa_dict, ignore_unknown=True, ignore_na=True, 
           else:
             print_bad_value(col_key, col_value)
 
-def check_units(row, column_units: dict, ignore_unknown=True, ignore_na=True, ignore_blank=True):
+def check_units(value, expected_unit, ignore_unknown=True, ignore_na=True, ignore_blank=True):
   # Conforms units for quantified values, removes unit from string, and returns a numerical value
-  for col, unit in column_units.items():
-    # Check for units
-    try:
-      val = str(row[col]).replace(' ', '')
-      quantity = ureg(val)
-      converted = quantity.to(unit)
-      row[col] = converted.magnitude
-    except Exception as e:
-      pass
+  try:
+    val = value.replace(' ', '')
+    quantity = ureg(val)
+    converted = quantity.to(expected_unit)
+    return converted.magnitude
+  except Exception as e:
+    pass

@@ -37,7 +37,6 @@ class ProvID:
     stmt = select(Mine.cmdb_id).filter(Mine.prov_terr==self.code)
     ids = []
     with self.session.execute(stmt).scalars() as q:
-    with self.session.execute(stmt).scalars() as q:
       for r in q:
         id_num = r[2:]
         ids.append(int(id_num))

@@ -14,9 +14,9 @@ def test_categorical_vals(capfd):
     assert "Test Site -- Status: Unknown" in output.out
 
 def test_check_units():
-    row = pd.Series({"Capacity": "100 m3"})
-    column_units = {"Capacity": "liter"}
+    value = '100 m3'
+    unit = 'liter'
     # Convert units using check_units
-    converted = check_units(row)
+    converted = check_units(value, unit)
     # Check if units were properly converted, allowing for rounding error
     assert converted == pytest.approx(100000, 0.1)
