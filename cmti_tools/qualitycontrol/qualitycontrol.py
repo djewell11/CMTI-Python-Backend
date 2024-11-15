@@ -4,7 +4,25 @@ from pint import UnitRegistry
 ureg = UnitRegistry()
 ureg.define('m3 = meter ** 3')
 
-def check_categorical_values(row, qa_dict, ignore_unknown=True, ignore_na=True, ignore_blank=True):
+def check_categorical_values(row:pd.Series, qa_dict:dict, ignore_unknown=True, ignore_na=True, ignore_blank=True):
+  """
+  Verifies that value given matches list of approved values in template. #TODO determine behaviour for bad values (currently prints to console).
+
+  :param row: A row from an input DataFrame.
+  :type row: pandas.Series
+
+  :param qa_dict: A dictionary where keys are columns and values are lists of approved strings for those columns.
+  :type qa_dict: dict
+
+  :param ignore_unknown: Whether to flag entries where value == 'Unknown' or 'N/A/Unknown'. Default: True.
+  :type ignore_unknown: bool
+
+  :param ignore_na: Whether to flag entries where value is an NA type. Default: True.
+  :type ignore_na: bool
+
+  :param ignore_blank: Whether to flag entries where value == ''. Default: True.
+  :type ignore_blank: bool
+  """
   # qa_dict keys are columns, values are allowed values
   # This function flags errant values but doesn't change them
   def print_bad_value(key, val):
@@ -24,8 +42,17 @@ def check_categorical_values(row, qa_dict, ignore_unknown=True, ignore_na=True, 
           else:
             print_bad_value(col_key, col_value)
 
-def check_units(value, expected_unit, ignore_unknown=True, ignore_na=True, ignore_blank=True):
-  # Conforms units for quantified values, removes unit from string, and returns a numerical value
+def check_units(value: int|float, expected_unit: str):
+  """
+  Conforms units for quantified values, removes unit from string, and returns a numerical value.
+
+  :param value: The input value.
+  :type value: int or float
+
+  :param expected_unit: The desired output unit.
+  :type expected_unit: str
+
+  """
   try:
     val = value.replace(' ', '')
     quantity = ureg(val)

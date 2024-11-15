@@ -1,0 +1,89 @@
+﻿Commodity, Name, Type
+Ag,Silver,metal
+Al,Aluminum,metal
+Amethyst,Amethyst,non_metal
+Ankerite,Ankerite,non_metal
+Anthraxolite,Anthraxolite,non_metal
+Apatite,Apatite,non_metal
+As,Arsenic,metal
+Asbestos,Asbestos,non_metal
+Au,Gold,metal
+Ba,Barium,metal
+Be,Beryllium,metal
+Bentonite,Bentonite,non_metal
+Bi,Bismuth,metal
+Calcium carbonate,Calcium carbonate,non_metal
+Cd,Cadmium,metal
+Ce,Cerium,metal
+Co,Cobalt,metal
+Coal,Coal,non_metal
+Corundum,Corundum,non_metal
+Cs,"Caesium, Cesium",metal
+Cu,Copper,metal
+Diamond,Diamond,non_metal
+Dolomite,Dolomite,non_metal
+Fe,Iron,metal
+Feldspar,Feldspar,non_metal
+Fluorite,Fluorite,non_metal
+Fluorspar,Fluorspar,non_metal
+Ga,Gallium,metal
+Garnet,Garnet,non_metal
+Ge,Germanium,metal
+Graphite,Graphite,non_metal
+Gypsum,Gypsum,non_metal
+In,Indium,metal
+Ir,Iridium,metal
+Jade,Jade,non_metal
+La,Lanthanum,metal
+Li,Lithium,metal
+Lime,Lime,non_metal
+Limestone,Limestone,non_metal
+Magnetite,Magnetite,metal
+Mg,Magnesium,metal
+Mica,Mica,non_metal
+Mn,Manganese,metal
+Mo,Molybdenum,metal
+Nb,Niobium,metal
+Nd,Neodymium,REE
+Nepheline syenite,Nepheline syenite,non_metal
+Ni,Nickel,metal
+Pb,Lead,metal
+Pd,Palladium,metal
+PGM,Platinum Group Metals,metal
+Phosphate,Phosphate,non_metal
+Phosphogypsum,Phosphogypsum,non_metal
+Potash,Potash,non_metal
+Potassium sulphate,Potassium sulphate,non_metal
+Pr,Praseodymium,REE
+Pt,Platinum,metal
+Pyrite,Pyrite,metal
+Pyrochlore,Pyrochlore,metal
+Pyrophyllite,Pyrophyllite,non_metal
+Ra,Radium,metal
+Rb,Rubidium,metal
+Re,Rhenium,metal
+REE,Rare Earth Elements,REE
+Rh,Rhodium,metal
+S,Sulphur,non_metal
+Salt,Salt,non-metal
+Sand,Sand,non-metal
+Sb,Antimony,metal
+Sc,Scandium,REE
+Se,Selenium,metal
+Silica,Silica,non_metal
+Sn,Tin,metal
+Sodium sulphate,Sodium sulphate,non_metal
+Sr,Strontium,metal
+Ta,Tantallum,metal
+Talc,Talc,non_metal
+Te,Tellurium,metal
+Th,Thorium,REE
+Ti,Titanium,metal
+U,Uranium,REE
+U3O8,Triuranium octoxide,REE
+Vermiculite,Vermiculite,non_metal
+W,Tungsten,metal
+Wollastonite,Wollastonite,non-metal
+Y,Yttrium,REE
+Zn,Zinc,metal
+Zr,Zirconium,metal

@@ -1,7 +1,7 @@
 [sources]
-critical_minerals = D:\Google Drive\NRCan\Projects\CMDB\Data\cmList.csv
-metals = D:\Google Drive\NRCan\Projects\CMDB\Data\metalList_utf.csv
-elements = D:\Google Drive\NRCan\Projects\CMDB\Data\elements.csv
+critical_minerals = cmti_tools\data\cmList.csv
+metals = cmti_tools\data\metalList_utf.csv
+elements = cmti_tools\data\elements.csv
 
 [engine]
 engine = postgresql+psycopg2://postgres:postgres@localhost:5432/cmti

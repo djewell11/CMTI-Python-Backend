@@ -503,7 +503,15 @@ def ingest_oam(oam_dataframe:pd.DataFrame, session):
 def bc_ahm_row_to_cmti(row:pd.Series, id_manager:CmtiIDManager, session):
   """
   Takes a row of the BC Abandoned and Historic Mine (BC AHM) 
-  :param row: A row from the 
+  
+  :param row: A row from the bc_ahm DataFrame.
+  :type row: pandas.Series
+
+  :param id_manager: A CmtiIDManager class instance for managing IDs.
+  :type id_manager: cmti_tools.tools.CmtiIDMAnager
+
+  :param session: The SQL Alchemy Session associated with the CMTI.
+  :type session: sqlalchemy.sessionmaker.Session
   """
 
 
@@ -589,9 +597,19 @@ def bc_ahm_row_to_cmti(row:pd.Series, id_manager:CmtiIDManager, session):
   commit_object(mine)
 
 def ingest_bc_ahm(bc_ahm_dataframe, session):
+  """
+  Appends the BC Abandoned and Historic Mines (BC AHM) database to the CMTI.
+
+  :param bc_ahm_dataframe: The BC AHM DataFrame.
+  :type bc_ahm_dataframe: pandas.DataFrame
+
+  :param session: The SQL Alchemy Session associated with the CMTI.
+  :type session: sqlalchemy.sessionmaker.Session
+  """
+
   id_manager = CmtiIDManager()
   for i, row in bc_ahm_dataframe.iterrows():
-      bc_ahm_row_to_cmti(row, id_manager)
+      bc_ahm_row_to_cmti(row, id_manager, session=session)
     # try:
     # except Exception as e:
     #   print(e, row) # placeholder except
