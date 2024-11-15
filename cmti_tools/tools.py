@@ -15,6 +15,14 @@ from cmti_tools.idmanager import *
 
 # Load data files from config parser
 def create_module_variables() -> dict:
+  """
+  Generate variables used in various places across the package. Configure file locations in config.toml.
+
+  :return: dict
+
+  """
+
+
   config = ConfigParser()
   config_path = pathlib.Path(__file__).parent.absolute() / "config.toml"
   config.read(config_path)
@@ -27,7 +35,8 @@ def create_module_variables() -> dict:
   with open(config.get('sources', 'elements'), mode='r') as elements_file:
     elements = pd.read_csv(elements_file)
     name_convert_dict = dict(zip(elements['symbol'], elements['name']))
-  return {"_l":critical_minerals, "metals_dict":metals, "name_convert_dict":name_convert_dict}
+  return {"cm_list":critical_minerals, "metals_dict":metals, "name_convert_dict":name_convert_dict}
+
 try:
   data_tables = create_module_variables()
 except ConfigError as config_error:
@@ -82,8 +91,6 @@ def convert_commodity_name(name:str, name_convert_dict:dict, output_type:str="fu
     Determines whether or not a warning is printed when "name" isn't present in "name_convert_dict".
     Absences are expected for non-element commodities. Default: True
   :type name_convert_dict: bool.
-
-  :return: None
   """
   # _name = name # Save original name in case no match is found. Capitalize name to account for input differences
   name = name.strip().capitalize()
@@ -115,7 +122,7 @@ def convert_commodity_name(name:str, name_convert_dict:dict, output_type:str="fu
   else:
     raise ValueError("output_type must be either 'full' or 'symbol'")
   
-def get_commodities(row:pd.Series, commodity_columns:list, critical_mineral_list:list, name_convert_dict:dict, metals_dict:dict, mine:Mine, session:sessionmaker.Session, name_type:str="full"):
+def get_commodities(row:pd.Series, commodity_columns:list, critical_mineral_list:list, name_convert_dict:dict, metals_dict:dict, mine:Mine, session, name_type:str="full"):
   """
   Takes multiple commodity columns from the spreadsheet and creates a Commodity object.
   Adds that object to the database. #TODO: Make this return a commodity rather than add it to session.
@@ -265,7 +272,7 @@ def lon_to_utm_zone(lon_deg:float):
   zone = ceil(((float(lon_deg) + 180)/6) % 60)
   return zone
 
-def assign_totals(mine_site:Mine, column_name:str, session:sessionmaker.Session):
+def assign_totals(mine_site:Mine, column_name:str, session):
   """
   Queries the DB for all child TSFs and Impoundments and sums a numeric property.
 
@@ -293,7 +300,7 @@ def assign_totals(mine_site:Mine, column_name:str, session:sessionmaker.Session)
   print(categorized)
 
 
-def merge_to_session(session:sessionmaker.Session, row:pd.Series, orm_class:object, column_dict:dict):
+def merge_to_session(session, row:pd.Series, orm_class:object, column_dict:dict):
   """
   Generate a table entry (ORM object) and add to an existing session. For adding data to the CMTI that doesn't come
   from the data-entry spreadsheet.
@@ -317,7 +324,7 @@ def merge_to_session(session:sessionmaker.Session, row:pd.Series, orm_class:obje
   newEntry = orm_class(**newValues)
   session.merge(newEntry)
 
-def orm_to_csv(orm_class:object, out_name:str, session:sessionmaker.Session):
+def orm_to_csv(orm_class:object, out_name:str, session):
   """
   Exports an ORM class object as a csv.
 
@@ -345,7 +352,7 @@ def orm_to_csv(orm_class:object, out_name:str, session:sessionmaker.Session):
     [writer.writerow([getattr(row, column.name) for column in orm_class.__mapper__.columns]) for row in query]
   session.close()
 
-def db_to_dataframe(worksheet:pd.DataFrame, session:sessionmaker.Session, ignore_default_records:bool=True):
+def db_to_dataframe(worksheet:pd.DataFrame, session, ignore_default_records:bool=True):
 
   """
   Converts database (in form of sqlalchemy Session) to a Pandas dataframe.
