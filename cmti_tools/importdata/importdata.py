@@ -22,12 +22,12 @@ from cmti_tools.idmanager import CmtiIDManager
 def convert_worksheet_to_db(session:sessionmaker.Session, dataframe:pd.DataFrame, auto_generate_cmdb_ids=False):
 
   """
-  Take the excel version of the CMDB as a pandas dataframe and convert to a database.
+  Take the excel version of the CMDB as a pandas DataFrame and convert to a database.
 
   :param session: An sqlalchemy session object. Designed for postgres, using other database dialects may not work.
   :type session: sqlalchemy.orm.Session
 
-  :param dataframe: A pandas dataframe version of the CMDB
+  :param dataframe: A pandas DataFrame version of the CMDB
   :type dataframe: pandas.DataFrame
 
   :return: None
@@ -220,8 +220,31 @@ def convert_worksheet_to_db(session:sessionmaker.Session, dataframe:pd.DataFrame
 
 # OMI - Ontario Mineral Inventory
 
-def omi_row_to_cmti(row, cmdb_id, production_df, production_comm_df, session, cmList=data_tables['cmList'], metalsDict=data_tables['metalsDict']):
-  # For each row in the OMI dataframe, extract necessary values for each object
+def omi_row_to_cmti(row, cmdb_id, production_df, production_comm_df, session, cm_list=data_tables['cm_list'], metals_dict=data_tables['metals_dict']):
+  """
+  Takes a row of the Ontario Mineral Inventory (OMI) databse and inserts it into the CMTI database.
+
+  :param row: A row of the omi database from a pandas DataFrame.
+  :type row: pandas.Series
+
+  :param cmdb_id: The ID to be applied to the new record. Recommend using in conjunction with ProvIDs to avoid duplicate IDs.
+  :type cmdb_id: str
+
+  :param production_df: The production table of the OMI.
+  :type production_df: pandas.DataFrame
+
+  :param production_comm_df: The production_commoditiies table of the OMI.
+  :type production_comm_df: pandas.DataFrame
+
+  :param session: The SQL Alchemy Session associated with the CMTI.
+  :type session: sqlalchemy.sessionmaker.Session
+
+  :param cm_list: A list of critical minerals. Default: data_tables['cm_list'].
+  :type cm_list: list
+
+  :param metals_dict: A dictionary denoting metal type per commodity. Commodities may be metal, non-metal, or REE. Default: data_tables['metals_dict']
+  :type metals_dict: dict
+  """
 
   # Mine object
   mineVals = get_table_values(row, {
@@ -245,8 +268,8 @@ def omi_row_to_cmti(row, cmdb_id, production_df, production_comm_df, session, cm
       })
       # print(commodityVals['commodity'])
       commodityRecord = CommodityRecord(mine=mine, **commodityVals)
-      commodityRecord.is_critical = True if commodityVals['commodity'] in cmList else False
-      commodityRecord.is_metal = metalsDict.get(commodityVals['commodity'])
+      commodityRecord.is_critical = True if commodityVals['commodity'] in cm_list else False
+      commodityRecord.is_metal = metals_dict.get(commodityVals['commodity'])
       session.add(commodityRecord)
 
   # Tailings facility object
@@ -277,7 +300,23 @@ def omi_row_to_cmti(row, cmdb_id, production_df, production_comm_df, session, cm
   session.add(mine)
   session.commit()
 
-def ingest_omi(omi_dataframe, omi_production_dataframe, omi_prod_comm_df, session):
+def ingest_omi(omi_dataframe, omi_production_df, omi_prod_comm_df, session):
+  """
+  Appends the Ontario Mineral Inventory (OMI) to the CMTI.
+
+  :param omi_dataframe: The OMI DataFrame.
+  :type omi_dataframe: pandas.DataFrame
+
+  :param omi_production_df: A DataFrame of the OMI's production table.
+  :type omi_production_df: pandas.DataFrame
+
+  :param omi_prod_comm_df: A DataFrame of the OMI's production_commodity table.
+  :type omi_prod_comm_df: pandas.DataFrame
+
+  :param session: The SQL Alchemy Session associated with the CMTI.
+  :type session: sqlalchemy.sessionmaker.Session
+  """
+
 
   prov_id = ProvID('ON')
   for i, row in omi_dataframe.iterrows():
@@ -307,10 +346,10 @@ def ingest_omi(omi_dataframe, omi_production_dataframe, omi_prod_comm_df, sessio
         # Create new ID
         prov_id.update_id()
         newID = prov_id.formatted_id
-        omi_row_to_cmti(row, newID, omi_production_dataframe, omi_prod_comm_df)
+        omi_row_to_cmti(row, newID, omi_production_df, omi_prod_comm_df)
       elif cmim_len == 1:
         cmdb_id = cmdb_ids[0]
-        omi_row_to_cmti(row, cmdb_id, omi_production_dataframe, omi_prod_comm_df)
+        omi_row_to_cmti(row, cmdb_id, omi_production_df, omi_prod_comm_df)
       elif cmim_len > 1:
         # Not sure how to handle this yet. Maybe use secondary matching to see if record already exists
         pass
@@ -321,9 +360,34 @@ def ingest_omi(omi_dataframe, omi_production_dataframe, omi_prod_comm_df, sessio
 
 # OAM - Orphaned and Abandoned Mines
 
-def oam_row_to_cmti(row, cmdb_id, oam_comm_names, session, cmList=data_tables['cmList'], metalsDict=data_tables['metalsDict'], convert_dict=['convert_dict']):
+def oam_row_to_cmti(row:pd.Series, cmdb_id:str, oam_comm_names:pd.DataFrame, session, cm_list:list=data_tables['cm_list'], metals_dict:dict=data_tables['metals_dict'], convert_dict:dict=data_tables['convert_dict']):
 
-  def commit_object(obj):
+  """
+  Takes a row of the Orphaned and Abandoned Mines (OAM) databse and inserts it into the CMTI database.
+
+  :param row: A row of the omi database from a pandas dataframe.
+  :type row: pandas.Series
+
+  :param cmdb_id: The ID to be applied to the new record. Recommend using in conjunction with ProvIDs to avoid duplicate IDs.
+  :type cmdb_id: str
+
+  :param oam_comm_names: A DataFrame containing the commodity names specific to the OAM. The OAM uses its own commodity symbols.
+  :type oam_comm_names: pandas.Dataframe
+
+  :param session: The SQL Alchemy Session associated with the CMTI.
+  :type session: sqlalchemy.sessionmaker.Session
+
+  :param cm_list: A list of critical minerals. Default: data_tables['cm_list'].
+  :type cm_list: list
+
+  :param metals_dict: A dictionary denoting metal type per commodity. Commodities may be metal, non-metal, or REE. Default: data_tables['metals_dict']
+  :type metals_dict: dict
+
+  :param convert_dict: A dictionary containing commodity names and symbol names. Used to convert the oam_comm_names to standard symbols and names. Default: data_tables['convert_dict']
+  :type convert_dict: dict
+  """
+
+  def _commit_object(obj):
     try:
       session.add(obj)
       session.commit()
@@ -379,8 +443,8 @@ def oam_row_to_cmti(row, cmdb_id, oam_comm_names, session, cmList=data_tables['c
           source_year_start=start_year,
           source_year_end=end_year
         )
-        commodityRecord.is_critical = True if comm_name in cmList['Commodity'].tolist() else False
-        commodityRecord.is_metal = metalsDict.get(comm_name)
+        commodityRecord.is_critical = True if comm_name in cm_list['Commodity'].tolist() else False
+        commodityRecord.is_metal = metals_dict.get(comm_name)
     except Exception as e:
       session.rollback()
       print(e)
@@ -408,9 +472,18 @@ def oam_row_to_cmti(row, cmdb_id, oam_comm_names, session, cmList=data_tables['c
   oam_reference.link = row['URL']
   # commit_object(oam_reference)
 
-  commit_object(mine)
+  _commit_object(mine)
 
-def ingest_oam(oam_dataframe, session):
+def ingest_oam(oam_dataframe:pd.DataFrame, session):
+  """
+  Appends the Orphaned and Abandoned Mines DataFrame to the CMTI.
+
+  :param oam_dataframe: A DataFrame of the OAM.
+  :type oam_dataframe: pandas.DataFrame
+
+  :param session: The SQL Alchemy Session associated with the CMTI.
+  :type session: sqlalchemy.sessionmaker.Session
+  """
   id_manager = CmtiIDManager()
   comm_name_lut = pd.read_csv("/content/gdrive/MyDrive/NRCan/Projects/CMDB/Data/OAM_commodity_names.csv")
   oam_convert_dict = dict(zip(comm_name_lut['Symbol'], comm_name_lut['Full_Name']))
@@ -426,7 +499,12 @@ def ingest_oam(oam_dataframe, session):
 
 # BC AHM - Abandoned and Historic Mines
 
-def bc_ahm_row_to_cmti(row, id_manager, session):
+def bc_ahm_row_to_cmti(row:pd.Series, id_manager:CmtiIDManager, session):
+  """
+  Takes a row of the BC Abandoned and Historic Mine (BC AHM) 
+  :param row: A row from the 
+  """
+
 
   def commit_object(obj):
     try:
@@ -474,7 +552,7 @@ def bc_ahm_row_to_cmti(row, id_manager, session):
     alias = Alias(mine=mine, alias=row.NAME2)
 
   # Commodities
-  # get_commodities(row, ['COMMOD_C1', 'COMMOD_C2', 'COMMOD_C3'], mine, cmList)
+  # get_commodities(row, ['COMMOD_C1', 'COMMOD_C2', 'COMMOD_C3'], mine, cm_list)
 
   # Owner(s)
   # for permittee in ['Permitee1', 'Permittee2']: # 'Permitee'[1] is a typo in the bc_ahm

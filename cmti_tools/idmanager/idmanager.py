@@ -4,6 +4,16 @@ from cmti_tools.tables import Mine
 from cmti_tools.tables import Mine
 
 class ProvID:
+  """
+  An object containing a string representing a provincial ID.
+
+  Attributes:
+    code (str): A two-letter code denoting the province or territory.
+    max_id (int): The largest existing ID per that code. i.e., the integer to start with when creating  additionaly IDs.
+    formatted_id (str): A concatenated string of the code and max_id.
+    session (sqlalchemy Session): The SQL Alchemy Session object. Used to search for existing IDs.
+  
+  """
   # Holds the highest ID for a prov_terr and can generate a new one
   def __init__(self, code:str, session):
     self._code = code
@@ -33,7 +43,11 @@ class ProvID:
     self._formatted_id = self.format_id()
 
   def get_highest_id(self):
-    # Query the session to get the highest ID for a given prov_terr
+    """
+    Query the session to get the highest ID for a given prov_terr.
+
+    :return: int
+    """
     stmt = select(Mine.cmdb_id).filter(Mine.prov_terr==self.code)
     ids = []
     with self.session.execute(stmt).scalars() as q:
@@ -43,6 +57,11 @@ class ProvID:
     return max(ids) if len(ids) > 0 else 0
 
   def format_id(self):
+    """
+    Concatenates province/territory code and max_id to create ID string.
+
+    :return: str
+    """
     return f"{self.code}{self.max_id:06d}"
 
   def update_id(self):
@@ -50,6 +69,9 @@ class ProvID:
     self.formatted_id = self.format_id()
 
 class ID_Manager:
+  """
+  A container providing easy access to ProvID objects.
+  """
 
   def __init__(self):
     # Initialize highest ID for each prov_terr

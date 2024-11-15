@@ -7,7 +7,7 @@ from warnings import warn
 from math import ceil
 from sqlalchemy import select
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 
 from cmti_tools.tables import *
@@ -122,7 +122,7 @@ def convert_commodity_name(name:str, name_convert_dict:dict, output_type:str="fu
   else:
     raise ValueError("output_type must be either 'full' or 'symbol'")
   
-def get_commodities(row:pd.Series, commodity_columns:list, critical_mineral_list:list, name_convert_dict:dict, metals_dict:dict, mine:Mine, session, name_type:str="full"):
+def get_commodities(row:pd.Series, commodity_columns:list, critical_mineral_list:list, name_convert_dict:dict, metals_dict:dict, mine:Mine, session:Session, name_type:str="full"):
   """
   Takes multiple commodity columns from the spreadsheet and creates a Commodity object.
   Adds that object to the database. #TODO: Make this return a commodity rather than add it to session.
@@ -146,7 +146,7 @@ def get_commodities(row:pd.Series, commodity_columns:list, critical_mineral_list
   :type mine: sqlalchemy.orm.DeclarativeBase.
 
   :param session: The database session.
-  :type session: sqlalcheny.sessionmaker.Session
+  :type session: sqlalchemy.orm.Session
 
   :param name_type: The output style for the commodity name, as entered in convert_commodity_name.
     Either "full" or "symbol". Default: "full".
