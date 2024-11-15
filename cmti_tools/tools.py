@@ -35,12 +35,14 @@ def create_module_variables() -> dict:
   with open(config.get('sources', 'elements'), mode='r') as elements_file:
     elements = pd.read_csv(elements_file)
     name_convert_dict = dict(zip(elements['symbol'], elements['name']))
-  return {"cm_list":critical_minerals, "metals_dict":metals, "name_convert_dict":name_convert_dict}
+  return {"cm_list":critical_minerals, "metals_dict":metals_dict, "name_convert_dict":name_convert_dict}
 
 try:
   data_tables = create_module_variables()
 except ConfigError as config_error:
   print(config_error)
+except Exception as e:
+  print(e)
 
 # try:
 #   engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost:5432/cmti')

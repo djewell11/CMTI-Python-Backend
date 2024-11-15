@@ -360,7 +360,8 @@ def ingest_omi(omi_dataframe, omi_production_df, omi_prod_comm_df, session):
 
 # OAM - Orphaned and Abandoned Mines
 
-def oam_row_to_cmti(row:pd.Series, cmdb_id:str, oam_comm_names:pd.DataFrame, session, cm_list:list=data_tables['cm_list'], metals_dict:dict=data_tables['metals_dict'], convert_dict:dict=data_tables['convert_dict']):
+def oam_row_to_cmti(row:pd.Series, cmdb_id:str, oam_comm_names:pd.DataFrame, session, cm_list:list=data_tables['cm_list'],
+                    metals_dict:dict=data_tables['metals_dict'], convert_dict:dict=data_tables['name_convert_dict']):
 
   """
   Takes a row of the Orphaned and Abandoned Mines (OAM) databse and inserts it into the CMTI database.

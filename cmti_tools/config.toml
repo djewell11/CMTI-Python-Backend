@@ -1,5 +1,5 @@
 [sources]
-cmlist = D:\Google Drive\NRCan\Projects\CMDB\Data\cmList.csv
+critical_minerals = D:\Google Drive\NRCan\Projects\CMDB\Data\cmList.csv
 metals = D:\Google Drive\NRCan\Projects\CMDB\Data\metalList_utf.csv
 elements = D:\Google Drive\NRCan\Projects\CMDB\Data\elements.csv
 
