@@ -1,1 +1,1 @@
-from .idmanager import ProvID, ID_Manager
+from .idmanager import *

@@ -1,1 +1,1 @@
-from cmti_tools.importdata import importdata
+from .importdata import *
