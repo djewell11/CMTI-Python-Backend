@@ -17,7 +17,7 @@ from cmti_tools.idmanager import ID_Manager
 
 # CMTI Excel data entry 'worksheet'
 
-def convert_worksheet_to_db(session:Session, dataframe:pd.DataFrame, auto_generate_cmdb_ids=False):
+def convert_worksheet_to_db(session:Session, dataframe:pd.DataFrame, name_convert_dict, elements_file, auto_generate_cmdb_ids=False):
 
   """
   Take the excel version of the CMDB as a pandas DataFrame and convert to a database.
@@ -93,7 +93,9 @@ def convert_worksheet_to_db(session:Session, dataframe:pd.DataFrame, auto_genera
 
     # Commodities
     commodityCols = list(filter(lambda x: x.startswith("Commodity"), dataframe.columns))
-    get_commodities(row, commodityCols, mine, name_convert_dict=data_tables['Commodity'].to_list())
+    elements = pd.read_csv(elements_file)
+    name_convert_dict = dict(zip(elements['symbol'], elements['name']))
+    get_commodities(row, commodityCols, mine, name_convert_dict=name_convert_dict)
 
     # Owners
     ownerVals = get_table_values(row, {"Owner_Operator": "name"})
