@@ -1,6 +1,4 @@
 from sqlalchemy import select
-
-from cmti_tools.tables import Mine
 from cmti_tools.tables import Mine
 
 class ProvID:
@@ -12,14 +10,13 @@ class ProvID:
     max_id (int): The largest existing ID per that code. i.e., the integer to start with when creating  additionaly IDs.
     formatted_id (str): A concatenated string of the code and max_id.
     session (sqlalchemy Session): The SQL Alchemy Session object. Used to search for existing IDs.
-  
   """
   # Holds the highest ID for a prov_terr and can generate a new one
-  def __init__(self, code:str, session):
+  def __init__(self, code:str):
     self._code = code
-    self._max_id = self.get_highest_id()
+    # self._max_id = self.get_highest_id()
+    self._max_id = 0
     self._formatted_id = self.format_id()
-    self.session = session
 
   @property
   def code(self):
@@ -42,7 +39,7 @@ class ProvID:
   def formatted_id(self, value):
     self._formatted_id = self.format_id()
 
-  def get_highest_id(self):
+  def query_highest_id(self, session):
     """
     Query the session to get the highest ID for a given prov_terr.
 

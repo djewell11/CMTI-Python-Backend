@@ -1,1 +1,1 @@
-from cmti_tools.qualitycontrol import qualitycontrol
+from .qualitycontrol import *

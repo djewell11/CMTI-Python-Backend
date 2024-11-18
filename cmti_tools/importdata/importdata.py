@@ -1,7 +1,6 @@
-# Comment to test push
 import pandas as pd
 from sqlalchemy import select
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 
 from cmti_tools.tools import get_digits
@@ -11,15 +10,14 @@ from cmti_tools.tools import get_commodities
 from cmti_tools.tools import lon_to_utm_zone
 from cmti_tools.tools import data_tables
 from cmti_tools.tables import Mine, Owner, Alias, TailingsFacility, Impoundment, CommodityRecord, Reference, Orebody
-from cmti_tools.idmanager import idmanager
 from cmti_tools.idmanager import ProvID
-from cmti_tools.idmanager import CmtiIDManager
+from cmti_tools.idmanager import ID_Manager
 
 # Bulk import functions
 
 # CMTI Excel data entry 'worksheet'
 
-def convert_worksheet_to_db(session:sessionmaker.Session, dataframe:pd.DataFrame, auto_generate_cmdb_ids=False):
+def convert_worksheet_to_db(session:Session, dataframe:pd.DataFrame, auto_generate_cmdb_ids=False):
 
   """
   Take the excel version of the CMDB as a pandas DataFrame and convert to a database.
@@ -41,7 +39,7 @@ def convert_worksheet_to_db(session:sessionmaker.Session, dataframe:pd.DataFrame
       session.rollback()
 
   if auto_generate_cmdb_ids:
-    id_manager = idmanager.ID_Manager()
+    id_manager = ID_Manager()
 
   # Tables have to be created in the order of hierarchy. Mines first
   mines = dataframe[dataframe["Site_Type"] == "Mine"]
@@ -485,7 +483,7 @@ def ingest_oam(oam_dataframe:pd.DataFrame, session):
   :param session: The SQL Alchemy Session associated with the CMTI.
   :type session: sqlalchemy.sessionmaker.Session
   """
-  id_manager = CmtiIDManager()
+  id_manager = ID_Manager()
   comm_name_lut = pd.read_csv("/content/gdrive/MyDrive/NRCan/Projects/CMDB/Data/OAM_commodity_names.csv")
   oam_convert_dict = dict(zip(comm_name_lut['Symbol'], comm_name_lut['Full_Name']))
   for i, row in oam_dataframe.iterrows():
@@ -500,7 +498,7 @@ def ingest_oam(oam_dataframe:pd.DataFrame, session):
 
 # BC AHM - Abandoned and Historic Mines
 
-def bc_ahm_row_to_cmti(row:pd.Series, id_manager:CmtiIDManager, session):
+def bc_ahm_row_to_cmti(row:pd.Series, id_manager:ID_Manager, session):
   """
   Takes a row of the BC Abandoned and Historic Mine (BC AHM) 
   
@@ -607,9 +605,9 @@ def ingest_bc_ahm(bc_ahm_dataframe, session):
   :type session: sqlalchemy.sessionmaker.Session
   """
 
-  id_manager = CmtiIDManager()
+  id_manager = ID_Manager()
   for i, row in bc_ahm_dataframe.iterrows():
-      bc_ahm_row_to_cmti(row, id_manager, session=session)
+      bc_ahm_row_to_cmti(row, id_manager, session)
     # try:
     # except Exception as e:
     #   print(e, row) # placeholder except

@@ -1,1 +1,1 @@
-from cmti_tools.idmanager import idmanager
+from .idmanager import ProvID, ID_Manager
