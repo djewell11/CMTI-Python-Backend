@@ -3,12 +3,12 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 
-from cmti_tools.tools import get_digits
-from cmti_tools.tools import get_table_values
-from cmti_tools.tools import convert_commodity_name
-from cmti_tools.tools import get_commodities
-from cmti_tools.tools import lon_to_utm_zone
-from cmti_tools.tools import data_tables
+from cmti_tools import get_digits
+from cmti_tools import get_table_values
+from cmti_tools import convert_commodity_name
+from cmti_tools import get_commodities
+from cmti_tools import lon_to_utm_zone
+# from cmti_tools import data_tables
 from cmti_tools.tables import Mine, Owner, Alias, TailingsFacility, Impoundment, CommodityRecord, Reference, Orebody
 from cmti_tools.idmanager import ProvID
 from cmti_tools.idmanager import ID_Manager
@@ -218,7 +218,7 @@ def convert_worksheet_to_db(session:Session, dataframe:pd.DataFrame, auto_genera
 
 # OMI - Ontario Mineral Inventory
 
-def omi_row_to_cmti(row, cmdb_id, production_df, production_comm_df, session, cm_list=data_tables['cm_list'], metals_dict=data_tables['metals_dict']):
+def omi_row_to_cmti(row, cmdb_id, production_df, production_comm_df, session, cm_list, metals_dict):
   """
   Takes a row of the Ontario Mineral Inventory (OMI) databse and inserts it into the CMTI database.
 
@@ -358,8 +358,8 @@ def ingest_omi(omi_dataframe, omi_production_df, omi_prod_comm_df, session):
 
 # OAM - Orphaned and Abandoned Mines
 
-def oam_row_to_cmti(row:pd.Series, cmdb_id:str, oam_comm_names:pd.DataFrame, session, cm_list:list=data_tables['cm_list'],
-                    metals_dict:dict=data_tables['metals_dict'], convert_dict:dict=data_tables['name_convert_dict']):
+def oam_row_to_cmti(row:pd.Series, cmdb_id:str, oam_comm_names:pd.DataFrame, session, cm_list:list,
+                    metals_dict:dict, convert_dict:dict):
 
   """
   Takes a row of the Orphaned and Abandoned Mines (OAM) databse and inserts it into the CMTI database.

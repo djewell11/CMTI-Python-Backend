@@ -9,7 +9,6 @@ from sqlalchemy import select
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
-
 from cmti_tools.tables import *
 from cmti_tools.idmanager import *
 
@@ -21,7 +20,6 @@ def create_module_variables() -> dict:
   :return: dict
 
   """
-
 
   config = ConfigParser()
   config_path = pathlib.Path(__file__).parent.absolute() / "config.toml"
@@ -37,12 +35,12 @@ def create_module_variables() -> dict:
     name_convert_dict = dict(zip(elements['symbol'], elements['name']))
   return {"cm_list":critical_minerals, "metals_dict":metals_dict, "name_convert_dict":name_convert_dict}
 
-try:
-  data_tables = create_module_variables()
-except ConfigError as config_error:
-  print(config_error)
-except Exception as e:
-  print(e)
+# try:
+#   data_tables = create_module_variables()
+# except ConfigError as config_error:
+#   print(config_error)
+# except Exception as e:
+#   print(e)
 
 # try:
 #   engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost:5432/cmti')
@@ -354,7 +352,7 @@ def orm_to_csv(orm_class:object, out_name:str, session):
     [writer.writerow([getattr(row, column.name) for column in orm_class.__mapper__.columns]) for row in query]
   session.close()
 
-def db_to_dataframe(worksheet:pd.DataFrame, session, ignore_default_records:bool=True):
+def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, ignore_default_records:bool=True):
 
   """
   Converts database (in form of sqlalchemy Session) to a Pandas dataframe.
@@ -403,7 +401,7 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, ignore_default_records:bool
         # Maintain list of existing commodities to avoid duplicates
         row_commodities = [new_row[f'Commodity{n}'] for n in range(1, comm_number)]
         comm_col = f'Commodity{comm_number}'
-        code = convert_commodity_name(comm.commodity, data_tables['name_convert_dict'], 'symbol', show_warning=False)
+        code = convert_commodity_name(comm.commodity, name_convert_dict, 'symbol', show_warning=False)
         if code not in row_commodities:
           new_row[comm_col] = code
           new_row[f'{code}_Grade'] = comm.grade

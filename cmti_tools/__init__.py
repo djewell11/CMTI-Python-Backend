@@ -1,5 +1,5 @@
 from importlib.metadata import version
-from cmti_tools import *
+from .tools import *
 
 __version__ = version("cmti_tools")
 # __version__ = "0.1.3"
