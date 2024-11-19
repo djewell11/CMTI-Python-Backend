@@ -3,7 +3,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 
-from cmti_tools.tools import get_digits
+from cmti_tools import get_digits
 from cmti_tools import get_table_values
 from cmti_tools import convert_commodity_name
 from cmti_tools import get_commodities

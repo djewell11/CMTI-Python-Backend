@@ -12,6 +12,11 @@ from sqlalchemy.exc import IntegrityError
 from cmti_tools.tables import *
 from cmti_tools.idmanager import *
 
+def create_name_dict(elements_csv) -> dict:
+  elements = pd.read_csv(elements_csv)
+  name_convert_dict = dict(zip(elements['symbol'], elements['name']))
+  return name_convert_dict
+
 # Load data files from config parser
 def create_module_variables() -> dict:
   """
@@ -31,16 +36,15 @@ def create_module_variables() -> dict:
     metals = pd.read_csv(metals_file, header=0, encoding='utf-8')
     metals_dict = dict(zip(metals['Commodity'], metals['Name']))
   with open(config.get('sources', 'elements'), mode='r') as elements_file:
-    elements = pd.read_csv(elements_file)
-    name_convert_dict = dict(zip(elements['symbol'], elements['name']))
+    name_convert_dict = create_name_dict(elements_file)
   return {"cm_list":critical_minerals, "metals_dict":metals_dict, "name_convert_dict":name_convert_dict}
 
-# try:
-#   data_tables = create_module_variables()
-# except ConfigError as config_error:
-#   print(config_error)
-# except Exception as e:
-#   print(e)
+try:
+  data_tables = create_module_variables()
+except ConfigError as config_error:
+  print(config_error)
+except Exception as e:
+  print(e)
 
 # try:
 #   engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost:5432/cmti')
