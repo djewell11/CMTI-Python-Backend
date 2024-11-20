@@ -135,7 +135,7 @@ class DataGrader:
 
   def __perfect_score(self):
     perfect_score = 0
-    for point_dict in [self.main, self.comms, self.source]:
+    for point_dict in [self.main, self.comms, self.years, self.source]:
       for points in point_dict.values():
         perfect_score += points
     return perfect_score
@@ -151,22 +151,23 @@ class DataGrader:
     return initial_points
 
   def calculate_commodity_values(self, row):
-    comm_points = 0
+    comm_points_list = []
     cols_with_values = set()
     for commodity_col in self.commodity_cols:
       comm = row[commodity_col]
+      comm_points = 0
       if pd.notna(comm):
         comm = comm.strip()
-        cols_with_values.add('Commodity')
-        if f"{comm}_Produced" in row.index.tolist() and pd.notna(row[f"{comm}_Produced"]):
-          cols_with_values.add('Commodity_Produced')
-        if f"{comm}_Contained" in self.commodity_cols and pd.notna(row[f"{comm}_Contained"]):
-          cols_with_values.add('Commodity_Contained')
-        if f"{comm}_Grade" in self.commodity_cols and pd.notna(row[f"{comm}_Grade"]):
-          cols_with_values.add('Commodity_Grade')
-    for col in cols_with_values:
-      comm_points += comm_dict[col]
-    return comm_points
+        comm_points += comm_dict['Commodity']
+        if f"{comm}_Produced" in row.index.to_list() and pd.notna(row[f"{comm}_Produced"]):
+          comm_points += comm_dict['Commodity_Produced']
+        if f"{comm}_Contained" in row.index.to_list() and pd.notna(row[f"{comm}_Contained"]):
+          comm_points += comm_dict['Commodity_Contained']
+        if f"{comm}_Grade" in row.index.to_list() and pd.notna(row[f"{comm}_Grade"]):
+          comm_points += comm_dict['Commodity_Grade']
+      comm_points_list.append(comm_points)
+
+    return max(comm_points_list)
 
   def calculate_year_values(self, row):
     for col in self.years.keys():
@@ -182,12 +183,12 @@ class DataGrader:
     for i in range(1, self.source_col_count+1):
       source_points = 0
       if pd.notna(row[f'Source_{i}']):
+        source_points += source_dict['Source']
         if pd.notna(row[f'Source_{i}_ID']):
           source_points += source_dict['Source_ID']
         elif pd.notna(row[f'Source_{i}_Link']) and pd.isna(row[f'Source_{i}_ID']):
           source_points += source_dict['Source_Link']
-        else:
-          source_points += source_dict['Source']
+
       points_list.append(source_points)
     return max(points_list)
 
