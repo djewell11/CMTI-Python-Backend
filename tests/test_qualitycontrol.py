@@ -40,7 +40,7 @@ grader = DataGrader(
         'Source_Link':3,
         'Source_ID': 5
     },
-    comm_col_count = 1, source_col_count = 1
+    comm_col_count = 2, source_col_count = 1
 )
 
 def test_perfect_row():
@@ -65,8 +65,11 @@ def test_assign_score():
         'Mine_Status': 'Closed',
         'Owner_Operator': None,
         'Commodity1': 'Au',
-        'Au_Produced': 1000,
-        'Au_Grade': 100,
+        'Au_Produced': None,
+        'Au_Grade': None,
+        'Commodity2': 'Ag',
+        'Ag_Produced': 500,
+        'Ag_Grade': None,
         'Construction_Year': 'Unknown',
         'Source_1': 'Source',
         'Source_1_ID': None,
@@ -74,7 +77,7 @@ def test_assign_score():
     })
 
     score = grader.assign_score(row)
-    expected_points = 23
+    expected_points = 18
 
     expected_score = round((expected_points/grader.perfect_score)*100, 2)
     assert score == expected_score
