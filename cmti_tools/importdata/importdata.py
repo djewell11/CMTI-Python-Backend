@@ -15,6 +15,260 @@ from cmti_tools.idmanager import ID_Manager
 
 # Bulk import functions
 
+# Abstract Classes implementation
+
+from abc import ABC, abstractmethod
+
+class DataImport(ABC):
+  def __init__(self, session: Session):
+    self.session = session
+    self.id_manager = ID_Manager()
+
+  @abstractmethod
+  def process_row(self, row: pd.Series):
+    """
+    Process a single row and add to db
+    """
+    pass
+
+  def commit_object(self, obj):
+    """
+    Commit an object to session
+    """
+    try:
+      self.session.add(obj)
+      self.session.commit()
+    except IntegrityError as e:
+      print(e)
+      self.session.rollback()
+  
+  def ingest_dataframe(self, dataframe: pd.DataFrame):
+    """
+    Ingest a dataframe into database
+    """
+    for _, row in dataframe.iterrows():
+      self.process_row(row)
+    self.session.close()
+
+class OMIImporter(DataImport):
+  def __init__(self, session: Session, production_df: pd.DataFrame, production_comm_df: pd.DataFrame):
+    super().__init__(session)
+    self.production_df = production_df
+    self.production_comm_df = production_comm_df
+    self.prov_id = ProvID("ON")
+  
+  def process_row(self, row: pd.Series):
+    try:
+      amis_id = row['AMIS_ID']
+      # omi_id = row['MD_ID']
+      # OMI records with AMIS IDs that match an existing record in the database
+      # IMPORTANT - Currently assuming all IDs are AMIS, as this seems to be how the worksheet was filled.
+        #Should revisit after QA (currently all sources listed as 'SPE' but seem to match)
+      # If secondary matching strategy (name, coordinates, etc.) is desired, it will go in this function.
+      cmdb_ids = []
+      if pd.notna(amis_id):
+        amis_int = str(amis_id)
+        amis_matched = select(Mine).filter(
+          Mine.prov_terr == 'ON',
+          Mine.references.any(
+              (Reference.source == 'Abandoned Mines Information System') | (Reference.source == "AMIS")),
+        ).where(
+          Mine.references.any(Reference.source_id == amis_int)
+        )
+        with self.session.execute(amis_matched).unique().scalars() as q:
+          for q_row in q.all():
+            # If matching, get existing CMIM ID
+            cmdb_ids.append(q_row.cmdb_id)
+      cmim_len = len(cmdb_ids)
+      if cmim_len == 0:
+        # Create new ID
+        self.prov_id.update_id()
+        newID = self.prov_id.formatted_id
+        self._omi_row_to_cmti(row, newID)
+      elif cmim_len == 1:
+        cmdb_id = cmdb_ids[0]
+        self._omi_row_to_cmti(row, cmdb_id)
+      elif cmim_len > 1:
+        # Not sure how to handle this yet. Maybe use secondary matching to see if record already exists
+        pass
+    except Exception as e:
+      print(e)
+    self.session.commit()
+
+  def _omi_row_to_cmti(self, row, cmdb_id):
+    mine = Mine(
+      cmdb_id = cmdb_id,
+      name = row["NAME"],
+      latitude = row["LAT_DEC"],
+      longitude = row["LNG_DEC"],
+      mining_method = row["MINING_METHOD"],
+      prov_terr="ON"
+    )
+    self.commit_object(mine)
+
+    prod_ids = self.production_df[self.production_df.MD_ID == row.MD_ID].ID
+    for prod_id in prod_ids:
+      prod_comms = self.production_comm_df[self.production_comm_df.PRODUCTION_ID == prod_id]
+      for _, comm_row in prod_comms.iterrows():
+        commodity = CommodityRecord(
+          mine = mine,
+          commodity = comm_row["COMMODITY_CODE"],
+          produced = comm_row["COMMODITY_MASS"],
+          produced_unit = comm_row["UNIT_OF_MEASURE"]
+        )
+        self.commit_object(commodity)
+    
+    tsf = TailingsFacility(default = True, name = f"default_TSF_{mine.name}".strip())
+    mine.tailings_facilities.append(tsf)
+    self.commit_object(tsf)
+
+    impoundment = Impoundment(parentTsf = tsf, default = True, name = f"{tsf.name}_impoundment")
+    self.commit_object(impoundment)
+
+    omi_reference = Reference(mine=mine, source = "OMI", source_id = row["MD_ID"])
+    self.commit_object(omi_reference)
+
+class OAMImporter(DataImport):
+  def __init__(self, session: Session, oam_comm_names: pd.DataFrame, cm_list: list, metals_dict: dict, convert_dict: dict):
+    super().__init__(session)
+    self.oam_comm_names = oam_comm_names
+    self.cm_list = cm_list
+    self.metals_dict = metals_dict
+    self.convert_dict = convert_dict
+
+  def check_year(self, val):
+    if isinstance(val, str):
+      return get_digits(val)
+    elif pd.isna(val):
+      return None
+    else:
+      return val
+
+  def process_row(self, row: pd.Series):
+    provID = getattr(self.id_manager, row["Jurisdiction"])
+    provID.update_id()
+    cmdb_id = provID.formatted_id
+    self._oam_row_to_cmti(row, cmdb_id)
+
+  def _oam_row_to_cmti(self, row: pd.Series, cmdb_id: str):
+    mine = Mine(
+      cmdb_id = cmdb_id,
+      name = row["Name"].title(),
+      latitude = row["Lat_DD"],
+      longitude = row["Long_DD"],
+      prov_terr = row["Jurisdiction"],
+      mine_status = row["Status"],
+      mine_type = row["Mine_Type"],
+      construction_year = row["Start_Date"]
+    )
+    self.commit_object(mine)
+
+    comm_code = row['Commodity_Code']
+    comm_full = row['Commodity_Full_Name'] # Records have either code or full name. Check both.
+    comm_name = comm_code if pd.notna(comm_code) else comm_full # This assumes that no records have both.
+    if pd.notna(comm_name):
+      try:
+        # Sometimes multiple listed in code, split it up and add one entry for each
+        commodities = [comm.strip() for comm in comm_name.split(",")]
+        for comm in commodities:
+          # Convert to full name using OAM name values, then to element names
+          comm_full_oam = convert_commodity_name(comm, self.oam_comm_names, output_type='full', show_warning=False)
+          comm_name = convert_commodity_name(comm_full_oam, self.convert_dict, output_type='symbol', show_warning=False)
+          # print(f"{comm} -- {comm_full_oam} -- {comm_name}")
+          start_year = self.check_year(row['Start_Date'])
+          end_year = self.check_year(row['Last_Year'])
+          produced = row["Mined_Quantity"] if pd.notna(row["Mined_Quantity"]) else None
+          commodityRecord = CommodityRecord(
+            mine=mine,
+            commodity=comm_name,
+            produced=produced,
+            source_year_start=start_year,
+            source_year_end=end_year
+          )
+          commodityRecord.is_critical = True if comm_name in self.cm_list['Commodity'].tolist() else False
+          commodityRecord.is_metal = self.metals_dict.get(comm_name)
+      except Exception as e:
+        self.session.rollback()
+        print(e)
+
+    tsf = TailingsFacility(default = True, name = f"default_TSF_{mine.name}".strip())
+    mine.tailings_facilities.append(tsf)
+    self.commit_object(tsf)
+
+    impoundment = Impoundment(parentTsf = tsf, default = True, name = f"{tsf.name}_impoundment")
+    self.commit_object(impoundment)
+
+    owner = Owner(name = row["Last_Operator"])
+    owner.mines.append(mine)
+    self.commit_object(owner)
+
+    oam_reference = Reference(mine = mine, source = "OAM", source_id = row["OID"], link = row["URL"])
+    self.commit_object(oam_reference)
+
+class BCAHMImporter(DataImport):
+  def __init__(self, session: Session):
+    super().__init__(session)
+  
+  def process_row(self, row: pd.Series):
+    cmdb_id = self.id_manager.BC.formatted_id
+    self._bc_ahm_row_to_cmti(row, cmdb_id)
+    
+  def _bc_ahm_row_to_cmti(self, row: pd.Series, cmdb_id: str):
+    mine_vals = {
+      "name": row["NAME1"],
+      "latitude": row["LATITUDE"],
+      "longitude": row["LONGITUDE"],
+      "utm_zone": row["UTM_ZONE"],
+      "northing": row["UTM_NORT"],
+      "easting": row["UTM_EAST"],
+      "year_opened": row["First_Year"],
+      "year_closed": row["Last_Year"],
+      "nts_area": row["NTSMAP_C1"],
+      "prov_terr": "BC",
+      "mine_status": "Inactive"
+    }
+
+    if (pd.isna(mine_vals["latitude"]) or mine_vals["latitude"] == 'Null') or \
+      (pd.isna(mine_vals["longitude"]) or mine_vals["longitude"] == 'Null'):
+        return
+    
+    if mine_vals['northing'] == 'Null' or pd.isna(mine_vals['northing']):
+      del(mine_vals['northing'])
+    if mine_vals['easting'] == 'Null' or pd.isna(mine_vals['easting']):
+      del(mine_vals['easting'])
+    if pd.isna(mine_vals['utm_zone']) or mine_vals['utm_zone'] == 'Null':
+      mine_vals['utm_zone'] = lon_to_utm_zone(mine_vals['longitude'])
+    
+    mine = Mine(cmdb_id = cmdb_id, **mine_vals)
+    self.commit_object(mine)
+    self.id_manager.BC.update_id()
+
+    if pd.notna(row["NAME2"]):
+      alias = Alias(mine=mine, alias=row["NAME2"])
+      self.commit_object(alias)
+    
+    tsf = TailingsFacility(default = True, name = f"default_TSF_{mine_vals['name']}".strip())
+    mine.tailings_facilities.append(tsf)
+    self.commit_object(tsf)
+    self.id_manager.BC.update_id()
+
+    impoundment = Impoundment(parentTsf=tsf, default=True, name=f"{tsf.name}_impoundment")
+    self.commit_object(impoundment)
+    self.id_manager.BC.update_id()
+
+    reference = Reference(mine = mine, source = "BCAHM", source_id = str(row.OBJECTID))
+    self.commit_object(reference)
+    if row.MINEFILNO != "Null":
+      minefileref = Reference(mine = mine, source = "BC Minfile", source_id = row. MINFILNO)
+      self.commit_object(minefileref)
+
+    orebody = Orebody(mine = mine, ore_type = row["DEPOSITTYPE_D1"], ore_class = row["DEPOSITCLASS_D1"])
+    self.commit_object(orebody)
+    if row["DEPOSITTYPE_D2"] != "Null":
+      orebody2 = Orebody(mine = mine, ore_type = row["DEPOSITTYPE_D2"], ore_class = row["DEPOSITCLASS_D2"])
+      self.commit_object(orebody2)
+    
+
 # CMTI Excel data entry 'worksheet'
 
 def convert_worksheet_to_db(session:Session, dataframe:pd.DataFrame, name_convert_dict, elements_file, auto_generate_cmdb_ids=False):
