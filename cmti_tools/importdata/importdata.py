@@ -44,7 +44,10 @@ class DataImport(ABC):
   
   def ingest_dataframe(self, dataframe: pd.DataFrame):
     """
-    Ingest a dataframe into database
+    Iterates through dataframe rows and calls process_row function.
+
+    :param dataframe: OMI, OAM, or BC AHM dataframe
+    :type dataframe: pandas.DataFrame
     """
     for _, row in dataframe.iterrows():
       self.process_row(row)
@@ -214,6 +217,16 @@ class BCAHMImporter(DataImport):
     self._bc_ahm_row_to_cmti(row, cmdb_id)
     
   def _bc_ahm_row_to_cmti(self, row: pd.Series, cmdb_id: str):
+    """
+    Takes a row of the BC Abandoned and Historic Mine (BC AHM) 
+    
+    :param row: A row from the bc_ahm DataFrame.
+    :type row: pandas.Series
+
+    :param cmdb_id: BC formatted id
+    :type cmdb_id: str
+    """
+    
     mine_vals = {
       "name": row["NAME1"],
       "latitude": row["LATITUDE"],
@@ -228,10 +241,12 @@ class BCAHMImporter(DataImport):
       "mine_status": "Inactive"
     }
 
+    # If either lat or lon are missin, don't add that record
     if (pd.isna(mine_vals["latitude"]) or mine_vals["latitude"] == 'Null') or \
       (pd.isna(mine_vals["longitude"]) or mine_vals["longitude"] == 'Null'):
         return
     
+    # Check coordinates for null strings as well
     if mine_vals['northing'] == 'Null' or pd.isna(mine_vals['northing']):
       del(mine_vals['northing'])
     if mine_vals['easting'] == 'Null' or pd.isna(mine_vals['easting']):
@@ -243,31 +258,225 @@ class BCAHMImporter(DataImport):
     self.commit_object(mine)
     self.id_manager.BC.update_id()
 
+    # Create alias if there's another name
     if pd.notna(row["NAME2"]):
       alias = Alias(mine=mine, alias=row["NAME2"])
       self.commit_object(alias)
     
+    # TSF
     tsf = TailingsFacility(default = True, name = f"default_TSF_{mine_vals['name']}".strip())
     mine.tailings_facilities.append(tsf)
     self.commit_object(tsf)
     self.id_manager.BC.update_id()
 
+    # Impoundment
     impoundment = Impoundment(parentTsf=tsf, default=True, name=f"{tsf.name}_impoundment")
     self.commit_object(impoundment)
     self.id_manager.BC.update_id()
 
+    #Reference
     reference = Reference(mine = mine, source = "BCAHM", source_id = str(row.OBJECTID))
     self.commit_object(reference)
     if row.MINEFILNO != "Null":
       minefileref = Reference(mine = mine, source = "BC Minfile", source_id = row. MINFILNO)
       self.commit_object(minefileref)
 
+    # Orebody
     orebody = Orebody(mine = mine, ore_type = row["DEPOSITTYPE_D1"], ore_class = row["DEPOSITCLASS_D1"])
     self.commit_object(orebody)
     if row["DEPOSITTYPE_D2"] != "Null":
       orebody2 = Orebody(mine = mine, ore_type = row["DEPOSITTYPE_D2"], ore_class = row["DEPOSITCLASS_D2"])
       self.commit_object(orebody2)
     
+class ExcelImporter(DataImport):
+  def __init__(self, session: Session, name_convert_dict: dict, elements_file, auto_generate_cmdb_ids = False):
+    super().__init__(session)
+    self.name_convert_dict = name_convert_dict
+    self.elements_file = elements_file
+    self.auto_generate_cmdb_ids = auto_generate_cmdb_ids
+    if auto_generate_cmdb_ids:
+      self.id_manager = ID_Manager()
+    
+  def process_row(self, row: pd.Series):
+    site_type = row['Site_Type']
+    if site_type == "Mine":
+      self.process_mine(row)
+    elif site_type == "TSF":
+      self.process_tsf(row)
+    elif site_type == "Impoundment":
+      self.process_impoundment(row)
+
+  def process_mine(self, row: pd.Series):
+    mine_vals = get_table_values(row, {
+      "CMIM_ID": "cmdb_id",
+      "Site_Name": "name",
+      "Province_Territory": "prov_terr",
+      "Last_Revised": "last_revised",
+      "NAD": "nad",
+      "UTM_Zone": "utm_zone",
+      "Easting": "easting",
+      "Northing": "northing",
+      "Latitude": "latitude",
+      "Longitude": "longitude",
+      "NTS_Area": "nts_area",
+      "Mining_District": "mining_district",
+      "Mine_Type": "mine_type",
+      "Mine_Status": "mine_status",
+      "Mining_Method": "mining_method",
+      "Dev_Stage": "development_stage",
+      "Site_Access": "site_access",
+      # "Construction_Year": "construction_year"
+    })
+
+    if pd.isna(row.CMIM_ID) and self.auto_generate_cmdb_ids:
+      prov_id = getattr(self.id_manager, mine_vals['prov_terr'])
+      mine_vals['cmdb_id'] = prov_id.formatted_id
+      prov_id.update_id()
+
+    # Work-around - some construction years are lists corresponding to multiple construction activities. For now, take lowest
+    # if mineVals.get('Construction_Year') is not None:
+    #   constructionYears = [int(year.strip()) for year in mineVals.get('Construction_Year').split(",")]
+    #   lowestYear = min(constructionYears)
+    #   # Override dict value for construction year
+    #   mineVals['Construction_Year'] = lowestYear
+    mine = Mine(**mine_vals)
+    self.commit_object(mine)
+
+    # Mine alias (alternative names)
+    # There are often multiple comma-separated aliases. Split them up
+    aliases = row['Site_Aliases']
+    if pd.notna(aliases):
+      # Check if more than one
+      aliasesList = [alias.strip() for alias in aliases.split(",")]
+      for aliasName in aliasesList:
+        alias = Alias(alias=aliasName)
+        alias.mine=mine
+        self.commit_object(alias)
+
+    # Commodities
+    commodityCols = list(filter(lambda x: x.startswith("Commodity"), row.index))
+    elements = pd.read_csv(self.elements_file)
+    name_convert_dict = dict(zip(elements['symbol'], elements['name']))
+    get_commodities(row, commodityCols, mine, name_convert_dict=name_convert_dict)
+
+    # Owners
+    ownerVals = get_table_values(row, {"Owner_Operator": "name"})
+    owner = Owner(**ownerVals)
+    if pd.notna(owner.name):
+      owner.mine = mine
+      mine.owners.append(owner)
+      self.commit_object(owner)
+
+    #References and links
+    source_quantity = 4 # Number of source columns
+    source_cols = [f"Source_{n+1}" for n in range(source_quantity)]
+    for col in source_cols:
+      source = row[col]
+      if pd.notna(source):
+        source_id = row[f"{col}_ID"]
+        link = row[f"{col}_Link"]
+        reference = Reference(mine=mine, source=source, source_id=source_id, link=link)
+        self.commit_object(reference)
+
+    # Default tailings facility. Every mine gets one
+    defaultTSFVals = get_table_values(row, {
+        "Mine_Status": "status",
+        "Hazard_Class": "hazard_class"
+    })
+    defaultTSFVals["name"] = f"defaultTSF_{mine.name}".strip()
+    defaultTSFVals["default"] = True
+    defaultTSF = TailingsFacility(**defaultTSFVals)
+    mine.tailings_facilities.append(defaultTSF)
+    self.commit_object(defaultTSF)
+
+    # Default impoundment. Every default tailings facility gets one
+    defaultImpoundmentVals = get_table_values(row, {
+      "Tailings_Area": "area",
+      "Tailings_Volume": "volume",
+      "Tailings_Capacity": "capacity",
+      "Tailings_Storage_Method": "storage_method",
+      "Current_Max_Height": "max_height",
+      "Acid_Generating" : "acid_generating",
+      "Treatment": "treatment"
+      # "Rating_Index": "rating_index",
+      # "History_Stability_Concerns": "stability_concerns"
+    })
+    defaultImpoundmentVals['default'] = True
+    # QA for quantified columns
+    for key in ["area", "volume", "capacity", "max_height"]:
+      val = defaultImpoundmentVals.get(key)
+      if isinstance(val, str):
+        try:
+          digits = get_digits(defaultImpoundmentVals[key])
+          defaultImpoundmentVals[key] = digits
+        except ValueError:
+          # If value can't be converted (i.e., doesn't contain digits), remove it. Property in table will be blank
+          del(defaultImpoundmentVals[key])
+    defaultImpoundmentVals["name"] = f"{defaultTSF.name}_impoundment"
+    defaultImpoundment = Impoundment(parentTsf=defaultTSF, **defaultImpoundmentVals)
+    self.commit_object(defaultImpoundment)
+
+    # orebodyVals = get_table_values(row, {
+    #   "Orebody_Type": "ore_type",
+    #   "Orebody_Class": "ore_class",
+    #   "Ore_Minerals": "mineral",
+    #   "Ore_Processed": "ore_processed"
+    # })
+    # orebody = Orebody(**orebodyVals)
+    # session.flush()
+  
+  def process_tsf(self, row: pd.Series):
+    tsfVals = get_table_values(row, {
+        "Site_Name": "name",
+        "CMIM_ID": 'cmdb_id',
+        "Mine_Status": "status",
+        "Hazard_Class": "hazard_class",
+        "Latitude": "latitude",
+        "Longitude": "longitude"
+    })
+    
+    tsf = TailingsFacility(**tsfVals)
+    
+    # Get parent mines. It's possible to have more than one
+    parentID = str(row['Parent_ID']).strip(",")
+    for id in parentID:
+      mine = self.session.query(Mine).filter(Mine.cmdb_id == id).first()
+      if pd.notna(mine):
+        mine.tailings_facilities.append(tsf)
+    
+    self.commit_object(tsf)
+
+  def process_impoundment(self, row: pd.Series):
+    parentID = row['Parent_ID']
+    parentTsf = self.session.query(TailingsFacility).filter(TailingsFacility.cmdb_id == parentID).first()
+    if pd.notna(parentTsf):
+      impoundmentVals = get_table_values(row, {
+        "Site_Name": "name",
+        "Tailings_Area": "area",
+        "Tailings_Volume": "volume",
+        "Tailings_Capacity": "capacity",
+        "Tailings_Storage_Method": "storage_method",
+        "Current_Max_Height": "max_height",
+        "Acid_Generating" : "acid_generating",
+        "Treatment": "treatment",
+        "Rating_Index": "rating_index",
+        "History_Stability_Concerns": "stability_concerns"
+      })
+      impoundmentVals['default'] = False
+      # QA for quantified columns
+      for key in ["area", "volume", "capacity", "max_height"]:
+        val = impoundmentVals.get(key)
+        if isinstance(val, str):
+          try:
+            digits = get_digits(impoundmentVals[key])
+            impoundmentVals[key] = digits
+          except ValueError:
+            # If value can't be converted (i.e., doesn't contain digits), remove it. Property in table will be blank
+            del(impoundmentVals[key])
+
+      impoundment = Impoundment(parentTsf=parentTsf, **impoundmentVals)
+      self.commit_object(impoundment)
+
 
 # CMTI Excel data entry 'worksheet'
 
