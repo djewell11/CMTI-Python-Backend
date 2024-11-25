@@ -227,58 +227,62 @@ class WorksheetImporter(DataImport):
       impoundment = Impoundment(parentTsf=parentTsf, **impoundmentVals)
       self.commit_object(impoundment)
 
-# class OMIImporter(DataImport):
-#   def __init__(self, session: Session):
-#     super().__init__(session)
-#     self.prov_id = ProvID("ON")
+class OMIImporter(DataImport):
+  def __init__(self, session: Session):
+    super().__init__(session)
+    self.prov_id = ProvID("ON")
   
-#   def process_row(self, row: pd.Series):
-#     try:
+  def process_row(self, row: pd.Series):
+    try:
+      row_id = self.prov_id.formatted_id
+      self.prov_id.update_id()
+      mine = Mine(
+        cmdb_id = row_id,
+        name = row["NAME"],
+        latitude = row["LATITUDE"],
+        longitude = row["LONGITUDE"],
+        prov_terr="ON",
+        mining_district = row['RGP_DIST']
+      )
+      self.commit_object(mine)
+
+      # Aliases
+      aliases = [name.strip() for name in row['ALL_NAMES'].split(",")]
+      for alias_val in aliases:
+        alias = Alias(mine=mine, alias=alias_val)
+        self.commit_object(alias)
       
-#     except Exception as e:
-#       print(e)
-#     self.session.commit()
+      # Commodities
+      primary_commodities = row['P_COMMOD']
+      secondary_commodities = row['S_COMMOD']
+      commodities = primary_commodities + secondary_commodities
+      for comm in commodities:
+        comm_converted = convert_commodity_name(comm)
+        comm_record = CommodityRecord(mine=mine, commodity=comm_converted, source='OMI', source_id=row['MDI_IDENT'])
+        # TODO: Incorporate is_critical and metal_type
+        self.commit_object(comm_record)
 
-#   def _omi_row_to_cmti(self, row, cmdb_id):
-#     mine = Mine(
-#       cmdb_id = cmdb_id,
-#       name = row["NAME"],
-#       latitude = row["LAT_DEC"],
-#       longitude = row["LNG_DEC"],
-#       mining_method = row["MINING_METHOD"],
-#       prov_terr="ON"
-#     )
-#     self.commit_object(mine)
+      # Default TSF
+      tsf = TailingsFacility(default = True, name = f"default_TSF_{mine.name}".strip())
+      mine.tailings_facilities.append(tsf)
+      self.commit_object(tsf)
 
-#     prod_ids = self.production_df[self.production_df.MD_ID == row.MD_ID].ID
-#     for prod_id in prod_ids:
-#       prod_comms = self.production_comm_df[self.production_comm_df.PRODUCTION_ID == prod_id]
-#       for _, comm_row in prod_comms.iterrows():
-#         commodity = CommodityRecord(
-#           mine = mine,
-#           commodity = comm_row["COMMODITY_CODE"],
-#           produced = comm_row["COMMODITY_MASS"],
-#           produced_unit = comm_row["UNIT_OF_MEASURE"]
-#         )
-#         self.commit_object(commodity)
-    
-#     tsf = TailingsFacility(default = True, name = f"default_TSF_{mine.name}".strip())
-#     mine.tailings_facilities.append(tsf)
-#     self.commit_object(tsf)
+      # Default Impoundment
+      impoundment = Impoundment(parentTsf = tsf, default = True, name = f"{tsf.name}_impoundment")
+      self.commit_object(impoundment)
 
-#     impoundment = Impoundment(parentTsf = tsf, default = True, name = f"{tsf.name}_impoundment")
-#     self.commit_object(impoundment)
+      omi_reference = Reference(mine=mine, source = "OMI", source_id = row["MDI_IDENT"])
+      self.commit_object(omi_reference)
+    except Exception as e:
+      print(e)
 
-#     omi_reference = Reference(mine=mine, source = "OMI", source_id = row["MD_ID"])
-#     self.commit_object(omi_reference)
-
-# class OAMImporter(DataImport):
-#   def __init__(self, session: Session, oam_comm_names: pd.DataFrame, cm_list: list, metals_dict: dict, convert_dict: dict):
-#     super().__init__(session)
-#     self.oam_comm_names = oam_comm_names
-#     self.cm_list = cm_list
-#     self.metals_dict = metals_dict
-#     self.convert_dict = convert_dict
+class OAMImporter(DataImport):
+  def __init__(self, session: Session, oam_comm_names: pd.DataFrame, cm_list: list, metals_dict: dict, convert_dict: dict):
+    super().__init__(session)
+    self.oam_comm_names = oam_comm_names
+    self.cm_list = cm_list
+    self.metals_dict = metals_dict
+    self.convert_dict = convert_dict
 
   def check_year(self, val):
     if isinstance(val, str):
