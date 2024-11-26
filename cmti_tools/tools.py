@@ -127,7 +127,8 @@ def convert_commodity_name(name:str, name_convert_dict:dict, output_type:str="fu
   else:
     raise ValueError("output_type must be either 'full' or 'symbol'")
   
-def get_commodity(row:pd.Series, commodity_column:str, critical_mineral_list:list, name_convert_dict:dict, metals_dict:dict, mine:Mine, name_type:str="full") -> CommodityRecord:
+def get_commodity(row:pd.Series, commodity_column:str, critical_mineral_list:list, name_convert_dict:dict, 
+                  metals_dict:dict, mine:Mine, name_type:str="full") -> CommodityRecord:
   """
   Takes multiple commodity columns from the spreadsheet and creates a CommodityRecord.
 

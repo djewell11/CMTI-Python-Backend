@@ -2,22 +2,20 @@ import pandas as pd
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
+from abc import ABC, abstractmethod
 
 from cmti_tools.tools import get_digits
 from cmti_tools import get_table_values
 from cmti_tools import convert_commodity_name
-from cmti_tools import get_commodities
+from cmti_tools import get_commodity
 from cmti_tools import lon_to_utm_zone
-# from cmti_tools import data_tables
-from cmti_tools.tables import Mine, Owner, Alias, TailingsFacility, Impoundment, CommodityRecord, Reference, Orebody
+from cmti_tools.tables import *
 from cmti_tools.idmanager import ProvID
 from cmti_tools.idmanager import ID_Manager
 
 # Bulk import functions
 
 # Abstract Classes implementation
-
-from abc import ABC, abstractmethod
 
 class DataImport(ABC):
   def __init__(self, session: Session):
@@ -113,10 +111,12 @@ class WorksheetImporter(DataImport):
         self.commit_object(alias)
 
     # Commodities
-    commodityCols = list(filter(lambda x: x.startswith("Commodity"), row.index))
+    commodity_cols = list(filter(lambda x: x.startswith("Commodity"), row.index))
     elements = pd.read_csv(self.elements_file)
     name_convert_dict = dict(zip(elements['symbol'], elements['name']))
-    get_commodities(row, commodityCols, mine, name_convert_dict=name_convert_dict)
+    for comm in commodity_cols:
+      comm_record = get_commodity(row, comm, mine, name_convert_dict=name_convert_dict)
+      self.commit_object(comm_record)
 
     # Owners
     ownerVals = get_table_values(row, {"Owner_Operator": "name"})
@@ -432,210 +432,6 @@ class BCAHMImporter(DataImport):
     if row["DEPOSITTYPE_D2"] != "Null":
       orebody2 = Orebody(mine = mine, ore_type = row["DEPOSITTYPE_D2"], ore_class = row["DEPOSITCLASS_D2"])
       self.commit_object(orebody2)
-    
-
-# CMTI Excel data entry 'worksheet'
-
-def convert_worksheet_to_db(session:Session, dataframe:pd.DataFrame, name_convert_dict, elements_file, auto_generate_cmdb_ids=False):
-
-  """
-  Take the excel version of the CMDB as a pandas DataFrame and convert to a database.
-
-  :param session: An sqlalchemy session object. Designed for postgres, using other database dialects may not work.
-  :type session: sqlalchemy.orm.Session
-
-  :param dataframe: A pandas DataFrame version of the CMDB
-  :type dataframe: pandas.DataFrame
-
-  :return: None
-  """
-
-  def _commit_object(obj):
-    try:
-      session.add(obj)
-      session.commit()
-    except IntegrityError:
-      session.rollback()
-
-  if auto_generate_cmdb_ids:
-    id_manager = ID_Manager()
-
-  # Tables have to be created in the order of hierarchy. Mines first
-  mines = dataframe[dataframe["Site_Type"] == "Mine"]
-  for i, row in mines.iterrows():
-    # Create one db row per mine. TSFs and impoundments are added after
-    mineVals = get_table_values(row, {
-      "CMIM_ID": "cmdb_id",
-      "Site_Name": "name",
-      "Province_Territory": "prov_terr",
-      "Last_Revised": "last_revised",
-      "NAD": "nad",
-      "UTM_Zone": "utm_zone",
-      "Easting": "easting",
-      "Northing": "northing",
-      "Latitude": "latitude",
-      "Longitude": "longitude",
-      "NTS_Area": "nts_area",
-      "Mining_District": "mining_district",
-      "Mine_Type": "mine_type",
-      "Mine_Status": "mine_status",
-      "Mining_Method": "mining_method",
-      "Dev_Stage": "development_stage",
-      "Site_Access": "site_access",
-      # "Construction_Year": "construction_year"
-    })
-
-    if pd.isna(row.CMIM_ID) and auto_generate_cmdb_ids:
-      prov_id = getattr(id_manager, mineVals['prov_terr'])
-      mineVals['cmdb_id'] = prov_id.formatted_id
-      prov_id.update_id()
-
-    # Work-around - some construction years are lists corresponding to multiple construction activities. For now, take lowest
-    # if mineVals.get('Construction_Year') is not None:
-    #   constructionYears = [int(year.strip()) for year in mineVals.get('Construction_Year').split(",")]
-    #   lowestYear = min(constructionYears)
-    #   # Override dict value for construction year
-    #   mineVals['Construction_Year'] = lowestYear
-    mine = Mine(**mineVals)
-    _commit_object(mine)
-
-    # Mine alias (alternative names)
-    # There are often multiple comma-separated aliases. Split them up
-    aliases = row['Site_Aliases']
-    if pd.notna(aliases):
-      # Check if more than one
-      aliasesList = [alias.strip() for alias in aliases.split(",")]
-      for aliasName in aliasesList:
-        alias = Alias(alias=aliasName)
-        alias.mine=mine
-        _commit_object(alias)
-
-    # Commodities
-    commodityCols = list(filter(lambda x: x.startswith("Commodity"), dataframe.columns))
-    elements = pd.read_csv(elements_file)
-    name_convert_dict = dict(zip(elements['symbol'], elements['name']))
-    get_commodities(row, commodityCols, mine, name_convert_dict=name_convert_dict)
-
-    # Owners
-    ownerVals = get_table_values(row, {"Owner_Operator": "name"})
-    owner = Owner(**ownerVals)
-    if pd.notna(owner.name):
-      owner.mine = mine
-      mine.owners.append(owner)
-      _commit_object(owner)
-
-    #References and links
-    source_quantity = 4 # Number of source columns
-    source_cols = [f"Source_{n+1}" for n in range(source_quantity)]
-    for col in source_cols:
-      source = row[col]
-      if pd.notna(source):
-        source_id = row[f"{col}_ID"]
-        link = row[f"{col}_Link"]
-        reference = Reference(mine=mine, source=source, source_id=source_id, link=link)
-        _commit_object(reference)
-
-    # Default tailings facility. Every mine gets one
-    defaultTSFVals = get_table_values(row, {
-        "Mine_Status": "status",
-        "Hazard_Class": "hazard_class"
-    })
-    defaultTSFVals["name"] = f"defaultTSF_{mine.name}".strip()
-    defaultTSFVals["default"] = True
-    defaultTSF = TailingsFacility(**defaultTSFVals)
-    mine.tailings_facilities.append(defaultTSF)
-    _commit_object(defaultTSF)
-
-    # Default impoundment. Every default tailings facility gets one
-    defaultImpoundmentVals = get_table_values(row, {
-      "Tailings_Area": "area",
-      "Tailings_Volume": "volume",
-      "Tailings_Capacity": "capacity",
-      "Tailings_Storage_Method": "storage_method",
-      "Current_Max_Height": "max_height",
-      "Acid_Generating" : "acid_generating",
-      "Treatment": "treatment"
-      # "Rating_Index": "rating_index",
-      # "History_Stability_Concerns": "stability_concerns"
-    })
-    defaultImpoundmentVals['default'] = True
-    # QA for quantified columns
-    for key in ["area", "volume", "capacity", "max_height"]:
-      val = defaultImpoundmentVals.get(key)
-      if isinstance(val, str):
-        try:
-          digits = get_digits(defaultImpoundmentVals[key])
-          defaultImpoundmentVals[key] = digits
-        except ValueError:
-          # If value can't be converted (i.e., doesn't contain digits), remove it. Property in table will be blank
-          del(defaultImpoundmentVals[key])
-    defaultImpoundmentVals["name"] = f"{defaultTSF.name}_impoundment"
-    defaultImpoundment = Impoundment(parentTsf=defaultTSF, **defaultImpoundmentVals)
-    _commit_object(defaultImpoundment)
-
-    # orebodyVals = get_table_values(row, {
-    #   "Orebody_Type": "ore_type",
-    #   "Orebody_Class": "ore_class",
-    #   "Ore_Minerals": "mineral",
-    #   "Ore_Processed": "ore_processed"
-    # })
-    # orebody = Orebody(**orebodyVals)
-    # session.flush()
-
-  # Get TSF subset and create tailings facility table
-  tailings_facilities = dataframe[dataframe["Site_Type"] == "TSF"]
-  for i, row in tailings_facilities.iterrows():
-    tsfVals = get_table_values(row, {
-        "Site_Name": "name",
-        "CMIM_ID": 'cmdb_id',
-        "Mine_Status": "status",
-        "Hazard_Class": "hazard_class",
-        "Latitude": "latitude",
-        "Longitude": "longitude"
-    })
-    tsf = TailingsFacility(**tsfVals)
-    # Get parent mines. It's possible to have more than one
-    parentID = str(row['Parent_ID'])
-    for id in parentID.split(","):
-      id = id.strip()
-    mine = session.query(Mine).filter(Mine.cmdb_id == id).first()
-    if pd.notna(mine):
-        mine.tailings_facilities.append(tsf)
-    _commit_object(tsf)
-    # Add impoundments last
-    impoundments = dataframe[(dataframe["Site_Type"] == "Impoundment") & (pd.notna(dataframe['Parent_ID']))]
-    # Create impoundment
-    for i, row in impoundments.iterrows():
-      parentID = row['Parent_ID']
-      parentTsf = session.query(TailingsFacility).filter(TailingsFacility.cmdb_id == parentID).first()
-      if pd.notna(parentTsf):
-        impoundmentVals = get_table_values(row, {
-          "Site_Name": "name",
-          "Tailings_Area": "area",
-          "Tailings_Volume": "volume",
-          "Tailings_Capacity": "capacity",
-          "Tailings_Storage_Method": "storage_method",
-          "Current_Max_Height": "max_height",
-          "Acid_Generating" : "acid_generating",
-          "Treatment": "treatment",
-          "Rating_Index": "rating_index",
-          "History_Stability_Concerns": "stability_concerns"
-        })
-        impoundmentVals['default'] = False
-        # QA for quantified columns
-        for key in ["area", "volume", "capacity", "max_height"]:
-          val = impoundmentVals.get(key)
-          if isinstance(val, str):
-            try:
-              digits = get_digits(impoundmentVals[key])
-              impoundmentVals[key] = digits
-            except ValueError:
-              # If value can't be converted (i.e., doesn't contain digits), remove it. Property in table will be blank
-              del(impoundmentVals[key])
-        impoundment = Impoundment(parentTsf=parentTsf, **impoundmentVals)
-        _commit_object(impoundment)
-
-  session.close()
 
 # OMI - Ontario Mineral Inventory
 
