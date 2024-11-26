@@ -1,6 +1,6 @@
 [sources]
 critical_minerals = cmti_tools\data\cmList.csv
-metals = cmti_tools\data\metalList_utf.csv
+metals = cmti_tools\data\metals_utf.csv
 elements = cmti_tools\data\elements.csv
 
 [engine]

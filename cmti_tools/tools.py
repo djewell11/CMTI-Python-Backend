@@ -34,7 +34,7 @@ def create_module_variables() -> dict:
     critical_minerals = pd.read_csv(critical_minerals_file, header=0)
   with open(config.get('sources', 'metals'), mode='r') as metals_file:
     metals = pd.read_csv(metals_file, header=0, encoding='utf-8')
-    metals_dict = dict(zip(metals['Commodity'], metals['Name']))
+    metals_dict = dict(zip(metals['Commodity'], metals['Type']))
   with open(config.get('sources', 'elements'), mode='r') as elements_file:
     name_convert_dict = create_name_dict(elements_file)
   return {"cm_list":critical_minerals, "metals_dict":metals_dict, "name_convert_dict":name_convert_dict}
@@ -78,7 +78,7 @@ def get_digits(value: str, output: str = 'float'):
   except ValueError as e:
     pass
 
-def convert_commodity_name(name:str, name_convert_dict:dict, output_type:str="full", show_warning=True):
+def convert_commodity_name(name:str, name_convert_dict:dict, output_type:str="full", show_warning=False):
   """
   Takes element names and converts them to either symbol or full name. Ignores names not found in name_convert_dict.
 
@@ -88,12 +88,13 @@ def convert_commodity_name(name:str, name_convert_dict:dict, output_type:str="fu
   :param name_convert_dict: A dictionary where keys are symbols and values are full names.
   :type name_convert_dict: dict.
 
-  :param output_type: The type of output desired. Default: "full".
+  :param output_type: The type of output desired, either "full" or "symbol". Commodities that don't match elements on the 
+    periodic table will revert to "full". Default: "full".
   :type output_type: str.
 
   :param show_warning:
     Determines whether or not a warning is printed when "name" isn't present in "name_convert_dict".
-    Absences are expected for non-element commodities. Default: True
+    Absences are expected for non-element commodities. Default: False
   :type name_convert_dict: bool.
   """
   # _name = name # Save original name in case no match is found. Capitalize name to account for input differences
@@ -105,31 +106,30 @@ def convert_commodity_name(name:str, name_convert_dict:dict, output_type:str="fu
 
   if output_type == "full":
     # Convert symbol to full name
-    commName = cap_dict.get(name, None)
-    if commName is None:
+    comm_name = cap_dict.get(name, None)
+    if comm_name is None:
       # If name isn't an element, assume it's a mineral and return the original. Misspellings will get through.
       if show_warning:
           warn(f"Could not convert {name}")
       return name
     else:
-      return commName
+      return comm_name
   elif output_type == "symbol":
     # Convert full name to symbol
     el_dict_reversed = {value: key for key, value in cap_dict.items()}
-    commName = el_dict_reversed.get(name, None)
-    if commName is None:
+    comm_name = el_dict_reversed.get(name, None)
+    if comm_name is None:
       if show_warning:
           warn(f"Could not convert {name}")
       return name # If name isn't in cap_dict, return original name.
     else:
-      return commName
+      return comm_name
   else:
     raise ValueError("output_type must be either 'full' or 'symbol'")
   
-def get_commodities(row:pd.Series, commodity_columns:list, critical_mineral_list:list, name_convert_dict:dict, metals_dict:dict, mine:Mine, session:Session, name_type:str="full"):
+def get_commodity(row:pd.Series, commodity_column:str, critical_mineral_list:list, name_convert_dict:dict, metals_dict:dict, mine:Mine, name_type:str="full") -> CommodityRecord:
   """
-  Takes multiple commodity columns from the spreadsheet and creates a Commodity object.
-  Adds that object to the database. #TODO: Make this return a commodity rather than add it to session.
+  Takes multiple commodity columns from the spreadsheet and creates a CommodityRecord.
 
   :param row: A dataframe row.
   :type row: pandas.Series.
@@ -149,59 +149,48 @@ def get_commodities(row:pd.Series, commodity_columns:list, critical_mineral_list
   :param mine: An sqlalchemy ORM class of type Mine.
   :type mine: sqlalchemy.orm.DeclarativeBase.
 
-  :param session: The database session.
-  :type session: sqlalchemy.orm.Session
-
   :param name_type: The output style for the commodity name, as entered in convert_commodity_name.
     Either "full" or "symbol". Default: "full".
   :type name_type: str.
 
-  :return: None
+  :return: CommodityRecord
   """
   # commodityCols = list(filter(lambda x: x.startswith("Commodity"), dataframe.columns))
   # Check each "commodity" column in table to see if it has a value
-  for col in commodity_columns:
     # If it has a value, create an ORM object. This commodity does not necessarily need to have quantities
-    comm = row[col]
-    if pd.notna(row[col]):
-      commName = convert_commodity_name(comm.capitalize(), name_convert_dict, name_type)
-      commodity = CommodityRecord(mine=mine, commodity=commName)
-      # Check if metal and critical
-      try:
-        commodity.metal_type = metals_dict.get(commName)
-      except KeyError:
-        pass
-      commodity.is_critical = True if commName in critical_mineral_list else False
-      # Now try and attach quantities, if present
-      try:
-        # grade = get_comm_value(row, valCol)
-        grade = row[f"{comm}_Grade"]
-        if pd.notna(grade):
-          commodity.grade = grade if isinstance(grade, (float, int)) else get_digits(grade)
-      except KeyError:
-        pass
-      try:
-        # produced = row[f"{comm}_Produced"]
-        produced = row[f"{comm}_Produced"]
-        if pd.notna(produced):
-          commodity.produced = produced if isinstance(produced, (float, int)) else get_digits(produced)
-      except KeyError:
-        pass
-      try:
-        contained = row[f"{comm}_Contained"]
-        if pd.notna(contained):
-          commodity.contained = contained if isinstance(contained, (float, int)) else get_digits(contained)
-      except KeyError:
-        pass
-      # Get record dates
-      # dateStart = row["Record_Period_Start"]
-      # dateEnd = row["Record_Period_End"]
-      # if pd.notna(dateStart):
-      #   commodity.source_year_start = dateStart
-      # if pd.notna(dateEnd):
-      #   commodity.source_year_end = dateEnd
-      session.merge(commodity)
-      session.flush()
+  comm = row[commodity_column].capitalize()
+  comm_name = convert_commodity_name(comm, name_convert_dict, name_type)
+  comm_short = convert_commodity_name(comm, name_convert_dict, output_type="symbol")
+  commodity = CommodityRecord(mine=mine, commodity=comm_name)
+  # Check if metal and critical
+  try:
+    commodity.metal_type = metals_dict.get(comm_short)
+  except KeyError:
+    pass
+  commodity.is_critical = True if comm_name in critical_mineral_list else False
+  # Now try and attach quantities, if present
+  try:
+    # grade = get_comm_value(row, valCol)
+    grade = row[f"{comm_short}_Grade"]
+    if pd.notna(grade):
+      commodity.grade = grade if isinstance(grade, (float, int)) else get_digits(grade)
+  except KeyError:
+    pass
+  try:
+    # produced = row[f"{comm}_Produced"]
+    produced = row[f"{comm_short}_Produced"]
+    if pd.notna(produced):
+      commodity.produced = produced if isinstance(produced, (float, int)) else get_digits(produced)
+  except KeyError:
+    pass
+  try:
+    contained = row[f"{comm_short}_Contained"]
+    if pd.notna(contained):
+      commodity.contained = contained if isinstance(contained, (float, int)) else get_digits(contained)
+  except KeyError:
+    pass
+  return commodity
+      
 
 def get_table_values(row:pd.Series, columnDict:dict, default_null:object=None):
   """

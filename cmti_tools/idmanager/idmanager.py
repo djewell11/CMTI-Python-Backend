@@ -9,7 +9,6 @@ class ProvID:
     code (str): A two-letter code denoting the province or territory.
     max_id (int): The largest existing ID per that code. i.e., the integer to start with when creating  additionaly IDs.
     formatted_id (str): A concatenated string of the code and max_id.
-    session (sqlalchemy Session): The SQL Alchemy Session object. Used to search for existing IDs.
   """
   # Holds the highest ID for a prov_terr and can generate a new one
   def __init__(self, code:str):
