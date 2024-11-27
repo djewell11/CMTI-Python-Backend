@@ -422,7 +422,7 @@ class BCAHMImporter(DataImport):
     #Reference
     reference = Reference(mine = mine, source = "BCAHM", source_id = str(row.OBJECTID))
     self.commit_object(reference)
-    if row.MINEFILNO != "Null":
+    if row.MINFILNO != "Null":
       minefileref = Reference(mine = mine, source = "BC Minfile", source_id = row. MINFILNO)
       self.commit_object(minefileref)
 
