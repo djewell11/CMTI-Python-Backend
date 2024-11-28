@@ -1,6 +1,7 @@
 import pandas as pd
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.exc import IntegrityError
 from abc import ABC, abstractmethod
 
@@ -18,42 +19,59 @@ from cmti_tools.idmanager import ID_Manager
 # Abstract Classes implementation
 
 class DataImport(ABC):
-  def __init__(self, session: Session):
-    self.session = session
+  """
+  An abstract base class for importing data sources.
+  """
+  def __init__(self):
     self.id_manager = ID_Manager()
 
   @abstractmethod
-  def process_row(self, row: pd.Series):
+  def process_row(self, row: pd.Series) -> list[object]:
     """
-    Process a single row and add to db
+    Process a single row and generates a DeclarativeBase objects based on inputs.
+
     """
     pass
 
-  def commit_object(self, obj):
+  def generate_records(self, dataframe:pd.DataFrame) -> list[object]:
+    session_records = []
+    for _, row in dataframe.iterrows():
+      row_records = self.process_row(row)
+      session_records = session_records + row_records
+    return session_records
+
+  def ingest_records(self, record_list:list[object], session:Session) -> None:
+      session.add_all(record_list)
+      session.commit()
+
+  def commit_object(self, obj, session:Session):
     """
     Commit an object to session
+
+    :param obj: An SQL Alchemy ORM object
+    :type obj: sqlalchemy.ORM.DeclarativeBase
     """
+    
     try:
-      self.session.add(obj)
-      self.session.commit()
+      session.add(obj)
+      session.commit()
     except IntegrityError as e:
       print(e)
-      self.session.rollback()
-  
-  def ingest_dataframe(self, dataframe: pd.DataFrame):
-    """
-    Iterates through dataframe rows and calls process_row function.
+      session.rollback()
 
-    :param dataframe: OMI, OAM, or BC AHM dataframe
-    :type dataframe: pandas.DataFrame
-    """
-    for _, row in dataframe.iterrows():
-      self.process_row(row)
-    self.session.close()
+  # def ingest_dataframe(self, dataframe: pd.DataFrame):
+  #   """
+  #   Iterates through dataframe rows and calls process_row function.
+
+  #   :param dataframe: OMI, OAM, or BC AHM dataframe
+  #   :type dataframe: pandas.DataFrame
+  #   """
+  #   for _, row in dataframe.iterrows():
+  #     self.process_row(row)
 
 class WorksheetImporter(DataImport):
-  def __init__(self, session: Session, name_convert_dict: dict, elements_file, auto_generate_cmdb_ids = False):
-    super().__init__(session)
+  def __init__(self, name_convert_dict: dict, elements_file, auto_generate_cmdb_ids = False):
+    super().__init__()
     self.name_convert_dict = name_convert_dict
     self.elements_file = elements_file
     self.auto_generate_cmdb_ids = auto_generate_cmdb_ids
@@ -169,13 +187,13 @@ class WorksheetImporter(DataImport):
           digits = get_digits(defaultImpoundmentVals[key])
           defaultImpoundmentVals[key] = digits
         except ValueError:
-          # If value can't be converted (i.e., doesn't contain digits), remove it. Property in table will be blank
+          # If value can't be converted (i.e., doesn't contain digits), remove it. Property in row_ will be blank
           del(defaultImpoundmentVals[key])
     defaultImpoundmentVals["name"] = f"{defaultTSF.name}_impoundment"
     defaultImpoundment = Impoundment(parentTsf=defaultTSF, **defaultImpoundmentVals)
     self.commit_object(defaultImpoundment)
   
-  def process_tsf(self, row: pd.Series):
+  def process_tsf(self, row: pd.Series, session:Session):
     tsfVals = get_table_values(row, {
         "Site_Name": "name",
         "CMIM_ID": 'cmdb_id',
@@ -190,15 +208,15 @@ class WorksheetImporter(DataImport):
     # Get parent mines. It's possible to have more than one
     parentID = str(row['Parent_ID']).strip(",")
     for id in parentID:
-      mine = self.session.query(Mine).filter(Mine.cmdb_id == id).first()
+      mine = session.query(Mine).filter(Mine.cmdb_id == id).first()
       if pd.notna(mine):
         mine.tailings_facilities.append(tsf)
     
     self.commit_object(tsf)
 
-  def process_impoundment(self, row: pd.Series):
+  def process_impoundment(self, row: pd.Series, session:Session):
     parentID = row['Parent_ID']
-    parentTsf = self.session.query(TailingsFacility).filter(TailingsFacility.cmdb_id == parentID).first()
+    parentTsf = session.query(TailingsFacility).filter(TailingsFacility.cmdb_id == parentID).first()
     if pd.notna(parentTsf):
       impoundmentVals = get_table_values(row, {
         "Site_Name": "name",
@@ -221,58 +239,60 @@ class WorksheetImporter(DataImport):
             digits = get_digits(impoundmentVals[key])
             impoundmentVals[key] = digits
           except ValueError:
-            # If value can't be converted (i.e., doesn't contain digits), remove it. Property in table will be blank
+            # If value can't be converted (i.e., doesn't contain digits), remove it. Property in row_ will be blank
             del(impoundmentVals[key])
 
       impoundment = Impoundment(parentTsf=parentTsf, **impoundmentVals)
       self.commit_object(impoundment)
 
 class OMIImporter(DataImport):
-  def __init__(self, session: Session):
-    super().__init__(session)
+  def __init__(self):
     self.prov_id = ProvID("ON")
   
-  def process_row(self, row: pd.Series):
+  def process_row(self, row: pd.Series, name_convert_dict: dict) -> list[object]:
+    row_records = []
     try:
       row_id = self.prov_id.formatted_id
       self.prov_id.update_id()
       mine = Mine(
         cmdb_id = row_id,
-        name = row["NAME"],
-        latitude = row["LATITUDE"],
-        longitude = row["LONGITUDE"],
+        name = row['NAME'],
+        latitude = row['LATITUDE'],
+        longitude = row['LONGITUDE'],
         prov_terr="ON",
         mining_district = row['RGP_DIST']
       )
-      self.commit_object(mine)
+      row_records.append(mine)
 
       # Aliases
       aliases = [name.strip() for name in row['ALL_NAMES'].split(",")]
       for alias_val in aliases:
         alias = Alias(mine=mine, alias=alias_val)
-        self.commit_object(alias)
+        row_records.append(alias)
       
       # Commodities
       primary_commodities = row['P_COMMOD']
       secondary_commodities = row['S_COMMOD']
       commodities = primary_commodities + secondary_commodities
       for comm in commodities:
-        comm_converted = convert_commodity_name(comm)
+        comm_converted = convert_commodity_name(comm, name_convert_dict)
         comm_record = CommodityRecord(mine=mine, commodity=comm_converted, source='OMI', source_id=row['MDI_IDENT'])
         # TODO: Incorporate is_critical and metal_type
-        self.commit_object(comm_record)
+        row_records.append(comm_record)
 
       # Default TSF
       tsf = TailingsFacility(default = True, name = f"default_TSF_{mine.name}".strip())
       mine.tailings_facilities.append(tsf)
-      self.commit_object(tsf)
+      row_records.append(tsf)
 
       # Default Impoundment
       impoundment = Impoundment(parentTsf = tsf, default = True, name = f"{tsf.name}_impoundment")
-      self.commit_object(impoundment)
+      row_records.append(impoundment)
 
-      omi_reference = Reference(mine=mine, source = "OMI", source_id = row["MDI_IDENT"])
-      self.commit_object(omi_reference)
+      omi_reference = Reference(mine=mine, source = "OMI", source_id = row["MDI_IDENT"], link=row['DETAIL'])
+      row_records.append(omi_reference)
+
+      return row_records
     except Exception as e:
       print(e)
 
@@ -292,13 +312,11 @@ class OAMImporter(DataImport):
     else:
       return val
 
-  def process_row(self, row: pd.Series):
+  def process_row(self, row: pd.Series, session:Session):
     provID = getattr(self.id_manager, row["Jurisdiction"])
     provID.update_id()
     cmdb_id = provID.formatted_id
-    self._oam_row_to_cmti(row, cmdb_id)
 
-  def _oam_row_to_cmti(self, row: pd.Series, cmdb_id: str):
     mine = Mine(
       cmdb_id = cmdb_id,
       name = row["Name"].title(),
@@ -313,7 +331,7 @@ class OAMImporter(DataImport):
 
     comm_code = row['Commodity_Code']
     comm_full = row['Commodity_Full_Name'] # Records have either code or full name. Check both.
-    comm_name = comm_code if pd.notna(comm_code) else comm_full # This assumes that no records have both.
+    comm_name = comm_code if pd.notna(comm_code) else comm_full # This assumes that no row_ have both.
     if pd.notna(comm_name):
       try:
         # Sometimes multiple listed in code, split it up and add one entry for each
@@ -336,7 +354,7 @@ class OAMImporter(DataImport):
           commodityRecord.is_critical = True if comm_name in self.cm_list['Commodity'].tolist() else False
           commodityRecord.is_metal = self.metals_dict.get(comm_name)
       except Exception as e:
-        self.session.rollback()
+        session.rollback()
         print(e)
 
     tsf = TailingsFacility(default = True, name = f"default_TSF_{mine.name}".strip())
@@ -445,10 +463,10 @@ def omi_row_to_cmti(row, cmdb_id, production_df, production_comm_df, session, cm
   :param cmdb_id: The ID to be applied to the new record. Recommend using in conjunction with ProvIDs to avoid duplicate IDs.
   :type cmdb_id: str
 
-  :param production_df: The production table of the OMI.
+  :param production_df: The production row_ of the OMI.
   :type production_df: pandas.DataFrame
 
-  :param production_comm_df: The production_commoditiies table of the OMI.
+  :param production_comm_df: The production_commoditiies row_ of the OMI.
   :type production_comm_df: pandas.DataFrame
 
   :param session: The SQL Alchemy Session associated with the CMTI.
@@ -457,7 +475,7 @@ def omi_row_to_cmti(row, cmdb_id, production_df, production_comm_df, session, cm
   :param cm_list: A list of critical minerals. Default: data_tables['cm_list'].
   :type cm_list: list
 
-  :param metals_dict: A dictionary denoting metal type per commodity. Commodities may be metal, non-metal, or REE. Default: data_tables['metals_dict']
+  :param metals_dict: A dictionary denoting metal type per commodity. Commodities may be metal, non-metal, or REE. Default: data_tables['metals_dict'].
   :type metals_dict: dict
   """
 
@@ -522,10 +540,10 @@ def ingest_omi(omi_dataframe, omi_production_df, omi_prod_comm_df, session):
   :param omi_dataframe: The OMI DataFrame.
   :type omi_dataframe: pandas.DataFrame
 
-  :param omi_production_df: A DataFrame of the OMI's production table.
+  :param omi_production_df: A DataFrame of the OMI's production row_.
   :type omi_production_df: pandas.DataFrame
 
-  :param omi_prod_comm_df: A DataFrame of the OMI's production_commodity table.
+  :param omi_prod_comm_df: A DataFrame of the OMI's production_commodity row_.
   :type omi_prod_comm_df: pandas.DataFrame
 
   :param session: The SQL Alchemy Session associated with the CMTI.
@@ -538,7 +556,7 @@ def ingest_omi(omi_dataframe, omi_production_df, omi_prod_comm_df, session):
     try:
       amis_id = row['AMIS_ID']
       # omi_id = row['MD_ID']
-      # OMI records with AMIS IDs that match an existing record in the database
+      # OMI row_ with AMIS IDs that match an existing record in the database
       # IMPORTANT - Currently assuming all IDs are AMIS, as this seems to be how the worksheet was filled.
         #Should revisit after QA (currently all sources listed as 'SPE' but seem to match)
       # If secondary matching strategy (name, coordinates, etc.) is desired, it will go in this function.
@@ -639,7 +657,7 @@ def oam_row_to_cmti(row:pd.Series, cmdb_id:str, oam_comm_names:pd.DataFrame, ses
       return val
   comm_code = row['Commodity_Code']
   comm_full = row['Commodity_Full_Name'] # Records have either code or full name. Check both.
-  comm_name = comm_code if pd.notna(comm_code) else comm_full # This assumes that no records have both.
+  comm_name = comm_code if pd.notna(comm_code) else comm_full # This assumes that no row_ have both.
   if pd.notna(comm_name):
     try:
       # Sometimes multiple listed in code, split it up and add one entry for each
