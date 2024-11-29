@@ -247,6 +247,7 @@ class WorksheetImporter(DataImport):
 
 class OMIImporter(DataImport):
   def __init__(self):
+    super().__init__()
     self.prov_id = ProvID("ON")
   
   def process_row(self, row: pd.Series, name_convert_dict: dict) -> list[object]:
@@ -297,8 +298,8 @@ class OMIImporter(DataImport):
       print(e)
 
 class OAMImporter(DataImport):
-  def __init__(self, session: Session, oam_comm_names: pd.DataFrame, cm_list: list, metals_dict: dict, convert_dict: dict):
-    super().__init__(session)
+  def __init__(self, oam_comm_names: dict, cm_list: list, metals_dict: dict, convert_dict: dict):
+    super().__init__()
     self.oam_comm_names = oam_comm_names
     self.cm_list = cm_list
     self.metals_dict = metals_dict
@@ -312,7 +313,7 @@ class OAMImporter(DataImport):
     else:
       return val
 
-  def process_row(self, row: pd.Series, session:Session):
+  def process_row(self, row: pd.Series):
     row_records = []
     try:
       provID = getattr(self.id_manager, row["Jurisdiction"])
@@ -342,21 +343,21 @@ class OAMImporter(DataImport):
             # Convert to full name using OAM name values, then to element names
             comm_full_oam = convert_commodity_name(comm, self.oam_comm_names, output_type='full', show_warning=False)
             comm_name = convert_commodity_name(comm_full_oam, self.convert_dict, output_type='symbol', show_warning=False)
-            # print(f"{comm} -- {comm_full_oam} -- {comm_name}")
             start_year = self.check_year(row['Start_Date'])
             end_year = self.check_year(row['Last_Year'])
             produced = row["Mined_Quantity"] if pd.notna(row["Mined_Quantity"]) else None
-            commodityRecord = CommodityRecord(
+            commodity_record = CommodityRecord(
               mine=mine,
               commodity=comm_name,
               produced=produced,
               source_year_start=start_year,
               source_year_end=end_year
             )
-            commodityRecord.is_critical = True if comm_name in self.cm_list['Commodity'].tolist() else False
-            commodityRecord.is_metal = self.metals_dict.get(comm_name)
+            commodity_record.is_critical = True if comm_name in self.cm_list else False
+            commodity_record.is_metal = self.metals_dict.get(comm_name)
+
+            row_records.append(commodity_record)
         except Exception as e:
-          session.rollback()
           print(e)
 
       tsf = TailingsFacility(default = True, name = f"default_TSF_{mine.name}".strip())
@@ -378,13 +379,15 @@ class OAMImporter(DataImport):
       print(e)
 
 class BCAHMImporter(DataImport):
-  def __init__(self, session: Session):
-    super().__init__(session)
-  
+
+  def __init__(self):
+    super().__init__()
+    self.provID = ProvID('BC')
+
   def process_row(self, row: pd.Series):
     row_records = []
     try:
-      bcahm_id = self.id_manager.BC.formatted_id
+      bcahm_id = self.provID
       mine_vals = {
         "name": row["NAME1"],
         "latitude": row["LATITUDE"],
@@ -412,7 +415,7 @@ class BCAHMImporter(DataImport):
       if pd.isna(mine_vals['utm_zone']) or mine_vals['utm_zone'] == 'Null':
         mine_vals['utm_zone'] = lon_to_utm_zone(mine_vals['longitude'])
       
-      mine = Mine(cmdb_id = bcahm_id, **mine_vals)
+      mine = Mine(cmdb_id = bcahm_id.formatted_id, **mine_vals)
       row_records.append(mine)
       bcahm_id.update_id()
 
@@ -435,8 +438,8 @@ class BCAHMImporter(DataImport):
       #Reference
       reference = Reference(mine = mine, source = "BCAHM", source_id = str(row.OBJECTID))
       row_records.append(reference)
-      if row.MINEFILNO != "Null":
-        minefileref = Reference(mine = mine, source = "BC Minfile", source_id = row. MINFILNO)
+      if row.MINFILNO != "Null":
+        minefileref = Reference(mine = mine, source = "BC Minfile", source_id = row.MINFILNO)
         row_records.append(minefileref)
 
       # Orebody
