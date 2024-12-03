@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 from configparser import ConfigParser
 from configparser import Error as ConfigError
@@ -24,34 +25,33 @@ class DataImporter(ABC):
   """
   An abstract base class for importing data sources.
   """
-  def __init__(self, **kwargs):
+  def __init__(self, name_convert_dict:str|dict|None=None, cm_list:str|dict|None=None, metals_dict:str|dict|None=None):
     self.id_manager = ID_Manager()
 
     # Use ConfigParser to get data files if not provided
     config = ConfigParser()
+    cfg_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../config.toml"))
+    config.read(cfg_path)
 
-    name_convert_dict = kwargs.get('name_convert_dict')
     if name_convert_dict == 'config':
       with open(config.get('sources', 'elements'), mode='r') as elements_file:
         self.name_convert_dict = create_name_dict(elements_file)
     elif name_convert_dict is not None:
         self.name_convert_dict = name_convert_dict
     
-    cm_list = kwargs.get('cm_list')
-    if kwargs.get('cm_list') == 'config':
+    if cm_list == 'config':
       with open(config.get('sources', 'critical_minerals'), mode='r') as critical_minerals_file:
         critical_minerals = pd.read_csv(critical_minerals_file, header=0)
         self.cm_list = critical_minerals
     elif cm_list is not None:
       self.cm_list = cm_list
     
-    metals = kwargs.get('metals_dict')
-    if metals == 'config':
+    if metals_dict == 'config':
       with open(config.get('sources', 'metals'), mode='r') as metals_file:
-        metals = pd.read_csv(metals_file, header=0, encoding='utf-8')
-        self.metals_dict = dict(zip(metals['Commodity'], metals['Type']))
-    elif metals is not None:
-      self.metals_dict = metals
+        metals_csv = pd.read_csv(metals_file, header=0, encoding='utf-8')
+        self.metals_dict = dict(zip(metals_csv['Commodity'], metals_csv['Type']))
+    elif metals_dict is not None:
+      self.metals_dict = metals_dict
 
   @abstractmethod
   def process_row(self, row: pd.Series) -> list[object]:
@@ -277,10 +277,15 @@ class WorksheetImporter(DataImporter):
 
 class OMIImporter(DataImporter):
   def __init__(self):
-    super().__init__()
+    super().__init__(name_convert_dict = 'config')
     self.prov_id = ProvID("ON")
   
-  def process_row(self, row: pd.Series, name_convert_dict: dict) -> list[object]:
+  def process_row(self, row: pd.Series, name_convert_dict: dict=None) -> list[object]:
+    
+    # name_convert_dict = self.name_convert_dict
+    # name_convert_dict = self.name_convert_dict if None else name_convert_dict # Use class name_convert_dict if provided, or override by providing new value
+    if name_convert_dict is None:
+      name_convert_dict = self.name_convert_dict
     row_records = []
     try:
       row_id = self.prov_id.formatted_id

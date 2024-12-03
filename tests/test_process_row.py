@@ -28,7 +28,7 @@ def test_process_row_omi():
             'RGP_DIST': 'Southern Ontario',
             'DETAIL': 'some website dot com'
          })
-    row_records = omi_importer.process_row(row, name_dict)
+    row_records = omi_importer.process_row(row)
     assert len(row_records) == 16
 
 # Test the Orphaned and Abandoned Mine Inventort (OAM)
