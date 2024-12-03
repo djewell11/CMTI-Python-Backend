@@ -29,7 +29,7 @@ def test_process_row_omi():
             'DETAIL': 'some website dot com'
          })
     row_records = omi_importer.process_row(row)
-    assert len(row_records) == 16
+    assert len(row_records) == 8
 
 # Test the Orphaned and Abandoned Mine Inventort (OAM)
 oam_comm_data = read_csv(r'cmti_tools\data\OAM_commodity_names.csv')

@@ -25,7 +25,7 @@ class DataImporter(ABC):
   """
   An abstract base class for importing data sources.
   """
-  def __init__(self, name_convert_dict:str|dict|None=None, cm_list:str|dict|None=None, metals_dict:str|dict|None=None):
+  def __init__(self, name_convert_dict:str|dict|None='config', cm_list:str|dict|None='config', metals_dict:str|dict|None='config'):
     self.id_manager = ID_Manager()
 
     # Use ConfigParser to get data files if not provided
@@ -88,7 +88,7 @@ class DataImporter(ABC):
       session.rollback()
 
 class WorksheetImporter(DataImporter):
-  def __init__(self, name_convert_dict):
+  def __init__(self, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None):
     super().__init__()
     self.name_convert_dict = name_convert_dict
     
@@ -128,7 +128,7 @@ class WorksheetImporter(DataImporter):
         "Mining_Method": "mining_method",
         "Dev_Stage": "development_stage",
         "Site_Access": "site_access",
-        # "Construction_Year": "construction_year"
+        "Construction_Year": "construction_year"
       })
 
       if pd.isna(row.CMIM_ID) and self.auto_generate_cmdb_ids:
@@ -272,12 +272,12 @@ class WorksheetImporter(DataImporter):
 
   #       impoundment = Impoundment(parentTsf=parentTsf, **impoundmentVals)
   #       self.row_records.append(impoundment)
-    except Exception as e:
-      print(e)
+  #   except Exception as e:
+  #     print(e)
 
 class OMIImporter(DataImporter):
-  def __init__(self, name_convert_dict='config'):
-    super().__init__(name_convert_dict=name_convert_dict)
+  def __init__(self, cm_list:list='config', metals_dict:dict='config', name_convert_dict:dict='config'):
+    super().__init__(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_convert_dict)
     self.prov_id = ProvID("ON")
   
   def process_row(self, row: pd.Series, name_convert_dict: dict=None) -> list[object]:
@@ -306,13 +306,8 @@ class OMIImporter(DataImporter):
         row_records.append(alias)
       
       # Commodities
-      primary_commodities = row['P_COMMOD']
-      secondary_commodities = row['S_COMMOD']
-      commodities = primary_commodities + secondary_commodities
-      for comm in commodities:
-        comm_converted = convert_commodity_name(comm, name_convert_dict)
-        comm_record = CommodityRecord(mine=mine, commodity=comm_converted, source='OMI', source_id=row['MDI_IDENT'])
-        # TODO: Incorporate is_critical and metal_type
+      for comm_col in ['P_COMMOD', 'S_COMMOD']:
+        comm_record = get_commodity(row, comm_col, self.cm_list, self.name_convert_dict, self.metals_dict, mine)
         row_records.append(comm_record)
 
       # Default TSF
