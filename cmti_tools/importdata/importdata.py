@@ -276,14 +276,13 @@ class WorksheetImporter(DataImporter):
       print(e)
 
 class OMIImporter(DataImporter):
-  def __init__(self):
-    super().__init__(name_convert_dict = 'config')
+  def __init__(self, name_convert_dict='config'):
+    super().__init__(name_convert_dict=name_convert_dict)
     self.prov_id = ProvID("ON")
   
   def process_row(self, row: pd.Series, name_convert_dict: dict=None) -> list[object]:
     
-    # name_convert_dict = self.name_convert_dict
-    # name_convert_dict = self.name_convert_dict if None else name_convert_dict # Use class name_convert_dict if provided, or override by providing new value
+    # name_convert_dict will default to the OMIImporter attribute but can be overridden
     if name_convert_dict is None:
       name_convert_dict = self.name_convert_dict
     row_records = []
@@ -333,8 +332,8 @@ class OMIImporter(DataImporter):
       print(e)
 
 class OAMImporter(DataImporter):
-  def __init__(self):
-    super().__init__()
+  def __init__(self, cm_list='config', metals_dict='config', name_convert_dict='config'):
+    super().__init__(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_convert_dict)
 
   def check_year(self, val):
     if isinstance(val, str):
@@ -344,7 +343,16 @@ class OAMImporter(DataImporter):
     else:
       return val
 
-  def process_row(self, row: pd.Series, oam_comm_names: dict, cm_list: list, metals_dict: dict, convert_dict: dict):
+  def process_row(self, row: pd.Series, oam_comm_names:dict, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None):
+
+    # Data tables will default to OAMImporter attributes but can be overridden
+    if cm_list is None:
+      cm_list = self.cm_list
+    if metals_dict is None:
+      metals_dict = self.metals_dict
+    if name_convert_dict is None:
+      name_convert_dict = self.name_convert_dict
+
     row_records = []
     try:
       provID = getattr(self.id_manager, row["Jurisdiction"])
@@ -373,7 +381,7 @@ class OAMImporter(DataImporter):
           for comm in commodities:
             # Convert to full name using OAM name values, then to element names
             comm_full_oam = convert_commodity_name(comm, oam_comm_names, output_type='full', show_warning=False)
-            comm_name = convert_commodity_name(comm_full_oam, convert_dict, output_type='symbol', show_warning=False)
+            comm_name = convert_commodity_name(comm_full_oam, name_convert_dict, output_type='symbol', show_warning=False)
             start_year = self.check_year(row['Start_Date'])
             end_year = self.check_year(row['Last_Year'])
             produced = row["Mined_Quantity"] if pd.notna(row["Mined_Quantity"]) else None
@@ -410,11 +418,20 @@ class OAMImporter(DataImporter):
       print(e)
 
 class BCAHMImporter(DataImporter):
-  def __init__(self):
-    super().__init__()
+  def __init__(self, cm_list:list='config', metals_dict:dict='config', name_convert_dict:dict='config'):
+    super().__init__(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_convert_dict)
     self.provID = ProvID('BC')
 
-  def process_row(self, row: pd.Series):
+  def process_row(self, row: pd.Series, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None):
+
+    # Data tables will default to BCAHMImporter attributes but can be overridden
+    if cm_list is None:
+      cm_list = self.cm_list
+    if metals_dict is None:
+      metals_dict = self.metals_dict
+    if name_convert_dict is None:
+      name_convert_dict = self.name_convert_dict
+
     row_records = []
     try:
       bcahm_id = self.provID
@@ -432,7 +449,7 @@ class BCAHMImporter(DataImporter):
         "mine_status": "Inactive"
       }
 
-      # If either lat or lon are missin, don't add that record
+      # If either lat or lon are missing, don't add that record
       if (pd.isna(mine_vals["latitude"]) or mine_vals["latitude"] == 'Null') or \
         (pd.isna(mine_vals["longitude"]) or mine_vals["longitude"] == 'Null'):
           return
@@ -454,6 +471,11 @@ class BCAHMImporter(DataImporter):
         alias = Alias(mine=mine, alias=row["NAME2"])
         row_records.append(alias)
       
+      # Commodities
+      for comm_col in ['COMMOD_C1', 'COMMOD_C2', 'COMMOD_C3']:
+        commodity_record = get_commodity(row, comm_col, cm_list, name_convert_dict, metals_dict, mine)
+        row_records.append(commodity_record)
+
       # TSF
       tsf = TailingsFacility(default = True, name = f"default_TSF_{mine_vals['name']}".strip())
       mine.tailings_facilities.append(tsf)
@@ -481,4 +503,4 @@ class BCAHMImporter(DataImporter):
 
       return row_records
     except Exception as e:
-      print(e)
+      raise(e)

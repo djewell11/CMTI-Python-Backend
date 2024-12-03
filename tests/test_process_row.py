@@ -14,7 +14,7 @@ def test_process_row_worksheet():
 
 # Test the Ontario Mineral Inventory (OMI)
 def test_process_row_omi():
-    omi_importer = OMIImporter()
+    omi_importer = OMIImporter(name_convert_dict='config')
     row = Series(
         {
             'MDI_IDENT': 'MDI130M', 
@@ -54,7 +54,7 @@ def test_process_row_oam():
             'Mined_Quantity': 150_000,
             'URL': 'somewebsite dot com'
         })
-    row_records = oam_importer.process_row(row, oam_comm_names=oam_comm_names, metals_dict=metals_dict, convert_dict=name_dict, cm_list=cm_list)
+    row_records = oam_importer.process_row(row, oam_comm_names=oam_comm_names)
     assert len(row_records) == 8
 
 # Test the BC Abandoned and Historic Mine database (BC AHM)
@@ -84,4 +84,4 @@ def test_process_row_BCAHM():
             'DEPOSITCLASS_D2': None
         })
     row_records = bcahm_importer.process_row(row)
-    assert len(row_records) == 8
+    assert len(row_records) == 11
