@@ -78,6 +78,9 @@ class CommodityRecord(Base):
 
   mine = relationship("Mine", back_populates="commodities")
 
+  def __repr__(self) -> str:
+    return f"{self.commodity!r}, ID: {self.id!r}, Mine Name: {CommodityRecord.mine.name}, mine_id: {self.mine_id}, Produced: {self.produced}"
+
 class Alias(Base):
   __tablename__ = "aliases"
 
@@ -85,6 +88,9 @@ class Alias(Base):
   alias: Mapped[str] = mapped_column(nullable=False, primary_key=True)
 
   mine = relationship("Mine", back_populates="aliases")
+
+  def __repr__(self) -> str:
+    return f"Alias: {self.alias!r}, Mine Name: {Alias.mine.name}, mine_id: {self.mine_id}"
 
 class Owner(Base):
   __tablename__ = "owners"
@@ -96,6 +102,9 @@ class Owner(Base):
         secondary = "owner_associations",
         back_populates = "owners"
   )
+
+  def __repr__(self) -> str:
+    return f"{self.name!r}, ID: {self.id!r}, Mines: {self.mines}"
 
 class TailingsFacility(Base):
   __tablename__ = "tailings_facilities"
@@ -114,6 +123,9 @@ class TailingsFacility(Base):
     back_populates = "tailings_facilities")
   impoundments: Mapped[List["Impoundment"]] = relationship("Impoundment", back_populates = "parentTsf",
                                                            cascade = "all, delete-orphan")
+  
+  def __repr__(self) -> str:
+    return f"{self.name!r}, ID: {self.id!r}, cmdb_id: {self.cmdb_id}"
 
 class Impoundment(Base):
   __tablename__ = "impoundments"
@@ -135,6 +147,9 @@ class Impoundment(Base):
 
   parentTsf = relationship("TailingsFacility", back_populates="impoundments")
 
+  def __repr__(self) -> str:
+    return f"{self.name!r}, ID: {self.id!r}, cmdb_id: {self.cmdb_id}"
+
 class Orebody(Base):
   __tablename__ = "orebodies"
 
@@ -146,6 +161,9 @@ class Orebody(Base):
   ore_processed: Mapped[float] = mapped_column(nullable=True)
 
   mine = relationship("Mine", back_populates="orebody")
+
+  def __repr__(self) -> str:
+    return f"{self.ore_type!r}, ID: {self.id!r}, mineral: {self.mineral}, Mine Name: {Orebody.mine.name}, mine_id: {self.mine_id}"
 
 class Reference(Base):
   __tablename__ = "references"
@@ -159,7 +177,7 @@ class Reference(Base):
   mine = relationship("Mine", back_populates="references")
 
   def __repr__(self):
-    return f"Reference ID: {self.source}:{self.source_id}"
+    return f"Reference ID: {self.source}:{self.source_id}, Mine Name: {Reference.mine.name}, mine_id: {self.mine_id}"
 
 class TailingsAssociation(Base):
   __tablename__ = "tsf_mine_associations"
@@ -169,6 +187,9 @@ class TailingsAssociation(Base):
   start_year: Mapped[Optional[int]]
   end_year: Mapped[Optional[int]]
 
+  def __repr__(self) -> str:
+    return f"tsf_id: {self.tsf_id!r}, mine_id: {self.mine_id}"
+
 class OwnerAssociation(Base):
   __tablename__ = "owner_associations"
 
@@ -176,3 +197,6 @@ class OwnerAssociation(Base):
   mine_id: Mapped["Mine"] = mapped_column(ForeignKey("mines.id"), primary_key=True)
   start_year: Mapped[Optional[int]]
   end_year: Mapped[Optional[int]]
+
+  def __repr__(self) -> str:
+    return f"Owner ID: {self.owner_id}, mine_id: {self.mine_id}"
