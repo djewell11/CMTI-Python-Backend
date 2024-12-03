@@ -1,4 +1,4 @@
-from cmti_tools.importdata import OMIImporter, OAMImporter, BCAHMImporter
+from cmti_tools.importdata import WorksheetImporter, OMIImporter, OAMImporter, BCAHMImporter
 from cmti_tools import create_module_variables
 from pandas import Series, read_csv
 
@@ -6,6 +6,11 @@ module_variables = create_module_variables()
 name_dict = module_variables.get('name_convert_dict')
 metals_dict = module_variables.get('metals_dict')
 cm_list = module_variables.get('cm_list')
+
+# Test the workseet
+def test_process_row_worksheet():
+    worksheet_importer = WorksheetImporter()
+    row = Series
 
 # Test the Ontario Mineral Inventory (OMI)
 def test_process_row_omi():
@@ -29,8 +34,9 @@ def test_process_row_omi():
 # Test the Orphaned and Abandoned Mine Inventort (OAM)
 oam_comm_data = read_csv(r'cmti_tools\data\OAM_commodity_names.csv')
 oam_comm_names = dict(zip(oam_comm_data['Symbol'], oam_comm_data['Full_Name']))
+
 def test_process_row_oam():
-    oam_importer = OAMImporter(oam_comm_names=oam_comm_names, metals_dict=metals_dict, convert_dict=name_dict, cm_list=cm_list)
+    oam_importer = OAMImporter()
     row = Series(
         {
             'OID': 10782,
@@ -48,7 +54,7 @@ def test_process_row_oam():
             'Mined_Quantity': 150_000,
             'URL': 'somewebsite dot com'
         })
-    row_records = oam_importer.process_row(row)
+    row_records = oam_importer.process_row(row, oam_comm_names=oam_comm_names, metals_dict=metals_dict, convert_dict=name_dict, cm_list=cm_list)
     assert len(row_records) == 8
 
 # Test the BC Abandoned and Historic Mine database (BC AHM)

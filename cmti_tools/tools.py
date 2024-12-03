@@ -39,12 +39,12 @@ def create_module_variables() -> dict:
     name_convert_dict = create_name_dict(elements_file)
   return {"cm_list":critical_minerals, "metals_dict":metals_dict, "name_convert_dict":name_convert_dict}
 
-try:
-  data_tables = create_module_variables()
-except ConfigError as config_error:
-  print(config_error)
-except Exception as e:
-  print(e)
+# try:
+#   data_tables = create_module_variables()
+# except ConfigError as config_error:
+#   print(config_error)
+# except Exception as e:
+#   print(e)
 
 # try:
 #   engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost:5432/cmti')
@@ -59,7 +59,7 @@ def get_digits(value: str, output: str = 'float'):
   Used for columns that contain quantities and may have erroneously included units.
 
   :param value: A quantity that includes numerical values.
-  :type value: str.jkmn
+  :type value: str.
 
   :param output: The output type. Either 'float' or 'int'. Default: 'float'.
   :type output: str.
