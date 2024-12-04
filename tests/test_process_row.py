@@ -10,7 +10,61 @@ cm_list = module_variables.get('cm_list')
 # Test the workseet
 def test_process_row_worksheet():
     worksheet_importer = WorksheetImporter()
-    row = Series
+    row = Series(
+    {
+        'Site_Name': 'Springhill',
+        'Site_Type': 'Mine',
+        'Site_Aliases': 'Spring Hill, Lime Mine',
+        'CMIM_ID': 'NB000084',
+        'Last_Revised': '2024/01/01',
+        'Latitude': 46.,
+        'Longitude': -65.37,
+        'Easting': 12345,
+        'Northing': 54321,
+        'NAD': '83',
+        'UTM_Zone': 19,
+        'NTS_Area': '15K01',
+        'Province_Territory': 'NB',
+        'Mining_District': 'Havelock',
+        'Commodity1': 'Limestone',
+        'Commodity1_Produced': 50_000,
+        'Commodity2': None,
+        'Commodity3': None,
+        'Commodity4': None,
+        'Commodity5': None,
+        'Commodity6': None,
+        'Commodity7': None,
+        'Commodity8': None,
+        'Mine_Type': 'Open Pit',
+        'Mine_Status': 'Active',
+        'Mining_Method': '',
+        'Owner_Operator': 'Mine Co.',
+        'Site_Access': 'Road',
+        'Past_Owners': 'Quarry Inc, Limestone Company',
+        'Dev_Stage': 'Production',
+        'Hazard_Class': 'Low',
+        'Source_1': 'Personal Communication',
+        'Source_1_Link': 'some website dot com',
+        'Source_1_ID': '00001',
+        'Source_2': None,
+        'Source_3': None,
+        'Source_4': None,
+        'Orebody_Type': 'Sedimentary',
+        'Construction_Year': 1901,
+        'Year_Opened': 1902,
+        'Year_Closed': 2002,
+        'Tailings_Area': 500,
+        'Tailings_Volume': 2500,
+        'Tailings_Capacity': 4000,
+        'Current_Max_Height': 750,
+        'Acid_Generating': 'True',
+        'Storage_Method': 'Dry Stack',
+        'Treatment': 'None',
+        'Rating_Index': 'A',
+        'Stability_Concerns': 'None'
+    })
+    row_records = worksheet_importer.process_row(row)
+    assert len(row_records) == 10
 
 # Test the Ontario Mineral Inventory (OMI)
 def test_process_row_omi():
