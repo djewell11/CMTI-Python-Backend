@@ -110,7 +110,7 @@ class TailingsFacility(Base):
   __tablename__ = "tailings_facilities"
 
   id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-  default: Mapped[bool] = mapped_column(nullable=False, default=False)
+  is_default: Mapped[bool] = mapped_column(nullable=False, default=False)
   cmdb_id: Mapped[Optional[str]]
   name: Mapped[Optional[str]]
   status: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
@@ -131,7 +131,7 @@ class Impoundment(Base):
   __tablename__ = "impoundments"
 
   id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-  default: Mapped[bool] = mapped_column(nullable=False, default=False)
+  is_default: Mapped[bool] = mapped_column(nullable=False, default=False)
   cmdb_id: Mapped[Optional[str]]
   parent_tsf_id: Mapped["TailingsFacility"] = mapped_column(ForeignKey("tailings_facilities.id"))
   name: Mapped[str] = mapped_column(nullable=False)
