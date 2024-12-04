@@ -88,192 +88,154 @@ class DataImporter(ABC):
       session.rollback()
 
 class WorksheetImporter(DataImporter):
-  def __init__(self, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None):
-    super().__init__()
-    self.name_convert_dict = name_convert_dict
+  def __init__(self, name_convert_dict = 'config', cm_list = 'config', metals_dict = 'config', auto_generate_cmti_ids:bool=False):
+    super().__init__(name_convert_dict, cm_list, metals_dict)
+
+    # ID Manager currently relies on a session query to initialize IDs. Leave this out for now.
+    # if auto_generate_cmti_ids:
+    #   self.id_manager = ID_Manager()
+  
+  def process_row(self, row, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None, comm_col_count:int=8, source_col_count:int=4):
     
-  def process_row(self, row: pd.Series, name_convert_dict: dict, elements_file, 
-                  auto_generate_cmdb_ids = False):
-    
+    # Data tables will default to WorksheetImporter attributes but can be overridden
+    if cm_list is None:
+      cm_list = self.cm_list
+    if metals_dict is None:
+      metals_dict = self.metals_dict
+    if name_convert_dict is None:
+      name_convert_dict = self.name_convert_dict
+ 
     self.row_records = []
+      
+    # The worksheet is based on 3 types of records. The imported data will change based on record type:
     site_type = row['Site_Type']
     if site_type == "Mine":
-      self.process_mine(row)
+      mine = self.process_mine(row, comm_col_count, source_col_count)
+      self.row_records.append(mine)
     elif site_type == "TSF":
       self.process_tsf(row)
     elif site_type == "Impoundment":
       self.process_impoundment(row)
     return self.row_records
+    
+  def process_mine(self, row:pd.Series, comm_col_count, source_col_count):
+    mine = Mine(
+      cmdb_id = row.CMIM_ID,
+      name = row.Site_Name,
+      prov_terr = row.Province_Territory,
+      last_revised = row.Last_Revised,
+      nad = row.NAD,
+      utm_zone = row.UTM_Zone,
+      easting = row.Easting,
+      northing = row.Northing,
+      latitude = row.Latitude,
+      longitude = row.Longitude,
+      nts_area = row.NTS_Area,
+      mining_district = row.Mining_District,
+      mine_type = row.Mine_Type,
+      mine_status = row.Mine_Status,
+      mining_method = row.Mining_Method,
+      development_stage = row.Dev_Stage,
+      site_access = row.Site_Access,
+      construction_year = row.Construction_Year
+    )
+    
+    # Commodities
+    comm_columns = [f"Commodity{i}" for i in range(1, comm_col_count+1)]
+    for col in comm_columns:
+      if pd.notna(row[col]):
+        commodity_record = get_commodity(row, col, self.cm_list, self.name_convert_dict, self.metals_dict, mine)
+        self.row_records.append(commodity_record)
+  
+    # Aliases
+    # There are often multiple comma-separated aliases. Split them up
+    aliases = row.Site_Aliases
+    if pd.notna(aliases):
+      # Check if more than one
+      aliases_list = [alias.strip() for alias in aliases.split(",")]
+      for aliasName in aliases_list:
+        alias = Alias(alias=aliasName)
+        alias.mine=mine
+        self.row_records.append(alias)
 
-  def process_mine(self, row: pd.Series, auto_generate_cmdb_ids):
-    try:  
-      if auto_generate_cmdb_ids:
-        self.id_manager = ID_Manager()
-
-      mine_vals = get_table_values(row, {
-        "CMIM_ID": "cmdb_id",
-        "Site_Name": "name",
-        "Province_Territory": "prov_terr",
-        "Last_Revised": "last_revised",
-        "NAD": "nad",
-        "UTM_Zone": "utm_zone",
-        "Easting": "easting",
-        "Northing": "northing",
-        "Latitude": "latitude",
-        "Longitude": "longitude",
-        "NTS_Area": "nts_area",
-        "Mining_District": "mining_district",
-        "Mine_Type": "mine_type",
-        "Mine_Status": "mine_status",
-        "Mining_Method": "mining_method",
-        "Dev_Stage": "development_stage",
-        "Site_Access": "site_access",
-        "Construction_Year": "construction_year"
-      })
-
-      if pd.isna(row.CMIM_ID) and self.auto_generate_cmdb_ids:
-        prov_id = getattr(self.id_manager, mine_vals['prov_terr'])
-        mine_vals['cmdb_id'] = prov_id.formatted_id
-        prov_id.update_id()
-
-      mine = Mine(**mine_vals)
-      self.row_records.append(mine)
-
-      # Mine alias (alternative names)
-      # There are often multiple comma-separated aliases. Split them up
-      aliases = row['Site_Aliases']
-      if pd.notna(aliases):
-        # Check if more than one
-        aliasesList = [alias.strip() for alias in aliases.split(",")]
-        for aliasName in aliasesList:
-          alias = Alias(alias=aliasName)
-          alias.mine=mine
-          self.row_records.append(alias)
-
-      # Commodities
-      commodity_cols = list(filter(lambda x: x.startswith("Commodity"), row.index))
-      elements = pd.read_csv(self.elements_file)
-      name_convert_dict = dict(zip(elements['symbol'], elements['name']))
-      for comm in commodity_cols:
-        comm_record = get_commodity(row, comm, mine, name_convert_dict=name_convert_dict)
-        self.row_records.append(comm_record)
-
-      # Owners
-      ownerVals = get_table_values(row, {"Owner_Operator": "name"})
-      owner = Owner(**ownerVals)
-      if pd.notna(owner.name):
-        owner.mine = mine
-        mine.owners.append(owner)
+    # Owners
+    owner = Owner(name=row.Owner_Operator)
+    mine.owners.append(owner)
+    self.row_records.append(owner)
+    
+    past_owners = row.Past_Owners
+    if pd.notna(past_owners):
+      past_owners_list = [_past_owner.strip() for _past_owner in past_owners.split(",")]
+      for past_owner in past_owners_list:
+        owner = Owner(name=past_owner)
+        owner.mines.append(mine)
         self.row_records.append(owner)
 
-      #References and links
-      source_quantity = 4 # Number of source columns
-      source_cols = [f"Source_{n+1}" for n in range(source_quantity)]
-      for col in source_cols:
-        source = row[col]
-        if pd.notna(source):
-          source_id = row[f"{col}_ID"]
-          link = row[f"{col}_Link"]
-          reference = Reference(mine=mine, source=source, source_id=source_id, link=link)
-          self.row_records.append(reference)
+    # References
+    source_columns = [f"Source_{j}" for j in range(1, source_col_count+1)]
+    for col in source_columns:
+      source = row[col]
+      if pd.notna(source):
+        source_id = row[f"{col}_ID"]
+        link = row[f"{col}_Link"]
+        reference = Reference(mine=mine, source=source, source_id=source_id, link=link)
+        self.row_records.append(reference)
 
-      # Default tailings facility. Every mine gets one
-      defaultTSFVals = get_table_values(row, {
-          "Mine_Status": "status",
-          "Hazard_Class": "hazard_class"
-      })
-      defaultTSFVals["name"] = f"defaultTSF_{mine.name}".strip()
-      defaultTSFVals["default"] = True
-      defaultTSF = TailingsFacility(**defaultTSFVals)
-      mine.tailings_facilities.append(defaultTSF)
-      self.row_records.append(defaultTSF)
+    # Default tailings facility. Every mine gets one
+    default_TSF = TailingsFacility(
+      name = f"defaultTSF_{mine.name}".strip(),
+      status = row.Mine_Status,
+      hazard_class = row.Hazard_Class,
+      is_default = True,
+    )
+    default_TSF.mines.append(mine)
+    self.row_records.append(default_TSF)
 
-      # Default impoundment. Every default tailings facility gets one
-      defaultImpoundmentVals = get_table_values(row, {
-        "Tailings_Area": "area",
-        "Tailings_Volume": "volume",
-        "Tailings_Capacity": "capacity",
-        "Tailings_Storage_Method": "storage_method",
-        "Current_Max_Height": "max_height",
-        "Acid_Generating" : "acid_generating",
-        "Treatment": "treatment"
-        # "Rating_Index": "rating_index",
-        # "History_Stability_Concerns": "stability_concerns"
-      })
-      defaultImpoundmentVals['default'] = True
-      # QA for quantified columns
-      for key in ["area", "volume", "capacity", "max_height"]:
-        val = defaultImpoundmentVals.get(key)
-        if isinstance(val, str):
-          try:
-            digits = get_digits(defaultImpoundmentVals[key])
-            defaultImpoundmentVals[key] = digits
-          except ValueError:
-            # If value can't be converted (i.e., doesn't contain digits), remove it. Property in row_ will be blank
-            del(defaultImpoundmentVals[key])
-      defaultImpoundmentVals["name"] = f"{defaultTSF.name}_impoundment"
-      defaultImpoundment = Impoundment(parentTsf=defaultTSF, **defaultImpoundmentVals)
-      self.row_records.append(defaultImpoundment)
-    except Exception as e:
-      print(e)
+    # Default impoundment. Every default tailings facility gets one
+    default_impoundment = Impoundment(
+      parentTsf = default_TSF,
+      is_default = True,
+      area = row.Tailings_Area,
+      volume = row.Tailings_Volume,
+      capacity = row.Tailings_Capacity,
+      storage_method = row.Storage_Method,
+      max_height = row.Current_Max_Height,
+      acid_generating = row.Acid_Generating,
+      treatment = row.Treatment,
+      rating_index = row.Rating_Index,
+      stability_concerns = row.Stability_Concerns
+    )
+    self.row_records.append(default_impoundment)
+
+  def process_tsf(self, row:pd.Series, parent_mine:Mine):
+    tsf = TailingsFacility(
+      name = row.Site_Name,
+      cmdb_id = row.CMIM_ID,
+      status = row.Mine_Status,
+      hazard_class = row.Hazard_Class,
+      latitude = row.Latitude,
+      longitude = row.Longitude,
+      is_default = False
+    )
+    tsf.mines.append(parent_mine)
+    return tsf
   
-  # def process_tsf(self, row: pd.Series):
-  #   try:  
-  #     tsfVals = get_table_values(row, {
-  #         "Site_Name": "name",
-  #         "CMIM_ID": 'cmdb_id',
-  #         "Mine_Status": "status",
-  #         "Hazard_Class": "hazard_class",
-  #         "Latitude": "latitude",
-  #         "Longitude": "longitude"
-  #     })
-      
-  #     tsf = TailingsFacility(**tsfVals)
-      
-  #     # Get parent mines. It's possible to have more than one
-  #     parentID = str(row['Parent_ID']).strip(",")
-  #     for id in parentID:
-  #       mine = session.query(Mine).filter(Mine.cmdb_id == id).first()
-  #       if pd.notna(mine):
-  #         mine.tailings_facilities.append(tsf)
-      
-  #     self.row_records.append(tsf)
-  #   except Exception as e:
-  #     print(e)
-
-  # def process_impoundment(self, row: pd.Series):
-  #   try:  
-  #     parentID = row['Parent_ID']
-  #     # parentTsf = session.query(TailingsFacility).filter(TailingsFacility.cmdb_id == parentID).first()
-  #     if pd.notna(parentTsf):
-  #       impoundmentVals = get_table_values(row, {
-  #         "Site_Name": "name",
-  #         "Tailings_Area": "area",
-  #         "Tailings_Volume": "volume",
-  #         "Tailings_Capacity": "capacity",
-  #         "Tailings_Storage_Method": "storage_method",
-  #         "Current_Max_Height": "max_height",
-  #         "Acid_Generating" : "acid_generating",
-  #         "Treatment": "treatment",
-  #         "Rating_Index": "rating_index",
-  #         "History_Stability_Concerns": "stability_concerns"
-  #       })
-  #       impoundmentVals['default'] = False
-  #       # QA for quantified columns
-  #       for key in ["area", "volume", "capacity", "max_height"]:
-  #         val = impoundmentVals.get(key)
-  #         if isinstance(val, str):
-  #           try:
-  #             digits = get_digits(impoundmentVals[key])
-  #             impoundmentVals[key] = digits
-  #           except ValueError:
-  #             # If value can't be converted (i.e., doesn't contain digits), remove it. Property in row_ will be blank
-  #             del(impoundmentVals[key])
-
-  #       impoundment = Impoundment(parentTsf=parentTsf, **impoundmentVals)
-  #       self.row_records.append(impoundment)
-  #   except Exception as e:
-  #     print(e)
+  def process_impoundment(self, row:pd.Series, parent_TSF:TailingsFacility):
+    impoundment = Impoundment(
+      name = row.Site_Name,
+      cmdb_id = row.CMIM_ID,
+      is_default = False,
+      area = row.Tailings_Area,
+      volume = row.Tailings_Volume,
+      capacity = row.Tailings_Capacity,
+      max_height = row.Current_Max_Height,
+      acid_generating = row.Acid_Generating,
+      treatment = row.Treatment,
+      rating_index = row.Rating_Index,
+      stability_concerns = row.Stability_Concerns
+    )
+    impoundment.parentTsf = parent_TSF
+    return impoundment
 
 class OMIImporter(DataImporter):
   def __init__(self, cm_list:list='config', metals_dict:dict='config', name_convert_dict:dict='config'):
@@ -311,12 +273,12 @@ class OMIImporter(DataImporter):
         row_records.append(comm_record)
 
       # Default TSF
-      tsf = TailingsFacility(default = True, name = f"default_TSF_{mine.name}".strip())
+      tsf = TailingsFacility(is_default = True, name = f"default_TSF_{mine.name}".strip())
       mine.tailings_facilities.append(tsf)
       row_records.append(tsf)
 
       # Default Impoundment
-      impoundment = Impoundment(parentTsf = tsf, default = True, name = f"{tsf.name}_impoundment")
+      impoundment = Impoundment(parentTsf = tsf, is_default = True, name = f"{tsf.name}_impoundment")
       row_records.append(impoundment)
 
       omi_reference = Reference(mine=mine, source = "OMI", source_id = row["MDI_IDENT"], link=row['DETAIL'])
@@ -394,11 +356,11 @@ class OAMImporter(DataImporter):
         except Exception as e:
           print(e)
 
-      tsf = TailingsFacility(default = True, name = f"default_TSF_{mine.name}".strip())
+      tsf = TailingsFacility(is_default = True, name = f"default_TSF_{mine.name}".strip())
       mine.tailings_facilities.append(tsf)
       row_records.append(tsf)
 
-      impoundment = Impoundment(parentTsf = tsf, default = True, name = f"{tsf.name}_impoundment")
+      impoundment = Impoundment(parentTsf = tsf, is_default = True, name = f"{tsf.name}_impoundment")
       row_records.append(impoundment)
 
       owner = Owner(name = row["Last_Operator"])
@@ -472,13 +434,13 @@ class BCAHMImporter(DataImporter):
         row_records.append(commodity_record)
 
       # TSF
-      tsf = TailingsFacility(default = True, name = f"default_TSF_{mine_vals['name']}".strip())
+      tsf = TailingsFacility(is_default = True, name = f"default_TSF_{mine_vals['name']}".strip())
       mine.tailings_facilities.append(tsf)
       row_records.append(tsf)
       bcahm_id.update_id()
 
       # Impoundment
-      impoundment = Impoundment(parentTsf=tsf, default=True, name=f"{tsf.name}_impoundment")
+      impoundment = Impoundment(parentTsf=tsf, is_default=True, name=f"{tsf.name}_impoundment")
       row_records.append(impoundment)
       bcahm_id.update_id()
 
