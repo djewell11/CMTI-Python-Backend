@@ -13,8 +13,7 @@ from cmti_tools.tables import *
 from cmti_tools.idmanager import *
 
 def create_name_dict(elements_csv) -> dict:
-  elements = pd.read_csv(elements_csv)
-  name_convert_dict = dict(zip(elements['symbol'], elements['name']))
+  name_convert_dict = dict(zip(elements_csv['symbol'], elements_csv['name']))
   return name_convert_dict
 
 # Load data files from config parser
@@ -31,28 +30,15 @@ def create_module_variables() -> dict:
   config.read(config_path)
 
   with open(config.get('sources', 'critical_minerals'), mode='r') as critical_minerals_file:
-    critical_minerals = pd.read_csv(critical_minerals_file, header=0)
+    critical_minerals = pd.read_csv(critical_minerals_file, encoding='utf-8')['Critical Minerals List'].tolist()
   with open(config.get('sources', 'metals'), mode='r') as metals_file:
-    metals = pd.read_csv(metals_file, header=0, encoding='utf-8')
+    metals = pd.read_csv(metals_file, encoding='utf-8')
     metals_dict = dict(zip(metals['Commodity'], metals['Type']))
   with open(config.get('sources', 'elements'), mode='r') as elements_file:
-    name_convert_dict = create_name_dict(elements_file)
-  return {"cm_list":critical_minerals, "metals_dict":metals_dict, "name_convert_dict":name_convert_dict}
+    elements = pd.read_csv(elements_file, encoding='utf-8')
+    name_convert_dict = create_name_dict(elements)
 
-# try:
-#   data_tables = create_module_variables()
-# except ConfigError as config_error:
-#   print(config_error)
-# except Exception as e:
-#   print(e)
-
-# try:
-#   engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost:5432/cmti')
-# except:
-#   print("Create Engine Failed")
-# Session = sessionmaker(bind=engine)
-# session = Session()
-
+  return {"cm_list": critical_minerals, "metals_dict": metals_dict, "name_convert_dict": name_convert_dict}
 
 def get_digits(value: str, output: str = 'float'):
   """

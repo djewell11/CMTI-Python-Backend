@@ -79,7 +79,7 @@ class CommodityRecord(Base):
   mine = relationship("Mine", back_populates="commodities")
 
   def __repr__(self) -> str:
-    return f"{self.commodity!r}, ID: {self.id!r}, Mine Name: {CommodityRecord.mine.name}, mine_id: {self.mine_id}, Produced: {self.produced}"
+    return f"{self.commodity!r}, ID: {self.id!r}, Mine Name: {self.mine.name!r}, mine_id: {self.mine_id}, Produced: {self.produced}"
 
 class Alias(Base):
   __tablename__ = "aliases"
@@ -90,7 +90,7 @@ class Alias(Base):
   mine = relationship("Mine", back_populates="aliases")
 
   def __repr__(self) -> str:
-    return f"Alias: {self.alias!r}, Mine Name: {Alias.mine.name}, mine_id: {self.mine_id}"
+    return f"Alias: {self.alias!r}, Mine Name: {self.mine.name!r}, mine_id: {self.mine_id}"
 
 class Owner(Base):
   __tablename__ = "owners"
@@ -163,7 +163,7 @@ class Orebody(Base):
   mine = relationship("Mine", back_populates="orebody")
 
   def __repr__(self) -> str:
-    return f"{self.ore_type!r}, ID: {self.id!r}, mineral: {self.mineral}, Mine Name: {Orebody.mine.name}, mine_id: {self.mine_id}"
+    return f"{self.ore_type!r}, ID: {self.id!r}, mineral: {self.mineral}, Mine Name: {self.mine.name}, mine_id: {self.mine_id}"
 
 class Reference(Base):
   __tablename__ = "references"
@@ -177,7 +177,7 @@ class Reference(Base):
   mine = relationship("Mine", back_populates="references")
 
   def __repr__(self):
-    return f"Reference ID: {self.source}:{self.source_id}, Mine Name: {Reference.mine.name}, mine_id: {self.mine_id}"
+    return f"Reference ID: {self.source}:{self.source_id}, Mine Name: {self.mine.name}, mine_id: {self.mine_id}"
 
 class TailingsAssociation(Base):
   __tablename__ = "tsf_mine_associations"

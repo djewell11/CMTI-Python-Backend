@@ -8,7 +8,6 @@ from sqlalchemy.exc import IntegrityError
 from abc import ABC, abstractmethod
 
 from cmti_tools import get_digits
-from cmti_tools import get_table_values
 from cmti_tools import convert_commodity_name
 from cmti_tools import get_commodity
 from cmti_tools import lon_to_utm_zone
@@ -25,7 +24,7 @@ class DataImporter(ABC):
   """
   An abstract base class for importing data sources.
   """
-  def __init__(self, name_convert_dict:str|dict|None='config', cm_list:str|dict|None='config', metals_dict:str|dict|None='config'):
+  def __init__(self, name_convert_dict:str|dict|None=None, cm_list:str|dict|None=None, metals_dict:str|dict|None=None):
     self.id_manager = ID_Manager()
 
     # Use ConfigParser to get data files if not provided
@@ -33,6 +32,7 @@ class DataImporter(ABC):
     cfg_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../config.toml"))
     config.read(cfg_path)
 
+    # TODO: Use create_module_variables here
     if name_convert_dict == 'config':
       with open(config.get('sources', 'elements'), mode='r') as elements_file:
         self.name_convert_dict = create_name_dict(elements_file)
@@ -54,7 +54,7 @@ class DataImporter(ABC):
       self.metals_dict = metals_dict
 
   @abstractmethod
-  def process_row(self, row: pd.Series) -> list[object]:
+  def create_row_records(self, row: pd.Series) -> list[object]:
     """
     Process a single row and generates a DeclarativeBase objects based on inputs.
 
@@ -64,7 +64,7 @@ class DataImporter(ABC):
   def generate_records(self, dataframe:pd.DataFrame) -> list[object]:
     session_records = []
     for _, row in dataframe.iterrows():
-      row_records = self.process_row(row)
+      row_records = self.create_row_records(row)
       session_records = session_records + row_records
     return session_records
 
@@ -95,7 +95,7 @@ class WorksheetImporter(DataImporter):
     # if auto_generate_cmti_ids:
     #   self.id_manager = ID_Manager()
   
-  def process_row(self, row, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None, comm_col_count:int=8, source_col_count:int=4):
+  def create_row_records(self, row, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None, comm_col_count:int=8, source_col_count:int=4):
     
     # Data tables will default to WorksheetImporter attributes but can be overridden
     if cm_list is None:
@@ -198,12 +198,12 @@ class WorksheetImporter(DataImporter):
       area = row.Tailings_Area,
       volume = row.Tailings_Volume,
       capacity = row.Tailings_Capacity,
-      storage_method = row.Storage_Method,
+      storage_method = row.Tailings_Storage_Method,
       max_height = row.Current_Max_Height,
       acid_generating = row.Acid_Generating,
       treatment = row.Treatment,
       rating_index = row.Rating_Index,
-      stability_concerns = row.Stability_Concerns
+      stability_concerns = row.History_Stability_Concerns
     )
     self.row_records.append(default_impoundment)
 
@@ -242,7 +242,7 @@ class OMIImporter(DataImporter):
     super().__init__(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_convert_dict)
     self.prov_id = ProvID("ON")
   
-  def process_row(self, row: pd.Series, name_convert_dict: dict=None) -> list[object]:
+  def create_row_records(self, row: pd.Series, name_convert_dict: dict=None) -> list[object]:
     
     # name_convert_dict will default to the OMIImporter attribute but can be overridden
     if name_convert_dict is None:
@@ -300,7 +300,7 @@ class OAMImporter(DataImporter):
     else:
       return val
 
-  def process_row(self, row: pd.Series, oam_comm_names:dict, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None):
+  def create_row_records(self, row: pd.Series, oam_comm_names:dict, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None):
 
     # Data tables will default to OAMImporter attributes but can be overridden
     if cm_list is None:
@@ -379,7 +379,7 @@ class BCAHMImporter(DataImporter):
     super().__init__(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_convert_dict)
     self.provID = ProvID('BC')
 
-  def process_row(self, row: pd.Series, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None):
+  def create_row_records(self, row: pd.Series, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None):
 
     # Data tables will default to BCAHMImporter attributes but can be overridden
     if cm_list is None:

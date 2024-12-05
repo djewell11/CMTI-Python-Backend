@@ -8,8 +8,8 @@ metals_dict = module_variables.get('metals_dict')
 cm_list = module_variables.get('cm_list')
 
 # Test the workseet
-def test_process_row_worksheet():
-    worksheet_importer = WorksheetImporter()
+def test_create_rows_records_worksheet():
+    worksheet_importer = WorksheetImporter(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_dict)
     row = Series(
     {
         'Site_Name': 'Springhill',
@@ -56,19 +56,19 @@ def test_process_row_worksheet():
         'Tailings_Area': 500,
         'Tailings_Volume': 2500,
         'Tailings_Capacity': 4000,
+        'Tailings_Storage_Method': 'Dry Stack',
         'Current_Max_Height': 750,
         'Acid_Generating': 'True',
-        'Storage_Method': 'Dry Stack',
         'Treatment': 'None',
         'Rating_Index': 'A',
-        'Stability_Concerns': 'None'
+        'History_Stability_Concerns': 'None'
     })
-    row_records = worksheet_importer.process_row(row)
+    row_records = worksheet_importer.create_row_records(row)
     assert len(row_records) == 10
 
 # Test the Ontario Mineral Inventory (OMI)
-def test_process_row_omi():
-    omi_importer = OMIImporter(name_convert_dict='config')
+def test_create_row_records_omi():
+    omi_importer = OMIImporter(name_convert_dict=name_dict)
     row = Series(
         {
             'MDI_IDENT': 'MDI130M', 
@@ -82,15 +82,15 @@ def test_process_row_omi():
             'RGP_DIST': 'Southern Ontario',
             'DETAIL': 'some website dot com'
          })
-    row_records = omi_importer.process_row(row)
+    row_records = omi_importer.create_row_records(row)
     assert len(row_records) == 8
 
 # Test the Orphaned and Abandoned Mine Inventort (OAM)
 oam_comm_data = read_csv(r'cmti_tools\data\OAM_commodity_names.csv')
 oam_comm_names = dict(zip(oam_comm_data['Symbol'], oam_comm_data['Full_Name']))
 
-def test_process_row_oam():
-    oam_importer = OAMImporter()
+def test_create_row_records_oam():
+    oam_importer = OAMImporter(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_dict)
     row = Series(
         {
             'OID': 10782,
@@ -108,12 +108,12 @@ def test_process_row_oam():
             'Mined_Quantity': 150_000,
             'URL': 'somewebsite dot com'
         })
-    row_records = oam_importer.process_row(row, oam_comm_names=oam_comm_names)
+    row_records = oam_importer.create_row_records(row, oam_comm_names=oam_comm_names)
     assert len(row_records) == 8
 
 # Test the BC Abandoned and Historic Mine database (BC AHM)
-def test_process_row_BCAHM():
-    bcahm_importer = BCAHMImporter()
+def test_create_row_records_BCAHM():
+    bcahm_importer = BCAHMImporter(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_dict)
     row = Series(
         {
             'OBJECTID': 1,
@@ -137,5 +137,5 @@ def test_process_row_BCAHM():
             'DEPOSITTYPE_D2': 'Pb-An-skarn',
             'DEPOSITCLASS_D2': None
         })
-    row_records = bcahm_importer.process_row(row)
+    row_records = bcahm_importer.create_row_records(row)
     assert len(row_records) == 11
