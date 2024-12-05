@@ -116,7 +116,7 @@ class WorksheetImporter(DataImporter):
     #   self.process_tsf(row)
     # elif site_type == "Impoundment":
     #   self.process_impoundment(row)
-    # return self.row_records
+    return self.row_records
     
   def process_mine(self, row:pd.Series, comm_col_count, source_col_count):
     mine = Mine(
