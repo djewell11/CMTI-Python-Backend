@@ -112,11 +112,11 @@ class WorksheetImporter(DataImporter):
     if site_type == "Mine":
       mine = self.process_mine(row, comm_col_count, source_col_count)
       self.row_records.append(mine)
-    elif site_type == "TSF":
-      self.process_tsf(row)
-    elif site_type == "Impoundment":
-      self.process_impoundment(row)
-    return self.row_records
+    # elif site_type == "TSF":
+    #   self.process_tsf(row)
+    # elif site_type == "Impoundment":
+    #   self.process_impoundment(row)
+    # return self.row_records
     
   def process_mine(self, row:pd.Series, comm_col_count, source_col_count):
     mine = Mine(
