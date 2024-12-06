@@ -33,9 +33,9 @@ class Mine(Base):
   mining_method: Mapped[Optional[str]] = mapped_column(server_default = "Unknown")
   development_stage: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
   site_access: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
-  construction_year: Mapped[Optional[int]] = mapped_column(server_default=-1)
-  year_opened: Mapped[Optional[int]] = mapped_column(server_default=-1)
-  year_closed: Mapped[Optional[int]] = mapped_column(server_default=-1)
+  construction_year: Mapped[Optional[int]]
+  year_opened: Mapped[Optional[int]]
+  year_closed: Mapped[Optional[int]]
 
   # Relationships
   commodities = relationship("CommodityRecord", back_populates="mine", cascade="all, delete-orphan")

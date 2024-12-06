@@ -90,7 +90,7 @@ oam_comm_data = read_csv(r'cmti_tools\data\OAM_commodity_names.csv')
 oam_comm_names = dict(zip(oam_comm_data['Symbol'], oam_comm_data['Full_Name']))
 
 def test_create_row_records_oam():
-    oam_importer = OAMImporter(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_dict)
+    oam_importer = OAMImporter(oam_comm_names=oam_comm_names, cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_dict)
     row = Series(
         {
             'OID': 10782,
