@@ -33,9 +33,9 @@ class Mine(Base):
   mining_method: Mapped[Optional[str]] = mapped_column(server_default = "Unknown")
   development_stage: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
   site_access: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
-  construction_year: Mapped[Optional[int]]
-  year_opened: Mapped[Optional[int]]
-  year_closed: Mapped[Optional[int]]
+  construction_year: Mapped[Optional[int]] = mapped_column(server_default=-1)
+  year_opened: Mapped[Optional[int]] = mapped_column(server_default=-1)
+  year_closed: Mapped[Optional[int]] = mapped_column(server_default=-1)
 
   # Relationships
   commodities = relationship("CommodityRecord", back_populates="mine", cascade="all, delete-orphan")
@@ -69,12 +69,12 @@ class CommodityRecord(Base):
   produced_unit: Mapped[str] = mapped_column(nullable=True)
   contained: Mapped[str] = mapped_column(nullable=True)
   contained_unit: Mapped[str] = mapped_column(nullable=True)
-  metal_type: Mapped[Optional[str]]
+  metal_type: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
   is_critical: Mapped[Optional[bool]]
-  source: Mapped [Optional[str]]
-  source_id: Mapped [Optional[str]]
-  source_year_start: Mapped [Optional[int]]
-  source_year_end: Mapped [Optional[int]]
+  source: Mapped [Optional[str]] = mapped_column(server_default="Unknown")
+  source_id: Mapped [Optional[str]] = mapped_column(server_default="Unknown")
+  source_year_start: Mapped [Optional[int]] = mapped_column(server_default="Unknown")
+  source_year_end: Mapped [Optional[int]] = mapped_column(server_default="Unknown")
 
   mine = relationship("Mine", back_populates="commodities")
 
@@ -111,10 +111,10 @@ class TailingsFacility(Base):
 
   id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
   is_default: Mapped[bool] = mapped_column(nullable=False, default=False)
-  cmdb_id: Mapped[Optional[str]]
+  cmdb_id: Mapped[Optional[str]] 
   name: Mapped[Optional[str]]
   status: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
-  hazard_class: Mapped[Optional[str]]
+  hazard_class: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
   # Coordinates are optional for TSFs, will likely be listed as the same as their parent mine
   latitude: Mapped[Optional[float]]
   longitude: Mapped[Optional[float]]

@@ -3,6 +3,7 @@ import pathlib
 from configparser import ConfigParser
 from configparser import Error as ConfigError
 import pandas as pd
+from pandas import DataFrame
 from warnings import warn
 from math import ceil
 from sqlalchemy import select
@@ -12,7 +13,7 @@ from sqlalchemy.exc import IntegrityError
 from cmti_tools.tables import *
 from cmti_tools.idmanager import *
 
-def create_name_dict(elements_csv) -> dict:
+def create_name_dict(elements_csv: DataFrame) -> dict:
   name_convert_dict = dict(zip(elements_csv['symbol'], elements_csv['name']))
   return name_convert_dict
 

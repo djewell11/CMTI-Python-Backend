@@ -184,8 +184,11 @@ class WorksheetImporter(DataImporter):
     # Default tailings facility. Every mine gets one
     default_TSF = TailingsFacility(
       name = f"defaultTSF_{mine.name}".strip(),
+      cmdb_id = mine.cmdb_id,
       status = row.Mine_Status,
       hazard_class = row.Hazard_Class,
+      latitude = mine.latitude,
+      longitude = mine.longitude,
       is_default = True,
     )
     default_TSF.mines.append(mine)
@@ -289,8 +292,9 @@ class OMIImporter(DataImporter):
       print(e)
 
 class OAMImporter(DataImporter):
-  def __init__(self, cm_list='config', metals_dict='config', name_convert_dict='config'):
+  def __init__(self, oam_comm_names:dict, cm_list='config', metals_dict='config', name_convert_dict='config'):
     super().__init__(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_convert_dict)
+    self.oam_comm_names = oam_comm_names
 
   def check_year(self, val):
     if isinstance(val, str):
@@ -303,6 +307,8 @@ class OAMImporter(DataImporter):
   def create_row_records(self, row: pd.Series, oam_comm_names:dict, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None):
 
     # Data tables will default to OAMImporter attributes but can be overridden
+    if oam_comm_names is None:
+      oam_comm_names = self.oam_comm_names
     if cm_list is None:
       cm_list = self.cm_list
     if metals_dict is None:
