@@ -73,8 +73,8 @@ class CommodityRecord(Base):
   is_critical: Mapped[Optional[bool]]
   source: Mapped [Optional[str]] = mapped_column(server_default="Unknown")
   source_id: Mapped [Optional[str]] = mapped_column(server_default="Unknown")
-  source_year_start: Mapped [Optional[int]] = mapped_column(server_default="Unknown")
-  source_year_end: Mapped [Optional[int]] = mapped_column(server_default="Unknown")
+  source_year_start: Mapped [Optional[int]]
+  source_year_end: Mapped [Optional[int]]
 
   mine = relationship("Mine", back_populates="commodities")
 
