@@ -7,16 +7,84 @@ from sqlalchemy.orm import DeclarativeBase # Imported for typehints
 from sqlalchemy.exc import IntegrityError
 from abc import ABC, abstractmethod
 
-from ..tools import get_digits
-from ..tools import convert_commodity_name
-from ..tools import get_commodity
-from ..tools import lon_to_utm_zone
-from ..tools import create_name_dict
-from ..tables import *
-from ..idmanager import ProvID
-from ..idmanager import ID_Manager
+import cmti_tools.tools as tools
+from cmti_tools.tables import *
+from cmti_tools.idmanager import ProvID
+from cmti_tools.idmanager import ID_Manager
 
 # Bulk import functions
+testTable = pd.read_excel(r"D:\Google Drive\NRCan\Data\CMDB_NoNoami.xlsx")
+# testTable = pd.DataFrame(data={'Site_Name':['Big Mine', 'Little Mine', pd.NA], 'Construction_Year': [1991, 2000., "1880"], 'UTM_Zone': [16, "20", pd.NA]})
+# testTypes = pd.DataFrame(data={'Column': ['Site_Name', 'Construction_Year', 'UTM_Zone'], 'Type': [str, int, 'u2'], 'Default': ['Unknown', 2000, 17]})
+
+cmti_dtypes = {'Site_Name':'U', 'Site_Type':'U', 'CMIM_ID':'U', 'Site_Aliases': 'U', 'Last_Revised': 'datetime64[ns]',
+  'NAD': 'u1', 'UTM_Zone':'u2', 'Easting':'u8', 'Northing':'u8', 'Latitude': 'f',
+  'Longitude': 'f', 'Country':'U','Province_Territory': 'U', 'NTS_Area':'U', 'Mining_District': 'U', 'Parent': 'U', 'Parent_ID': 'U',
+  'Commodity1':'U', 'Commodity2':'U', 'Commodity3': 'U', 'Commodity4': 'U', 'Commodity5': 'U', 'Commodity6':'U',
+  'Commodity7':'U', 'Commodity8':'U', 'Mine_Type':'U',  'Mining_Method':'U', 'Mine_Status': 'U',
+  'Owner_Operator': 'U', 'Past_Owners': 'U', 'Dev_Stage': 'U', 'DS_Comments': 'U', 'Site_Access': 'U',
+  'SA_Comments': 'U',  'Shaft_Depth':'f', 'Construction_Year': 'u2', 'Year_Opened': 'u2', 'Year_Closed': 'u2',
+  'Reserves_Resources': 'f', 'SEDAR': 'U', 'Source_1': 'U', 'Source_1_ID': 'U', 'Source_1_Link': 'U',
+  'Source_2': 'U', 'Source_2_ID': 'U', 'Source_2_Link': 'U', 'Source_3': 'U', 'Source_3_ID': 'U', 'Source_3_Link': 'U',
+  'Source_4': 'U', 'Source_4_ID': 'U', 'Source_4_Link': 'U', 'Notes': 'U', 'Orebody_Type':'U', 'Orebody_Class':'U',
+  'Ore_Minerals':'U', 'Processing_Method':'U',  'Ore_Processed': 'f', 'Ore_Processed_Unit':'U',
+  'Other_Mineralization': 'U', 'Spectral_Mineralization': 'U', 'Forcing_Features': 'U', 'Feature_References': 'U',
+  'NOAMI_Status': 'U', 'NOAMI_Site_Class': 'U', 'Hazard_Class':'U', 'Hazard_System':'U', 'PRP_Rating':'U',
+  'Rehab_Plan':'U', 'EWS':'U', 'EWS_Rating':'U', 'Raise_Type':'U', 'History_Stability_Concerns':'U',
+  'Rating_Index':'U', 'Acid_Generating':'?',  'Treatment':'U', 'Current_Max_Height': 'f', 'Tailings_Storage_Method': 'U',
+  'Tailings_Volume': 'f', 'Tailings_Capacity':'f', 'Tailings_Area':'f', 'Tailings_Area_From_Images':'f',
+  'Tailings_Area_Notes': 'U'}
+grades = ['Au_Grade', 'Au_Contained', 'Au_Produced', 'Ag_Grade', 'Ag_Contained', 'Ag_Produced', 'Barite_Grade',
+  'Barite_Contained', 'Barite_Produced', 'Bi_Grade', 'Bi_Contained', 'Bi_Produced', 'Cd_Grade', 'Cd_Contained',
+  'Cd_Produced', 'Coal_Type', 'Coal_Rank', 'Coal_Production', 'Coal_Produced', 'Co_Grade', 'Co_Contained',
+  'Co_Produced', 'Cu_Grade', 'Cu_Contained', 'Cu_Produced', 'Diamond', 'Diamond_Grade', 'Fe_Grade', 'Fe_Produced',
+  'Fe_Ore_Extracted', 'Fe_Ore_Smelted', 'Flourspar_Grade', 'Flourspar_Contained', 'Graphite_Grade', 'Graphite_Contained',
+  'Gypsum_Produced', 'In_Grade', 'In_Contained', 'In_Produced', 'Mo_Grade', 'Mo_Contained', 'Mo_Produced',
+  'Ni_Grade', 'Ni_Contained', 'Ni_Produced', 'Pb_Grade', 'Pb_Contained', 'Pb_Produced', 'Pd_Grade', 'Pd_Contained',
+  'Pd_Produced', 'Potash_Grade', 'Potash_Contained', 'Potash_Produced', 'Pt_Grade', 'Pt_Contained', 'Pt_Produced',
+  'Sb_Grade', 'Sb_Contained', 'Sb_Produced', 'Sn_Grade', 'Sn_Contained', 'Sn_Produced', 'U_Grade', 'U_Contained',
+  'U_Produced', 'W_Grade', 'W_Contained', 'W_Produced', 'Zn_Grade', 'Zn_Contained', 'Zn_Produced']
+for grade in grades:
+  cmti_dtypes[grade] = 'f'
+cmti_defaults = []
+for k, v in cmti_dtypes.items():
+  if v == 'U':
+    cmti_defaults.append('Unknown')
+  elif v.startswith('u') or v.startswith('i') or v.startswith('f'):
+    cmti_defaults.append(pd.NA)
+  elif v == 'datetime64[ns]':
+    cmti_defaults.append(pd.NaT)
+  elif v == '?':
+    cmti_defaults.append(False)
+
+testTypes = pd.DataFrame(data={"Column":cmti_dtypes.keys(), "Type":cmti_dtypes.values(), "Default":cmti_defaults})
+# print(testTypes)
+# print(testTypes)
+def clean_table_data(in_table:pd.DataFrame, types_table:pd.DataFrame) -> pd.DataFrame:
+  """
+  Enforces dtypes for in_table columns and inserts default values.
+
+  :param in_table: The table being cleaned.
+  :type in_table: Pandas DataFrame.
+
+  :param types_table: A DataFrame with columns "Column", "Type", and "Default".
+  :type types_table: Pandas DataFrame.
+  """
+  # Fill NAs
+  na_dict = dict(zip(types_table.Column, types_table.Default))
+  dtype_dict = dict(zip(types_table.Column, types_table.Type))
+  try:
+    out_table = in_table.fillna(na_dict)
+  except Exception as err:
+    raise err
+  # Insert defaults
+
+  out_table = out_table.astype(dtype_dict)
+
+  return out_table
+
+clean_table_data(testTable, testTypes)
+
 
 # Abstract Classes implementation
 
@@ -35,7 +103,7 @@ class DataImporter(ABC):
     # TODO: Use create_module_variables here
     if name_convert_dict == 'config':
       with open(config.get('sources', 'elements'), mode='r') as elements_file:
-        self.name_convert_dict = create_name_dict(elements_file)
+        self.name_convert_dict = tools.create_name_dict(elements_file)
     elif name_convert_dict is not None:
         self.name_convert_dict = name_convert_dict
     
@@ -144,7 +212,7 @@ class WorksheetImporter(DataImporter):
     comm_columns = [f"Commodity{i}" for i in range(1, comm_col_count+1)]
     for col in comm_columns:
       if pd.notna(row[col]):
-        commodity_record = get_commodity(row, col, self.cm_list, self.name_convert_dict, self.metals_dict, mine)
+        commodity_record = tools.get_commodity(row, col, self.cm_list, self.name_convert_dict, self.metals_dict, mine)
         self.row_records.append(commodity_record)
   
     # Aliases
@@ -272,7 +340,7 @@ class OMIImporter(DataImporter):
       
       # Commodities
       for comm_col in ['P_COMMOD', 'S_COMMOD']:
-        comm_record = get_commodity(row, comm_col, self.cm_list, self.name_convert_dict, self.metals_dict, mine)
+        comm_record = tools.get_commodity(row, comm_col, self.cm_list, self.name_convert_dict, self.metals_dict, mine)
         row_records.append(comm_record)
 
       # Default TSF
@@ -298,7 +366,7 @@ class OAMImporter(DataImporter):
 
   def check_year(self, val):
     if isinstance(val, str):
-      return get_digits(val)
+      return tools.get_digits(val)
     elif pd.isna(val):
       return None
     else:
@@ -343,8 +411,8 @@ class OAMImporter(DataImporter):
           commodities = [comm.strip() for comm in comm_name.split(",")]
           for comm in commodities:
             # Convert to full name using OAM name values, then to element names
-            comm_full_oam = convert_commodity_name(comm, oam_comm_names, output_type='full', show_warning=False)
-            comm_name = convert_commodity_name(comm_full_oam, name_convert_dict, output_type='symbol', show_warning=False)
+            comm_full_oam = tools.convert_commodity_name(comm, oam_comm_names, output_type='full', show_warning=False)
+            comm_name = tools.convert_commodity_name(comm_full_oam, name_convert_dict, output_type='symbol', show_warning=False)
             start_year = self.check_year(row['Start_Date'])
             end_year = self.check_year(row['Last_Year'])
             produced = row["Mined_Quantity"] if pd.notna(row["Mined_Quantity"]) else None
@@ -423,7 +491,7 @@ class BCAHMImporter(DataImporter):
       if mine_vals['easting'] == 'Null' or pd.isna(mine_vals['easting']):
         del(mine_vals['easting'])
       if pd.isna(mine_vals['utm_zone']) or mine_vals['utm_zone'] == 'Null':
-        mine_vals['utm_zone'] = lon_to_utm_zone(mine_vals['longitude'])
+        mine_vals['utm_zone'] = tools.lon_to_utm_zone(mine_vals['longitude'])
       
       mine = Mine(cmdb_id = bcahm_id.formatted_id, **mine_vals)
       row_records.append(mine)
@@ -436,7 +504,7 @@ class BCAHMImporter(DataImporter):
       
       # Commodities
       for comm_col in ['COMMOD_C1', 'COMMOD_C2', 'COMMOD_C3']:
-        commodity_record = get_commodity(row, comm_col, cm_list, name_convert_dict, metals_dict, mine)
+        commodity_record = tools.get_commodity(row, comm_col, cm_list, name_convert_dict, metals_dict, mine)
         row_records.append(commodity_record)
 
       # TSF
