@@ -7,14 +7,14 @@ from sqlalchemy.orm import DeclarativeBase # Imported for typehints
 from sqlalchemy.exc import IntegrityError
 from abc import ABC, abstractmethod
 
-from cmti_tools import get_digits
-from cmti_tools import convert_commodity_name
-from cmti_tools import get_commodity
-from cmti_tools import lon_to_utm_zone
-from cmti_tools import create_name_dict
-from cmti_tools.tables import *
-from cmti_tools.idmanager import ProvID
-from cmti_tools.idmanager import ID_Manager
+from ..tools import get_digits
+from ..tools import convert_commodity_name
+from ..tools import get_commodity
+from ..tools import lon_to_utm_zone
+from ..tools import create_name_dict
+from ..tables import *
+from ..idmanager import ProvID
+from ..idmanager import ID_Manager
 
 # Bulk import functions
 
@@ -289,7 +289,7 @@ class OMIImporter(DataImporter):
 
       return row_records
     except Exception as e:
-      print(e)
+      raise e
 
 class OAMImporter(DataImporter):
   def __init__(self, oam_comm_names:dict, cm_list='config', metals_dict='config', name_convert_dict='config'):
