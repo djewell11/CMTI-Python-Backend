@@ -13,7 +13,8 @@ from cmti_tools.idmanager import ProvID
 from cmti_tools.idmanager import ID_Manager
 
 # Bulk import functions
-testTable = pd.read_excel(r"D:\Google Drive\NRCan\Data\CMDB_NoNoami.xlsx")
+
+# testTable = pd.read_excel(r"D:\Google Drive\NRCan\Data\CMDB_NoNoami.xlsx")
 # testTable = pd.DataFrame(data={'Site_Name':['Big Mine', 'Little Mine', pd.NA], 'Construction_Year': [1991, 2000., "1880"], 'UTM_Zone': [16, "20", pd.NA]})
 # testTypes = pd.DataFrame(data={'Column': ['Site_Name', 'Construction_Year', 'UTM_Zone'], 'Type': [str, int, 'u2'], 'Default': ['Unknown', 2000, 17]})
 
@@ -57,10 +58,9 @@ for k, v in cmti_dtypes.items():
   elif v == '?':
     cmti_defaults.append(False)
 
-testTypes = pd.DataFrame(data={"Column":cmti_dtypes.keys(), "Type":cmti_dtypes.values(), "Default":cmti_defaults})
-# print(testTypes)
-# print(testTypes)
-def clean_table_data(in_table:pd.DataFrame, types_table:pd.DataFrame) -> pd.DataFrame:
+# testTypes = pd.DataFrame(data={"Column":cmti_dtypes.keys(), "Type":cmti_dtypes.values(), "Default":cmti_defaults})
+
+def clean_table_data(in_table:pd.DataFrame, types_table:pd.DataFrame, drop_NA_columns:list=None) -> pd.DataFrame:
   """
   Enforces dtypes for in_table columns and inserts default values.
 
@@ -69,22 +69,27 @@ def clean_table_data(in_table:pd.DataFrame, types_table:pd.DataFrame) -> pd.Data
 
   :param types_table: A DataFrame with columns "Column", "Type", and "Default".
   :type types_table: Pandas DataFrame.
+
+  :param drop_NA_columns: Columns where row should be dropped if value is missing. Provides a way of removing rows that lack required values before committing to database. Default: None.
+  :type drop_NA_columns: list.
   """
-  # Fill NAs
+
+  pd.set_option('future.no_silent_downcasting', True)
+
+  # Drop rows with NA values in critical columns
+  if drop_NA_columns is not None:
+    in_table.dropna(subset=drop_NA_columns, how='any', inplace=True)
+  # Fill NAs with defaults
   na_dict = dict(zip(types_table.Column, types_table.Default))
   dtype_dict = dict(zip(types_table.Column, types_table.Type))
-  try:
-    out_table = in_table.fillna(na_dict)
-  except Exception as err:
-    raise err
-  # Insert defaults
+  out_table = in_table.fillna(na_dict)
+  # Enforce type
+  # Numeric columns use to_numeric instead of astype.
+  out_table.select_dtypes(include='number').apply(func=lambda col: pd.to_numeric(col, errors='coerce', dtype_backend='numpy_nullable'), axis=0)
 
-  out_table = out_table.astype(dtype_dict)
+  #TODO: If needed - isolate string columns and apply defaults/NA. isolate bad numeric values and insert default.
 
   return out_table
-
-clean_table_data(testTable, testTypes)
-
 
 # Abstract Classes implementation
 
