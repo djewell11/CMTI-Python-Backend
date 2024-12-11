@@ -269,7 +269,7 @@ class WorksheetImporter(DataImporter):
 
     # Default impoundment. Every default tailings facility gets one
     default_impoundment = Impoundment(
-      name=f"{mine.name}_default_impoundment",
+      name="default_placeholder",
       parentTsf = default_TSF,
       is_default = True,
       area = row.Tailings_Area,
