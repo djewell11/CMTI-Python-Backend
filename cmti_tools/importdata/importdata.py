@@ -268,8 +268,9 @@ class WorksheetImporter(DataImporter):
     self.row_records.append(default_TSF)
 
     # Default impoundment. Every default tailings facility gets one
+    impountment_name = f"{mine.name}_defaultImpoundment"
     default_impoundment = Impoundment(
-      name="default_placeholder",
+      name=impountment_name,
       parentTsf = default_TSF,
       is_default = True,
       area = row.Tailings_Area,
