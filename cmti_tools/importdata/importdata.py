@@ -248,7 +248,7 @@ class WorksheetImporter(DataImporter):
     source_columns = [f"Source_{j}" for j in range(1, source_col_count+1)]
     for col in source_columns:
       source = row[col]
-      if pd.notna(source):
+      if pd.notna(source) and source != "Unknown":
         source_id = row[f"{col}_ID"]
         link = row[f"{col}_Link"]
         reference = Reference(mine=mine, source=source, source_id=source_id, link=link)
@@ -268,7 +268,7 @@ class WorksheetImporter(DataImporter):
     self.row_records.append(default_TSF)
 
     # Default impoundment. Every default tailings facility gets one
-    impountment_name = f"{mine.name}_defaultImpoundment"
+    impountment_name = f"{mine.name.strip()}_defaultImpoundment"
     default_impoundment = Impoundment(
       name=impountment_name,
       parentTsf = default_TSF,
