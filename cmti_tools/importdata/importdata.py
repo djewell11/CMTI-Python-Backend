@@ -285,6 +285,8 @@ class WorksheetImporter(DataImporter):
     )
     self.row_records.append(default_impoundment)
 
+    self.row_records.append(mine)
+
   def process_tsf(self, row:pd.Series, parent_mine:Mine):
     tsf = TailingsFacility(
       name = row.Site_Name,
