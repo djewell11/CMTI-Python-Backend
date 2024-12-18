@@ -312,7 +312,7 @@ class WorksheetImporter(DataImporter):
       acid_generating = row.Acid_Generating,
       treatment = row.Treatment,
       rating_index = row.Rating_Index,
-      stability_concerns = row.Stability_Concerns
+      stability_concerns = row.History_Stability_Concerns
     )
     impoundment.parentTsf = parent_TSF
     return impoundment
