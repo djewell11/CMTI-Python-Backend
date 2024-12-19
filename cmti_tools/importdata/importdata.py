@@ -96,8 +96,13 @@ def clean_table_data(in_table:pd.DataFrame, types_table:pd.DataFrame, drop_NA_co
 class DataImporter(ABC):
   """
   An abstract base class for importing data sources.
+  Manages data initialization, record creation, and database ingestion.
   """
   def __init__(self, name_convert_dict:str|dict|None=None, cm_list:str|dict|None=None, metals_dict:str|dict|None=None):
+    """
+    Initializes the DataImporter class with optional configurations for 
+    name conversion, critical minerals, and metals classification.
+    """
     self.id_manager = ID_Manager()
 
     # Use ConfigParser to get data files if not provided
@@ -112,6 +117,7 @@ class DataImporter(ABC):
     elif name_convert_dict is not None:
         self.name_convert_dict = name_convert_dict
     
+    # Load critical minerals list
     if cm_list == 'config':
       with open(config.get('sources', 'critical_minerals'), mode='r') as critical_minerals_file:
         critical_minerals = pd.read_csv(critical_minerals_file, header=0)
@@ -119,6 +125,7 @@ class DataImporter(ABC):
     elif cm_list is not None:
       self.cm_list = cm_list
     
+    # Load metals dict
     if metals_dict == 'config':
       with open(config.get('sources', 'metals'), mode='r') as metals_file:
         metals_csv = pd.read_csv(metals_file, header=0, encoding='utf-8')
@@ -129,12 +136,18 @@ class DataImporter(ABC):
   @abstractmethod
   def create_row_records(self, row: pd.Series) -> list[object]:
     """
-    Process a single row and generates a DeclarativeBase objects based on inputs.
-
+    Process a single row and generates a DeclarativeBase objects based on inputs. 
+    Implemented by child classes.
     """
     pass
 
   def generate_records(self, dataframe:pd.DataFrame) -> list[object]:
+    """
+    Converts a DataFrame into a list of database records using create_row_records().
+    
+    :param dataframe: The input data as a pandas DataFrame.
+    :type dataframe: pd.DataFrame 
+    """
     session_records = []
     for _, row in dataframe.iterrows():
       row_records = self.create_row_records(row)
@@ -142,8 +155,17 @@ class DataImporter(ABC):
     return session_records
 
   def ingest_records(self, record_list:list[object], session:Session) -> None:
-      session.add_all(record_list)
-      session.commit()
+    """
+    Commits all generated records to the database in a single transaction.
+
+    :param record_list: List of ORM objects to be inserted.
+    :type record_list: list
+
+    :param session: SQLAlchemy session for committing records.
+    :type session: Session 
+    """
+    session.add_all(record_list)
+    session.commit()
 
   def commit_object(self, obj, session:Session):
     """
@@ -161,6 +183,9 @@ class DataImporter(ABC):
       session.rollback()
 
 class WorksheetImporter(DataImporter):
+  """
+  Imports worksheet data into the database.
+  """
   def __init__(self, name_convert_dict = 'config', cm_list = 'config', metals_dict = 'config', auto_generate_cmti_ids:bool=False):
     super().__init__(name_convert_dict, cm_list, metals_dict)
 
@@ -169,7 +194,29 @@ class WorksheetImporter(DataImporter):
     #   self.id_manager = ID_Manager()
   
   def create_row_records(self, row, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None, comm_col_count:int=8, source_col_count:int=4):
-    
+    """
+    Processes a worksheet row based on its 'Site_Type' and creates database records.
+
+    :param row: A pandas Series containing data from a worksheet row.
+    :type row: pd.Series
+
+    :param cm_list: Critical Minerals list
+    :type cm_list: list
+
+    :param metals_dict: Metals dictionary
+    :type metals_dict: dict
+
+    :param name_convert_dict: Name Convert dictionary
+    :type name_convert_dict: dict
+
+    :param comm_col_count: Commodity Column count to indicate amount of commodities in record
+    :type comm_col_count: int
+
+    :param source_col_count: Source Column count to indicate amount of sources in record
+    :type source_col_count: int
+
+    :return list: row_records
+    """
     # Data tables will default to WorksheetImporter attributes but can be overridden
     if cm_list is None:
       cm_list = self.cm_list
@@ -192,6 +239,10 @@ class WorksheetImporter(DataImporter):
     return self.row_records
     
   def process_mine(self, row:pd.Series, comm_col_count, source_col_count):
+    """
+    Processes mine-specific data and creates Mine, Owner, Alias, 
+    Commodity, Reference, and default TSF and Impoundment records.
+    """
     mine = Mine(
       cmdb_id = row.CMIM_ID,
       name = row.Site_Name,
@@ -319,11 +370,33 @@ class WorksheetImporter(DataImporter):
 
 class OMIImporter(DataImporter):
   def __init__(self, cm_list:list='config', metals_dict:dict='config', name_convert_dict:dict='config'):
+    """
+    Initializes the OMIImporter class with configuration data.
+    
+    :param cm_list: List of critical minerals.
+    :type cm_list: list
+
+    :param metals_dict: Dictionary mapping metal names to properties.
+    :type metals_dict: dict
+
+    :param name_convert_dict: Dictionary for converting commodity names.
+    :type name_convert_dict: dict
+    """
     super().__init__(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_convert_dict)
     self.prov_id = ProvID("ON")
   
   def create_row_records(self, row: pd.Series, name_convert_dict: dict=None) -> list[object]:
+    """
+    Processes a row of data and creates associated database records.
     
+    :param row: The data row to be processed.
+    :type row: pd.Series
+
+    :param name_convert_dict: Optional dictionary for commodity name conversion.
+    :type name_convert_dict: dict, optional
+
+    :return list[object]: A list of created data records.
+    """
     # name_convert_dict will default to the OMIImporter attribute but can be overridden
     if name_convert_dict is None:
       name_convert_dict = self.name_convert_dict
@@ -370,10 +443,33 @@ class OMIImporter(DataImporter):
 
 class OAMImporter(DataImporter):
   def __init__(self, oam_comm_names:dict, cm_list='config', metals_dict='config', name_convert_dict='config'):
+    """
+    Initializes the OAMImporter class with configuration data and commodity names.
+
+    :param oam_comm_names: Dictionary of OAM commodity names.
+    :type oam_comm_names: dict
+
+    :param cm_list: List of critical minerals.
+    :type cm_list: list
+
+    :param metals_dict: Dictionary mapping metal names to properties.
+    :type metals_dict: dict
+
+    :param name_convert_dict: Dictionary for converting commodity names.
+    :type name_convert_dict: dict
+
+    """
     super().__init__(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_convert_dict)
     self.oam_comm_names = oam_comm_names
 
   def check_year(self, val):
+    """
+    Checks and extracts the year from a value.
+
+    :param val: Value to be checked for a year.
+    :type val: str or float
+    :return int or None: Extracted year or None if not available.
+    """
     if isinstance(val, str):
       return tools.get_digits(val)
     elif pd.isna(val):
@@ -382,7 +478,26 @@ class OAMImporter(DataImporter):
       return val
 
   def create_row_records(self, row: pd.Series, oam_comm_names:dict, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None):
+    """
+    Processes a row of OAM data and creates associated database records.
 
+    :param row: The data row to be processed.
+    :type row: pd.Series
+
+    :param oam_comm_names: Dictionary of OAM commodity names.
+    :type oam_comm_names: dict
+
+    :param cm_list: List of critical minerals.
+    :type cm_list: list
+
+    :param metals_dict: Dictionary mapping metal names to properties.
+    :type metals_dict: dict
+
+    :param name_convert_dict: Dictionary for converting commodity names.
+    :type name_convert_dict: dict
+
+    :return list[object]: A list of created data records.
+    """
     # Data tables will default to OAMImporter attributes but can be overridden
     if oam_comm_names is None:
       oam_comm_names = self.oam_comm_names
@@ -459,11 +574,39 @@ class OAMImporter(DataImporter):
 
 class BCAHMImporter(DataImporter):
   def __init__(self, cm_list:list='config', metals_dict:dict='config', name_convert_dict:dict='config'):
+    """
+    Initializes the BCAHMImporter class with configuration data.
+    
+    :param cm_list: List of critical minerals.
+    :type cm_list: list
+
+    :param metals_dict: Dictionary mapping metal names to properties.
+    :type metals_dict: dict
+
+    :param name_convert_dict: Dictionary for converting commodity names.
+    :type name_convert_dict: dict
+    """
     super().__init__(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_convert_dict)
     self.provID = ProvID('BC')
 
   def create_row_records(self, row: pd.Series, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None):
+    """
+    Processes a row of data from the BCAHM dataset and creates associated database records.
+    
+    :param row: The data row to be processed.
+    :type row: pd.Series
 
+    :param cm_list: List of critical minerals, defaults to the class attribute.
+    :type cm_list: list
+
+    :param metals_dict: Dictionary of metals and their properties, defaults to the class attribute.
+    :type metals_dict: dict
+
+    :param name_convert_dict: Dictionary for commodity name conversion, defaults to the class attribute.
+    :type name_convert_dict: dict
+    
+    :return list[object]: A list of created data records.
+    """
     # Data tables will default to BCAHMImporter attributes but can be overridden
     if cm_list is None:
       cm_list = self.cm_list
