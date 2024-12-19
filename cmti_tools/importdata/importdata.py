@@ -14,51 +14,84 @@ from cmti_tools.idmanager import ID_Manager
 
 # Bulk import functions
 
-# testTable = pd.read_excel(r"D:\Google Drive\NRCan\Data\CMDB_NoNoami.xlsx")
-# testTable = pd.DataFrame(data={'Site_Name':['Big Mine', 'Little Mine', pd.NA], 'Construction_Year': [1991, 2000., "1880"], 'UTM_Zone': [16, "20", pd.NA]})
-# testTypes = pd.DataFrame(data={'Column': ['Site_Name', 'Construction_Year', 'UTM_Zone'], 'Type': [str, int, 'u2'], 'Default': ['Unknown', 2000, 17]})
+class converter_factory:
+  """
+  A class that generates converters for use in pandas, based on expected column datatypes and default values.
 
-cmti_dtypes = {'Site_Name':'U', 'Site_Type':'U', 'CMIM_ID':'U', 'Site_Aliases': 'U', 'Last_Revised': 'datetime64[ns]',
-  'NAD': 'u1', 'UTM_Zone':'u2', 'Easting':'u8', 'Northing':'u8', 'Latitude': 'f',
-  'Longitude': 'f', 'Country':'U','Province_Territory': 'U', 'NTS_Area':'U', 'Mining_District': 'U', 'Parent': 'U', 'Parent_ID': 'U',
-  'Commodity1':'U', 'Commodity2':'U', 'Commodity3': 'U', 'Commodity4': 'U', 'Commodity5': 'U', 'Commodity6':'U',
-  'Commodity7':'U', 'Commodity8':'U', 'Mine_Type':'U',  'Mining_Method':'U', 'Mine_Status': 'U',
-  'Owner_Operator': 'U', 'Past_Owners': 'U', 'Dev_Stage': 'U', 'DS_Comments': 'U', 'Site_Access': 'U',
-  'SA_Comments': 'U',  'Shaft_Depth':'f', 'Construction_Year': 'u2', 'Year_Opened': 'u2', 'Year_Closed': 'u2',
-  'Reserves_Resources': 'f', 'SEDAR': 'U', 'Source_1': 'U', 'Source_1_ID': 'U', 'Source_1_Link': 'U',
-  'Source_2': 'U', 'Source_2_ID': 'U', 'Source_2_Link': 'U', 'Source_3': 'U', 'Source_3_ID': 'U', 'Source_3_Link': 'U',
-  'Source_4': 'U', 'Source_4_ID': 'U', 'Source_4_Link': 'U', 'Notes': 'U', 'Orebody_Type':'U', 'Orebody_Class':'U',
-  'Ore_Minerals':'U', 'Processing_Method':'U',  'Ore_Processed': 'f', 'Ore_Processed_Unit':'U',
-  'Other_Mineralization': 'U', 'Spectral_Mineralization': 'U', 'Forcing_Features': 'U', 'Feature_References': 'U',
-  'NOAMI_Status': 'U', 'NOAMI_Site_Class': 'U', 'Hazard_Class':'U', 'Hazard_System':'U', 'PRP_Rating':'U',
-  'Rehab_Plan':'U', 'EWS':'U', 'EWS_Rating':'U', 'Raise_Type':'U', 'History_Stability_Concerns':'U',
-  'Rating_Index':'U', 'Acid_Generating':'?',  'Treatment':'U', 'Current_Max_Height': 'f', 'Tailings_Storage_Method': 'U',
-  'Tailings_Volume': 'f', 'Tailings_Capacity':'f', 'Tailings_Area':'f', 'Tailings_Area_From_Images':'f',
-  'Tailings_Area_Notes': 'U'}
-grades = ['Au_Grade', 'Au_Contained', 'Au_Produced', 'Ag_Grade', 'Ag_Contained', 'Ag_Produced', 'Barite_Grade',
-  'Barite_Contained', 'Barite_Produced', 'Bi_Grade', 'Bi_Contained', 'Bi_Produced', 'Cd_Grade', 'Cd_Contained',
-  'Cd_Produced', 'Coal_Type', 'Coal_Rank', 'Coal_Production', 'Coal_Produced', 'Co_Grade', 'Co_Contained',
-  'Co_Produced', 'Cu_Grade', 'Cu_Contained', 'Cu_Produced', 'Diamond', 'Diamond_Grade', 'Fe_Grade', 'Fe_Produced',
-  'Fe_Ore_Extracted', 'Fe_Ore_Smelted', 'Flourspar_Grade', 'Flourspar_Contained', 'Graphite_Grade', 'Graphite_Contained',
-  'Gypsum_Produced', 'In_Grade', 'In_Contained', 'In_Produced', 'Mo_Grade', 'Mo_Contained', 'Mo_Produced',
-  'Ni_Grade', 'Ni_Contained', 'Ni_Produced', 'Pb_Grade', 'Pb_Contained', 'Pb_Produced', 'Pd_Grade', 'Pd_Contained',
-  'Pd_Produced', 'Potash_Grade', 'Potash_Contained', 'Potash_Produced', 'Pt_Grade', 'Pt_Contained', 'Pt_Produced',
-  'Sb_Grade', 'Sb_Contained', 'Sb_Produced', 'Sn_Grade', 'Sn_Contained', 'Sn_Produced', 'U_Grade', 'U_Contained',
-  'U_Produced', 'W_Grade', 'W_Contained', 'W_Produced', 'Zn_Grade', 'Zn_Contained', 'Zn_Produced']
-for grade in grades:
-  cmti_dtypes[grade] = 'f'
-cmti_defaults = []
-for k, v in cmti_dtypes.items():
-  if v == 'U':
-    cmti_defaults.append('Unknown')
-  elif v.startswith('u') or v.startswith('i') or v.startswith('f'):
-    cmti_defaults.append(pd.NA)
-  elif v == 'datetime64[ns]':
-    cmti_defaults.append(pd.NaT)
-  elif v == '?':
-    cmti_defaults.append(False)
+  ...
 
-# testTypes = pd.DataFrame(data={"Column":cmti_dtypes.keys(), "Type":cmti_dtypes.values(), "Default":cmti_defaults})
+  Attributes
+  ----------
+  types_table: pandas.DataFrame
+    A DataFrame with columns "Column", "Type", and "Default". Column must have unique values.
+
+  Methods
+  ----------
+  create_converter(column):
+    Uses types_table to create a converter for input column. Returns a function based on column dtype.
+
+  create_converter_dict():
+    Calls create_converter for each Column value in types_table and returns a dictionary of converter functions.
+  """
+  def __init__(self, types_table):
+    """
+    :param types_table: A DataFrame with columns "Column", "Type", and "Default". Column values must be unique.
+    :type types_table: pandas.DataFrame.
+    """
+    self.types_table = types_table
+
+  def create_converter(self, column:str):
+    """
+    Creates a function for the input column that either returns the default or performs some cleanup action.
+
+    :param column: The Column value from types_table.
+    :type column: str.
+
+    :return: Function
+    """
+    dtype = self.types_table.loc[self.types_table.Column == column, 'Type'].values[0]
+    default = self.types_table.loc[self.types_table.Column == column, 'Default'].values[0]
+    if dtype.startswith('u') or dtype.startswith('i') or dtype.startswith('I'):
+      def get_int(val):
+        if pd.isna(val):
+          return default
+        if isinstance(val, str):
+          return tools.get_digits(val, 'int')
+        return val
+      return get_int
+    if dtype.startswith('f'):
+      def get_float(val):
+        if pd.isna(val):
+          return default
+        if isinstance(val, str):
+          return tools.get_digits(val, 'float')
+        return val
+      return get_float
+    if dtype == 'U':
+      def get_str(val):
+        if pd.isna(val):
+          return default
+        if isinstance(val, str):
+          return val.strip()
+        return val
+      return get_str
+    if dtype == 'datetime64[ns]':
+      def get_datetime(val):
+        if pd.isnull(val):
+          return datetime.now()
+        return val
+      return get_datetime
+
+  def create_converter_dict(self):
+    """
+    Runs create_converter for all columns in types_table.Column.
+
+    :return: dict.
+    """
+    converters = {}
+    for i, row in self.types_table.iterrows():
+      converters[row.Column] = self.create_converter(row.Column)
+    return converters
 
 def clean_table_data(in_table:pd.DataFrame, types_table:pd.DataFrame, drop_NA_columns:list=None) -> pd.DataFrame:
   """
@@ -138,6 +171,13 @@ class DataImporter(ABC):
     """
     Process a single row and generates a DeclarativeBase objects based on inputs. 
     Implemented by child classes.
+    """
+    pass
+
+  @abstractmethod
+  def clean_input_table(self, input_table:pd.DataFrame) -> pd.DataFrame:
+    """
+    Clean values in the input table and make column data types consistent.
     """
     pass
 
@@ -237,7 +277,83 @@ class WorksheetImporter(DataImporter):
     # elif site_type == "Impoundment":
     #   self.process_impoundment(row)
     return self.row_records
-    
+  
+  def clean_input_table(self, input_table, drop_NA_columns=['Site_Name', 'Site_Type', 'CMIM_ID', 'Latitude', 'Longitude'], calculate_UTM=True):
+      
+    cmti_dtypes = {'Site_Name':'U', 'Site_Type':'U', 'CMIM_ID':'U', 'Site_Aliases': 'U', 'Last_Revised': 'datetime64[ns]',
+      'NAD': 'Int64', 'UTM_Zone':'Int64', 'Easting':'Int64', 'Northing':'Int64', 'Latitude': 'f',
+      'Longitude': 'f', 'Country':'U','Province_Territory': 'U', 'NTS_Area':'U', 'Mining_District': 'U', 'Parent': 'U', 'Parent_ID': 'U',
+      'Commodity1':'U', 'Commodity2':'U', 'Commodity3': 'U', 'Commodity4': 'U', 'Commodity5': 'U', 'Commodity6':'U',
+      'Commodity7':'U', 'Commodity8':'U', 'Mine_Type':'U',  'Mining_Method':'U', 'Mine_Status': 'U',
+      'Owner_Operator': 'U', 'Past_Owners': 'U', 'Dev_Stage': 'U', 'DS_Comments': 'U', 'Site_Access': 'U',
+      'SA_Comments': 'U',  'Shaft_Depth':'f', 'Construction_Year': 'Int64', 'Year_Opened': 'Int64', 'Year_Closed': 'Int64',
+      'Reserves_Resources': 'f', 'SEDAR': 'U', 'Source_1': 'U', 'Source_1_ID': 'U', 'Source_1_Link': 'U',
+      'Source_2': 'U', 'Source_2_ID': 'U', 'Source_2_Link': 'U', 'Source_3': 'U', 'Source_3_ID': 'U', 'Source_3_Link': 'U',
+      'Source_4': 'U', 'Source_4_ID': 'U', 'Source_4_Link': 'U', 'Notes': 'U', 'Orebody_Type':'U', 'Orebody_Class':'U',
+      'Ore_Minerals':'U', 'Processing_Method':'U',  'Ore_Processed': 'f', 'Ore_Processed_Unit':'U',
+      'Other_Mineralization': 'U', 'Spectral_Mineralization': 'U', 'Forcing_Features': 'U', 'Feature_References': 'U',
+      'NOAMI_Status': 'U', 'NOAMI_Site_Class': 'U', 'Hazard_Class':'U', 'Hazard_System':'U', 'PRP_Rating':'U',
+      'Rehab_Plan':'U', 'EWS':'U', 'EWS_Rating':'U', 'Raise_Type':'U', 'History_Stability_Concerns':'U',
+      'Rating_Index':'U', 'Acid_Generating':'U',  'Treatment':'U', 'Current_Max_Height': 'f', 'Tailings_Storage_Method': 'U',
+      'Tailings_Volume': 'f', 'Tailings_Capacity':'f', 'Tailings_Area':'f', 'Tailings_Area_From_Images':'f',
+      'Tailings_Area_Notes': 'U'}
+    grades = ['Au_Grade', 'Au_Contained', 'Au_Produced', 'Ag_Grade', 'Ag_Contained', 'Ag_Produced', 'Barite_Grade',
+      'Barite_Contained', 'Barite_Produced', 'Bi_Grade', 'Bi_Contained', 'Bi_Produced', 'Cd_Grade', 'Cd_Contained',
+      'Cd_Produced', 'Coal_Type', 'Coal_Rank', 'Coal_Production', 'Coal_Produced', 'Co_Grade', 'Co_Contained',
+      'Co_Produced', 'Cu_Grade', 'Cu_Contained', 'Cu_Produced', 'Diamond', 'Diamond_Grade', 'Fe_Grade', 'Fe_Produced',
+      'Fe_Ore_Extracted', 'Fe_Ore_Smelted', 'Flourspar_Grade', 'Flourspar_Contained', 'Graphite_Grade', 'Graphite_Contained',
+      'Gypsum_Produced', 'In_Grade', 'In_Contained', 'In_Produced', 'Mo_Grade', 'Mo_Contained', 'Mo_Produced',
+      'Ni_Grade', 'Ni_Contained', 'Ni_Produced', 'Pb_Grade', 'Pb_Contained', 'Pb_Produced', 'Pd_Grade', 'Pd_Contained',
+      'Pd_Produced', 'Potash_Grade', 'Potash_Contained', 'Potash_Produced', 'Pt_Grade', 'Pt_Contained', 'Pt_Produced',
+      'Sb_Grade', 'Sb_Contained', 'Sb_Produced', 'Sn_Grade', 'Sn_Contained', 'Sn_Produced', 'U_Grade', 'U_Contained',
+      'U_Produced', 'W_Grade', 'W_Contained', 'W_Produced', 'Zn_Grade', 'Zn_Contained', 'Zn_Produced']
+
+    for grade in grades:
+      cmti_dtypes[grade] = 'f'
+    cmti_defaults = {}
+    for key, val in cmti_dtypes.items():
+      if val[0] in ['i','I','u','f']:
+        cmti_defaults[key] = pd.NA
+      elif val == 'NAD':
+        cmti_defaults[key] = 83
+      elif val == 'Site_Aliases':
+        cmti_defaults[key] = None
+      elif val == 'U':
+        cmti_defaults[key] = 'Unknown'
+      elif val == 'datetime64[ns]':
+        cmti_defaults[key] = pd.NaT   
+        
+    cmti_types_table = pd.DataFrame(columns=['Column', 'Type', 'Default'])
+    converters = converter_factory(cmti_types_table).create_converter_dict()
+    # UTM_Zone gets a special converter
+    if calculate_UTM:
+      def get_UTM(val):
+        if pd.isna(val):
+          return tools.lon_to_utm_zone(val)
+        else:
+          return int(val)
+      converters['UTM_Zone'] = get_UTM
+
+    cmti_df = pd.read_excel(input_table, header=0, converters=converters)
+    # Drop rows that are missing values in the drop_NA_columns list
+    cmti_df = cmti_df.dropna(subset=drop_NA_columns)
+
+    # Final type coercion
+    for column in cmti_df.columns:
+      try:
+        dtype = cmti_dtypes[column]
+        if dtype.startswith('u') or dtype.startswith('i') or dtype.startswith('I'):
+          cmti_df[column] = pd.to_numeric(cmti_df[column], errors='coerce').astype('Int64')
+        elif dtype.startswith('f'):
+          cmti_df[column] = pd.to_numeric(cmti_df[column], errors='coerce').astype('float')
+      except Exception as e:
+        print(f"Failed on column: {column}")
+        print(e)
+      # Lastly, fill blank "last revised" with today's date. 
+        # Note: This should have been done in the converters but I couldn't get it to work. Probably a better option would be to allow Nulls for times.
+      cmti_df.Last_Revised = cmti_df.Last_Revised.fillna(datetime.now().date())
+    return cmti_df
+
   def process_mine(self, row:pd.Series, comm_col_count, source_col_count):
     """
     Processes mine-specific data and creates Mine, Owner, Alias, 
@@ -385,6 +501,9 @@ class OMIImporter(DataImporter):
     super().__init__(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_convert_dict)
     self.prov_id = ProvID("ON")
   
+  def clean_input_table(self, input_table):
+    return super().clean_input_table(input_table)
+
   def create_row_records(self, row: pd.Series, name_convert_dict: dict=None) -> list[object]:
     """
     Processes a row of data and creates associated database records.
@@ -476,6 +595,9 @@ class OAMImporter(DataImporter):
       return None
     else:
       return val
+
+  def clean_input_table(self, input_table):
+    return super().clean_input_table(input_table)
 
   def create_row_records(self, row: pd.Series, oam_comm_names:dict, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None):
     """
@@ -588,6 +710,9 @@ class BCAHMImporter(DataImporter):
     """
     super().__init__(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_convert_dict)
     self.provID = ProvID('BC')
+
+  def clean_input_table(self, input_table):
+    return super().clean_input_table(input_table)
 
   def create_row_records(self, row: pd.Series, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None):
     """
