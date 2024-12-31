@@ -439,7 +439,33 @@ class OMIImporter(DataImporter):
     self.prov_id = ProvID("ON")
   
   def clean_input_table(self, input_table):
-    return super().clean_input_table(input_table)
+    omi_dict = {
+      'MDI_IDENT': 'U',
+      'NAME': 'U',
+      'STATUS': 'U',
+      'TWP_AREA': 'U',
+      'RGP_DIST': 'U',
+      'P_COMMOD': 'U',
+      'S_COMMOD': 'U',
+      'ALL_NAMES': 'U',
+      'DEP_CLASS': 'U',
+      'LONGITUDE': 'f4',
+      'LATITUDE': 'f4',
+      'LL_DATUM': 'U',
+      'DETAIL': 'U'
+    }
+
+    omi_columns = list(omi_dict.keys())
+    omi_types = list(omi_dict.values())
+    omi_defaults = ["Unknown" if t == "U" else pd.NA for t in omi_types]
+
+    omi_df = pd.DataFrame({
+        'Column': omi_columns,
+        'Type': omi_types,
+        'Default': omi_defaults
+    })
+
+    return omi_df
 
   def create_row_records(self, row: pd.Series, name_convert_dict: dict=None) -> list[object]:
     
@@ -501,7 +527,73 @@ class OAMImporter(DataImporter):
       return val
 
   def clean_input_table(self, input_table):
-    return super().clean_input_table(input_table)
+    oam_dict = {
+      'OID': 'U',
+      'Lat_DD': 'f4',
+      'Long_DD': 'f4',
+      'Jurisdiction': 'U',
+      'Juris_ID': 'U',
+      'Name': 'U',
+      'Status': 'U',
+      'Commodity_Code': 'U',
+      'Commodity_Full_Name': 'U',
+      'Mined_Quantity': 'f4',
+      'Mine_Type': 'U',
+      'Last_Year': 'U',
+      'Permit': 'U',
+      'URL': 'U',
+      'Forcing_Features': 'U',
+      'Feature_References': 'U',
+      'Feature_Class': 'U',
+      'Location': 'U',
+      'County': 'U',
+      'Landowner': 'U',
+      'Last_Operator': 'U',
+      'Start_Date': 'f4',
+      'Peak_Production': 'U',
+      'Last_Updated': 'f4'
+  }
+
+    # Take keys and values as columns and types for dataframe
+    oam_columns = list(oam_dict.keys())
+    oam_types = list(oam_dict.values())
+    #Set default values based on datatype
+    oam_defaults = ["Unknown" if t == 'U' else pd.NA for t in oam_types]
+
+    # Create df for read_csv/read_excel function
+    oam_df = pd.DataFrame({
+        'Column': oam_columns,
+        'Type': oam_types,
+        'Default': oam_defaults
+    })
+
+    omi_dict = {
+        'MDI_IDENT': 'U',
+        'NAME': 'U',
+        'STATUS': 'U',
+        'TWP_AREA': 'U',
+        'RGP_DIST': 'U',
+        'P_COMMOD': 'U',
+        'S_COMMOD': 'U',
+        'ALL_NAMES': 'U',
+        'DEP_CLASS': 'U',
+        'LONGITUDE': 'f4',
+        'LATITUDE': 'f4',
+        'LL_DATUM': 'U',
+        'DETAIL': 'U'
+    }
+
+    omi_columns = list(omi_dict.keys())
+    omi_types = list(omi_dict.values())
+    omi_defaults = ["Unknown" if t == "U" else pd.NA for t in omi_types]
+
+    omi_df = pd.DataFrame({
+        'Column': omi_columns,
+        'Type': omi_types,
+        'Default': omi_defaults
+    })
+
+    return omi_df
 
   def create_row_records(self, row: pd.Series, oam_comm_names:dict, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None):
 
@@ -585,7 +677,58 @@ class BCAHMImporter(DataImporter):
     self.provID = ProvID('BC')
 
   def clean_input_table(self, input_table):
-    return super().clean_input_table(input_table)
+    bcahm_dict = {
+      "OBJECTID": "u4",
+      "MINFILNO": "U",
+      "NAME1": "U",
+      "NAME2": "U",
+      "STATUS": "U",
+      "LATITUDE": "f4",
+      "LONGITUDE": "f4",
+      "UTM_ZONE": "f4",
+      "UTM_NORT": "f4",
+      "UTM_EAST": "f4",
+      "ELEV": "f4",
+      "COMMOD_C1": "U",
+      "COMMOD_C2": "U",
+      "COMMOD_C3": "U",
+      "DEPOSITTYPE_D1": "U",
+      "DEPOSITTYPE_D2": "U",
+      "DEPOSITCLASS_D1": "U",
+      "DEPOSITCLASS_D2": "U",
+      "NTSMAP_C1": "U",
+      "NTSMAP_C2": "U",
+      "Permit1": "U",
+      "Permit2": "U",
+      "Mine_Name": "U",
+      "Mine_Statu": "U",
+      "Region": "U",
+      "Tailings": "U",
+      "Disposal_Method": "U",
+      "Mined": "f4",
+      "Milled": "f4",
+      "Mine_type": "U",
+      "Permitee1": "U",
+      "Permittee2": "U",
+      "URL": "U",
+      "Current_st": "U",
+      "Permit1_Status": "U",
+      "Permit2_Status": "U",
+      "First_Year": "f4",
+      "Last_Year": "f4"
+    }
+
+    bcahm_columns = list(bcahm_dict.keys())
+    bcahm_types = list(bcahm_dict.values())
+    bcahm_defaults = ["Unknown" if t == "U" else pd.NA for t in bcahm_types]
+
+    bcahm_df = pd.DataFrame({
+        'Column': bcahm_columns,
+        'Type': bcahm_types,
+        'Default': bcahm_defaults
+    })
+
+    return bcahm_df
 
   def create_row_records(self, row: pd.Series, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None):
 
