@@ -519,15 +519,30 @@ class OMIImporter(DataImporter):
     }
 
     omi_columns = list(omi_dict.keys())
-    omi_types = list(omi_dict.values())
-    omi_defaults = ["Unknown" if t == "U" else pd.NA for t in omi_types]
+    omi_dtypes = list(omi_dict.values())
+    omi_defaults = ["Unknown" if t == "U" else pd.NA for t in omi_dtypes]
+    # omi_defaults = {}
+    # for key, val in omi_dtypes.items():
+    #   if val[0] in ['i','I','u','f']:
+    #     omi_defaults[key] = pd.NA
+    #   elif val == 'NAD':
+    #     omi_defaults[key] = 83
+    #   elif val == 'Site_Aliases':
+    #     omi_defaults[key] = None
+    #   elif val == 'U':
+    #     omi_defaults[key] = 'Unknown'
+    #   elif val == 'datetime64[ns]':
+    #     omi_defaults[key] = pd.NaT   
 
-    omi_df = pd.DataFrame({
+    omi_types_table = pd.DataFrame({
         'Column': omi_columns,
-        'Type': omi_types,
+        'Type': omi_dtypes,
         'Default': omi_defaults
     })
 
+    converters = converter_factory(omi_types_table).create_converter_dict()
+
+    omi_df = pd.read_excel(input_table, header=0, converters=converters)
     return omi_df
 
   def create_row_records(self, row: pd.Series, name_convert_dict: dict=None) -> list[object]:
@@ -652,7 +667,7 @@ class OAMImporter(DataImporter):
 
     # Take keys and values as columns and types for dataframe
     oam_columns = list(oam_dict.keys())
-    oam_types = list(oam_dict.values())
+    oam_dtypes = list(oam_dict.values())
     #Set default values based on datatype
     oam_defaults = ["Unknown" if t == 'U' else pd.NA for t in oam_types]
 
@@ -663,33 +678,20 @@ class OAMImporter(DataImporter):
         'Default': oam_defaults
     })
 
-    omi_dict = {
-        'MDI_IDENT': 'U',
-        'NAME': 'U',
-        'STATUS': 'U',
-        'TWP_AREA': 'U',
-        'RGP_DIST': 'U',
-        'P_COMMOD': 'U',
-        'S_COMMOD': 'U',
-        'ALL_NAMES': 'U',
-        'DEP_CLASS': 'U',
-        'LONGITUDE': 'f4',
-        'LATITUDE': 'f4',
-        'LL_DATUM': 'U',
-        'DETAIL': 'U'
-    }
+    oam_columns = list(oam_dict.keys())
+    oam_types = list(oam_dict.values())
+    oam_defaults = ["Unknown" if t == "U" else pd.NA for t in oam_dtypes]
 
-    omi_columns = list(omi_dict.keys())
-    omi_types = list(omi_dict.values())
-    omi_defaults = ["Unknown" if t == "U" else pd.NA for t in omi_types]
-
-    omi_df = pd.DataFrame({
-        'Column': omi_columns,
-        'Type': omi_types,
-        'Default': omi_defaults
+    omi_types_table = pd.DataFrame({
+        'Column': oam_columns,
+        'Type': oam_dtypes,
+        'Default': oam_defaults
     })
 
-    return omi_df
+    converters = converter_factory(omi_types_table).create_converter_dict()
+
+    oam_df = pd.read_excel(input_table, header=0, converters=converters)
+    return oam_df
 
   def create_row_records(self, row: pd.Series, oam_comm_names:dict, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None):
     """
@@ -849,12 +851,15 @@ class BCAHMImporter(DataImporter):
     bcahm_types = list(bcahm_dict.values())
     bcahm_defaults = ["Unknown" if t == "U" else pd.NA for t in bcahm_types]
 
-    bcahm_df = pd.DataFrame({
+    bcahm_types_table = pd.DataFrame({
         'Column': bcahm_columns,
         'Type': bcahm_types,
         'Default': bcahm_defaults
     })
 
+    converters = converter_factory(bcahm_types_table).create_converter_dict()
+
+    bcahm_df = pd.read_excel(input_table, header=0, converters=converters)
     return bcahm_df
 
   def create_row_records(self, row: pd.Series, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None):
