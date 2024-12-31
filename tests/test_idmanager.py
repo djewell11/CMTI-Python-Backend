@@ -2,14 +2,20 @@ import pytest
 from cmti_tools.idmanager import ProvID
 
 def test_prov_id_init():
-    # Verify ProvID works as intended
+    """
+    Tests prov_id initialization and ensures code is correctly set
+    """
+    # Create ProvID instance and assert attributes are correct
     prov = ProvID('ON')
     assert prov.code == "ON"
     assert prov.max_id >= 0
     assert isinstance(prov._formatted_id, str)
 
 def test_update_id():
-    # Verify update_id() works as intended
+    """
+    Tests the update_id method in ProvID
+    Confirms max_id and formatted_id update as expected
+    """
     prov = ProvID('ON')
     original_id = prov.max_id
     prov.update_id()

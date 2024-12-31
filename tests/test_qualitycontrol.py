@@ -3,7 +3,11 @@ import pandas as pd
 from cmti_tools.qualitycontrol import check_categorical_values, check_units, DataGrader
 
 def test_categorical_vals(capfd):
-    # Create a row with incorrect category vals
+    """
+    Tests the check_categorical_vals function.
+    Ensures incorrect values are caught.
+    """
+    # Create a row with incorrect values
     qa_dict = {"Status": ["Active", "Inactive"]}
     row = pd.Series({"Site_Name": "Test Site", "Status": "Unknown"})
     check_categorical_values(row, qa_dict, ignore_unknown = False)
@@ -14,6 +18,10 @@ def test_categorical_vals(capfd):
     assert "Test Site -- Status: Unknown" in output.out
 
 def test_check_units():
+    """
+    Tests the check_units function.
+    Confirms unit conversion from cubic meters to liters works correctly.
+    """
     value = '100 m3'
     unit = 'liter'
     # Convert units using check_units
@@ -21,6 +29,7 @@ def test_check_units():
     # Check if units were properly converted, allowing for rounding error
     assert converted == pytest.approx(100000, 0.1)
 
+# Initialize DataGrader with a custom scoring criteria
 grader = DataGrader(
     main = {
         'Mine_Type': 3,
@@ -44,6 +53,10 @@ grader = DataGrader(
 )
 
 def test_perfect_row():
+    """
+    Tests DataGrader's perfect_row method.
+    Verifies that all required columns are correctly flagged as True.
+    """
     row = grader.perfect_row()
 
     assert row['Mine_Type'] == True
@@ -52,6 +65,10 @@ def test_perfect_row():
     assert row['Source'] == True
 
 def test_perfect_score():
+    """
+    Tests calculation of the perfect_score attribute.
+    Confirms it sums all defined scoring weights correctly.
+    """
     assert grader.perfect_score == (
         sum(grader.main.values()) +
         sum(grader.comms.values()) +
@@ -60,6 +77,10 @@ def test_perfect_score():
     )
 
 def test_assign_score():
+    """
+    Tests DataGrader's assign_score method.
+    Verifies that an example row receives the correct calculated score.
+    """
     row = pd.Series({
         'Mine_Type': 'Underground',
         'Mine_Status': 'Closed',
@@ -77,7 +98,9 @@ def test_assign_score():
     })
 
     score = grader.assign_score(row)
+    # Expected points based on input
     expected_points = 18
 
+    # Expected score based on the formula used in qualitycontrol.py
     expected_score = round((expected_points/grader.perfect_score)*100, 2)
     assert score == expected_score
