@@ -690,11 +690,12 @@ class OAMImporter(DataImporter):
     })
 
     converters = converter_factory(omi_types_table).create_converter_dict()
-
     try:
       oam_df = pd.read_csv(input_table, header=0, converters=converters)
+      print("load csv")
     except:
       oam_df = pd.read_excel(input_table, header=0, converters=converters)
+      print("load excel")
     return oam_df
 
   def create_row_records(self, row: pd.Series, oam_comm_names:dict, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None):
