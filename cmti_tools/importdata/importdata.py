@@ -674,12 +674,12 @@ class OAMImporter(DataImporter):
     # Create df for read_csv/read_excel function
     oam_df = pd.DataFrame({
         'Column': oam_columns,
-        'Type': oam_types,
+        'Type': oam_dtypes,
         'Default': oam_defaults
     })
 
     oam_columns = list(oam_dict.keys())
-    oam_types = list(oam_dict.values())
+    oam_dtypes = list(oam_dict.values())
     oam_defaults = ["Unknown" if t == "U" else pd.NA for t in oam_dtypes]
 
     omi_types_table = pd.DataFrame({
