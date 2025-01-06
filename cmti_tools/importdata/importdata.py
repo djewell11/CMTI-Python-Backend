@@ -681,6 +681,7 @@ class OAMImporter(DataImporter):
     oam_columns = list(oam_dict.keys())
     oam_dtypes = list(oam_dict.values())
     oam_defaults = ["Unknown" if t == "U" else pd.NA for t in oam_dtypes]
+    oam_defaults = ["Unknown" if t == "U" else pd.NA for t in oam_dtypes]
 
     omi_types_table = pd.DataFrame({
         'Column': oam_columns,
