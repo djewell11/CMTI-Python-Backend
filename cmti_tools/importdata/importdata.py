@@ -669,7 +669,7 @@ class OAMImporter(DataImporter):
     oam_columns = list(oam_dict.keys())
     oam_dtypes = list(oam_dict.values())
     #Set default values based on datatype
-    oam_defaults = ["Unknown" if t == 'U' else pd.NA for t in oam_types]
+    oam_defaults = ["Unknown" if t == 'U' else pd.NA for t in oam_dtypes]
 
     # Create df for read_csv/read_excel function
     oam_df = pd.DataFrame({
