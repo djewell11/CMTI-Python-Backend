@@ -221,6 +221,25 @@ class DataImporter(ABC):
     except IntegrityError as e:
       print(e)
       session.rollback()
+  
+  def coerce_dtypes(self, input_types_table, input_table:pd.DataFrame) -> pd.DataFrame:
+    """
+    Coerces the data types of the input table based on the types_table.
+    """
+    # types_table = pd.DataFrame(data={'Column': list(input_dtypes.keys()), 'Type': list(input_dtypes.values()), 'Default': list(input_dtypes.values())})
+
+    # Final type coercion
+    for column in input_table.columns:
+      # print(column)
+      try:
+        dtype = input_types_table[input_types_table['Column'] == column]['Type'].iloc[0]
+        if dtype.startswith('u') or dtype.startswith('i') or dtype.startswith('I'):
+          input_table[column] = pd.to_numeric(input_table[column], errors='coerce').astype('Int64')
+        elif dtype.startswith('f'):
+          input_table[column] = pd.to_numeric(input_table[column], errors='coerce').astype('float')
+      except Exception as e:
+        print(f"Failed on column: {column}")
+    return input_table
 
 class WorksheetImporter(DataImporter):
   """
@@ -323,7 +342,7 @@ class WorksheetImporter(DataImporter):
       elif val == 'datetime64[ns]':
         cmti_defaults[key] = pd.NaT   
         
-    cmti_types_table = pd.DataFrame(columns=['Column', 'Type', 'Default'])
+    cmti_types_table = pd.DataFrame(data={'Column': list(cmti_dtypes.keys()), 'Type': list(cmti_dtypes.values()), 'Default': list(cmti_defaults.values())})
     converters = converter_factory(cmti_types_table).create_converter_dict()
     # UTM_Zone gets a special converter
     if calculate_UTM:
@@ -334,24 +353,21 @@ class WorksheetImporter(DataImporter):
           return int(val)
       converters['UTM_Zone'] = get_UTM
 
-    cmti_df = pd.read_excel(input_table, header=0, converters=converters)
+    if isinstance(input_table, str):
+      try:
+        cmti_df = pd.read_excel(input_table, header=0, converters=converters)
+      except:
+        cmti_df = pd.read_csv(input_table, header=0, converters=converters)
+    else:
+      cmti_df = input_table
+    print(cmti_types_table)
     # Drop rows that are missing values in the drop_NA_columns list
     cmti_df = cmti_df.dropna(subset=drop_NA_columns)
-
     # Final type coercion
-    for column in cmti_df.columns:
-      try:
-        dtype = cmti_dtypes[column]
-        if dtype.startswith('u') or dtype.startswith('i') or dtype.startswith('I'):
-          cmti_df[column] = pd.to_numeric(cmti_df[column], errors='coerce').astype('Int64')
-        elif dtype.startswith('f'):
-          cmti_df[column] = pd.to_numeric(cmti_df[column], errors='coerce').astype('float')
-      except Exception as e:
-        print(f"Failed on column: {column}")
-        print(e)
-      # Lastly, fill blank "last revised" with today's date. 
-        # Note: This should have been done in the converters but I couldn't get it to work. Probably a better option would be to allow Nulls for times.
-      cmti_df.Last_Revised = cmti_df.Last_Revised.fillna(datetime.now().date())
+    cmti_df = self.coerce_dtypes(cmti_types_table, cmti_df)
+      # # Lastly, fill blank "last revised" with today's date. 
+      #   # Note: This should have been done in the converters but I couldn't get it to work. Probably a better option would be to allow Nulls for times.
+    cmti_df.Last_Revised = cmti_df.Last_Revised.fillna(datetime.now().date())
     return cmti_df
 
   def process_mine(self, row:pd.Series, comm_col_count, source_col_count):
@@ -521,18 +537,6 @@ class OMIImporter(DataImporter):
     omi_columns = list(omi_dict.keys())
     omi_dtypes = list(omi_dict.values())
     omi_defaults = ["Unknown" if t == "U" else pd.NA for t in omi_dtypes]
-    # omi_defaults = {}
-    # for key, val in omi_dtypes.items():
-    #   if val[0] in ['i','I','u','f']:
-    #     omi_defaults[key] = pd.NA
-    #   elif val == 'NAD':
-    #     omi_defaults[key] = 83
-    #   elif val == 'Site_Aliases':
-    #     omi_defaults[key] = None
-    #   elif val == 'U':
-    #     omi_defaults[key] = 'Unknown'
-    #   elif val == 'datetime64[ns]':
-    #     omi_defaults[key] = pd.NaT   
 
     omi_types_table = pd.DataFrame({
         'Column': omi_columns,
@@ -542,7 +546,17 @@ class OMIImporter(DataImporter):
 
     converters = converter_factory(omi_types_table).create_converter_dict()
 
-    omi_df = pd.read_excel(input_table, header=0, converters=converters)
+    if isinstance(input_table, str):
+      try:
+        omi_df = pd.read_csv(input_table, header=0, converters=converters)
+      except:
+        omi_df = pd.read_excel(input_table, header=0, converters=converters)
+    elif isinstance(input_table, pd.DataFrame):
+      omi_df = input_table
+    
+    # Enforce types
+    omi_df = self.coerce_dtypes(omi_types_table, omi_df)
+
     return omi_df
 
   def create_row_records(self, row: pd.Series, name_convert_dict: dict=None) -> list[object]:
@@ -650,7 +664,7 @@ class OAMImporter(DataImporter):
       'Commodity_Full_Name': 'U',
       'Mined_Quantity': 'f4',
       'Mine_Type': 'U',
-      'Last_Year': 'U',
+      'Last_Year': 'Int64',
       'Permit': 'U',
       'URL': 'U',
       'Forcing_Features': 'U',
@@ -690,12 +704,27 @@ class OAMImporter(DataImporter):
     })
 
     converters = converter_factory(omi_types_table).create_converter_dict()
-    try:
-      oam_df = pd.read_csv(input_table, header=0, converters=converters)
-      print("load csv")
-    except:
-      oam_df = pd.read_excel(input_table, header=0, converters=converters)
-      print("load excel")
+    if isinstance(input_table, str):
+      try:
+        oam_df = pd.read_csv(input_table, header=0, converters=converters)
+      except:
+        oam_df = pd.read_excel(input_table, header=0, converters=converters)
+    else:
+      oam_df = input_table
+
+    for column in oam_df.columns:
+      try:
+        dtype = omi_types_table[column]
+        if dtype.startswith('u') or dtype.startswith('i') or dtype.startswith('I'):
+          oam_df[column] = pd.to_numeric(oam_df[column], errors='coerce').astype('Int64')
+        elif dtype.startswith('f'):
+          oam_df[column] = pd.to_numeric(oam_df[column], errors='coerce').astype('float')
+      except Exception as e:
+        print(f"Failed on column: {column}")
+
+    # Coerce types
+    oam_df = self.coerce_dtypes(omi_types_table, oam_df)
+
     return oam_df
 
   def create_row_records(self, row: pd.Series, oam_comm_names:dict, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None):
@@ -820,8 +849,8 @@ class BCAHMImporter(DataImporter):
       "LATITUDE": "f4",
       "LONGITUDE": "f4",
       "UTM_ZONE": "f4",
-      "UTM_NORT": "f4",
-      "UTM_EAST": "f4",
+      "UTM_NORT": "Int64",
+      "UTM_EAST": "Int64",
       "ELEV": "f4",
       "COMMOD_C1": "U",
       "COMMOD_C2": "U",
@@ -848,8 +877,8 @@ class BCAHMImporter(DataImporter):
       "Current_st": "U",
       "Permit1_Status": "U",
       "Permit2_Status": "U",
-      "First_Year": "f4",
-      "Last_Year": "f4"
+      "First_Year": "Int64",
+      "Last_Year": "Int64"
     }
 
     bcahm_columns = list(bcahm_dict.keys())
@@ -864,7 +893,17 @@ class BCAHMImporter(DataImporter):
 
     converters = converter_factory(bcahm_types_table).create_converter_dict()
 
-    bcahm_df = pd.read_excel(input_table, header=0, converters=converters)
+    if isinstance(input_table, str):
+      try:
+        bcahm_df = pd.read_excel(input_table, header=0, converters=converters)
+      except:
+        bcahm_df = pd.read_csv(input_table, header=0, converters=converters)
+    else:
+      bcahm_df = input_table
+
+    # Coerce types
+    bcahm_df = self.coerce_dtypes(bcahm_types_table, bcahm_df)
+
     return bcahm_df
 
   def create_row_records(self, row: pd.Series, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None):

@@ -7,7 +7,7 @@ name_dict = module_variables.get('name_convert_dict')
 metals_dict = module_variables.get('metals_dict')
 cm_list = module_variables.get('cm_list')
 
-# Test the workseet
+# Test the workseet/CMTI
 def test_create_row_records_worksheet():
     worksheet_importer = WorksheetImporter(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_dict)
     row = Series(
