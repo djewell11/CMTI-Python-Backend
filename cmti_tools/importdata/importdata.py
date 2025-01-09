@@ -686,16 +686,6 @@ class OAMImporter(DataImporter):
     else:
       oam_df = input_table
 
-    for column in oam_df.columns:
-      try:
-        dtype = omi_types_table[column]
-        if dtype.startswith('u') or dtype.startswith('i') or dtype.startswith('I'):
-          oam_df[column] = pd.to_numeric(oam_df[column], errors='coerce').astype('Int64')
-        elif dtype.startswith('f'):
-          oam_df[column] = pd.to_numeric(oam_df[column], errors='coerce').astype('float')
-      except Exception as e:
-        print(f"Failed on column: {column}")
-
     # Coerce types
     oam_df = self.coerce_dtypes(omi_types_table, oam_df)
 
