@@ -170,7 +170,7 @@ class Reference(Base):
 
   id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
   mine_id: Mapped["Mine"] = mapped_column(ForeignKey("mines.id"), primary_key=True)
-  source_id: Mapped[str] = mapped_column(nullable=False)
+  source_id: Mapped[str] = mapped_column(nullable=False, primary_key=True)
   source: Mapped[str] = mapped_column(nullable=False)
   link: Mapped[str] = mapped_column(nullable=True)
 

@@ -63,8 +63,9 @@ def test_create_row_records_worksheet():
         'Rating_Index': 'A',
         'History_Stability_Concerns': 'None'
     })
-    row_records = worksheet_importer.create_row_records(row)
-    assert len(row_records) == 11
+    worksheet_importer.create_row_records(row)
+    print(worksheet_importer.row_records)
+    assert len(worksheet_importer.row_records) == 10
 
 # Test the Ontario Mineral Inventory (OMI)
 def test_create_row_records_omi():

@@ -139,6 +139,7 @@ class DataImporter(ABC):
     name conversion, critical minerals, and metals classification.
     """
     self.id_manager = ID_Manager()
+    self.row_records = []
 
     # Use ConfigParser to get data files if not provided
     config = ConfigParser()
@@ -284,19 +285,12 @@ class WorksheetImporter(DataImporter):
       metals_dict = self.metals_dict
     if name_convert_dict is None:
       name_convert_dict = self.name_convert_dict
- 
-    self.row_records = []
       
     # The worksheet is based on 3 types of records. The imported data will change based on record type:
     site_type = row['Site_Type']
     if site_type == "Mine":
-      mine = self.process_mine(row, comm_col_count, source_col_count)
-      self.row_records.append(mine)
-    # elif site_type == "TSF":
-    #   self.process_tsf(row)
-    # elif site_type == "Impoundment":
-    #   self.process_impoundment(row)
-    return self.row_records
+      self.process_mine(row, comm_col_count, source_col_count)
+      # self.row_records.append(mine)
   
   def clean_input_table(self, input_table, drop_NA_columns=['Site_Name', 'Site_Type', 'CMIM_ID', 'Latitude', 'Longitude'], calculate_UTM=True):
       
@@ -428,7 +422,7 @@ class WorksheetImporter(DataImporter):
         self.row_records.append(owner)
 
     # References
-    source_columns = [f"Source_{j}" for j in range(1, source_col_count+1)]
+    source_columns = [f"Source_{i}" for i in range(1, source_col_count+1)]
     for col in source_columns:
       source = row[col]
       if pd.notna(source) and source != "Unknown":
@@ -481,7 +475,6 @@ class WorksheetImporter(DataImporter):
       is_default = False
     )
     tsf.mines.append(parent_mine)
-    return tsf
   
   def process_impoundment(self, row:pd.Series, parent_TSF:TailingsFacility):
     impoundment = Impoundment(
@@ -498,7 +491,6 @@ class WorksheetImporter(DataImporter):
       stability_concerns = row.History_Stability_Concerns
     )
     impoundment.parentTsf = parent_TSF
-    return impoundment
 
 class OMIImporter(DataImporter):
   def __init__(self, cm_list:list='config', metals_dict:dict='config', name_convert_dict:dict='config'):
