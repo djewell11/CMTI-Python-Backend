@@ -12,6 +12,8 @@ from cmti_tools.tables import *
 from cmti_tools.idmanager import ProvID
 from cmti_tools.idmanager import ID_Manager
 
+pd.options.mode.chained_assignment = None
+
 # Bulk import functions
 
 class converter_factory:
@@ -230,7 +232,6 @@ class DataImporter(ABC):
 
     # Final type coercion
     for column in input_table.columns:
-      # print(column)
       try:
         dtype = input_types_table[input_types_table['Column'] == column]['Type'].iloc[0]
         if dtype.startswith('u') or dtype.startswith('i') or dtype.startswith('I'):
@@ -360,7 +361,6 @@ class WorksheetImporter(DataImporter):
         cmti_df = pd.read_csv(input_table, header=0, converters=converters)
     else:
       cmti_df = input_table
-    print(cmti_types_table)
     # Drop rows that are missing values in the drop_NA_columns list
     cmti_df = cmti_df.dropna(subset=drop_NA_columns)
     # Final type coercion
@@ -518,7 +518,7 @@ class OMIImporter(DataImporter):
     self.prov_id = ProvID("ON")
   
   def clean_input_table(self, input_table):
-    omi_dict = {
+    omi_dtypes = {
       'MDI_IDENT': 'U',
       'NAME': 'U',
       'STATUS': 'U',
@@ -534,15 +534,8 @@ class OMIImporter(DataImporter):
       'DETAIL': 'U'
     }
 
-    omi_columns = list(omi_dict.keys())
-    omi_dtypes = list(omi_dict.values())
     omi_defaults = ["Unknown" if t == "U" else pd.NA for t in omi_dtypes]
-
-    omi_types_table = pd.DataFrame({
-        'Column': omi_columns,
-        'Type': omi_dtypes,
-        'Default': omi_defaults
-    })
+    omi_types_table = pd.DataFrame(data={'Column': omi_dtypes.keys(), 'Type': omi_dtypes.values(), 'Default': omi_defaults})
 
     converters = converter_factory(omi_types_table).create_converter_dict()
 
@@ -652,7 +645,7 @@ class OAMImporter(DataImporter):
       return val
 
   def clean_input_table(self, input_table):
-    oam_dict = {
+    oam_dtypes = {
       'OID': 'U',
       'Lat_DD': 'f4',
       'Long_DD': 'f4',
@@ -680,28 +673,9 @@ class OAMImporter(DataImporter):
   }
 
     # Take keys and values as columns and types for dataframe
-    oam_columns = list(oam_dict.keys())
-    oam_dtypes = list(oam_dict.values())
-    #Set default values based on datatype
-    oam_defaults = ["Unknown" if t == 'U' else pd.NA for t in oam_dtypes]
-
-    # Create df for read_csv/read_excel function
-    oam_df = pd.DataFrame({
-        'Column': oam_columns,
-        'Type': oam_dtypes,
-        'Default': oam_defaults
-    })
-
-    oam_columns = list(oam_dict.keys())
-    oam_dtypes = list(oam_dict.values())
+    # Set default values based on datatype
     oam_defaults = ["Unknown" if t == "U" else pd.NA for t in oam_dtypes]
-    oam_defaults = ["Unknown" if t == "U" else pd.NA for t in oam_dtypes]
-
-    omi_types_table = pd.DataFrame({
-        'Column': oam_columns,
-        'Type': oam_dtypes,
-        'Default': oam_defaults
-    })
+    omi_types_table = pd.DataFrame(data={'Column': oam_dtypes.keys(), 'Type': oam_dtypes.values(), 'Default': oam_defaults})
 
     converters = converter_factory(omi_types_table).create_converter_dict()
     if isinstance(input_table, str):
@@ -840,7 +814,7 @@ class BCAHMImporter(DataImporter):
     self.provID = ProvID('BC')
 
   def clean_input_table(self, input_table):
-    bcahm_dict = {
+    bcahm_dtypes = {
       "OBJECTID": "u4",
       "MINFILNO": "U",
       "NAME1": "U",
@@ -881,15 +855,8 @@ class BCAHMImporter(DataImporter):
       "Last_Year": "Int64"
     }
 
-    bcahm_columns = list(bcahm_dict.keys())
-    bcahm_types = list(bcahm_dict.values())
-    bcahm_defaults = ["Unknown" if t == "U" else pd.NA for t in bcahm_types]
-
-    bcahm_types_table = pd.DataFrame({
-        'Column': bcahm_columns,
-        'Type': bcahm_types,
-        'Default': bcahm_defaults
-    })
+    bcahm_defaults = ["Unknown" if t == "U" else pd.NA for t in bcahm_dtypes]
+    bcahm_types_table = pd.DataFrame(data={'Column': bcahm_dtypes.keys(), 'Type': bcahm_dtypes.values(), 'Default': bcahm_defaults})
 
     converters = converter_factory(bcahm_types_table).create_converter_dict()
 
