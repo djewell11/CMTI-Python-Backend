@@ -139,7 +139,6 @@ class DataImporter(ABC):
     name conversion, critical minerals, and metals classification.
     """
     self.id_manager = ID_Manager()
-    self.row_records = []
 
     # Use ConfigParser to get data files if not provided
     config = ConfigParser()
@@ -184,31 +183,31 @@ class DataImporter(ABC):
     """
     pass
 
-  def generate_records(self, dataframe:pd.DataFrame) -> list[object]:
-    """
-    Converts a DataFrame into a list of database records using create_row_records().
+  # def generate_records(self, dataframe:pd.DataFrame) -> list[object]:
+  #   """
+  #   Converts a DataFrame into a list of database records using create_row_records().
     
-    :param dataframe: The input data as a pandas DataFrame.
-    :type dataframe: pd.DataFrame 
-    """
-    session_records = []
-    for _, row in dataframe.iterrows():
-      row_records = self.create_row_records(row)
-      session_records = session_records + row_records
-    return session_records
+  #   :param dataframe: The input data as a pandas DataFrame.
+  #   :type dataframe: pd.DataFrame 
+  #   """
+  #   session_records = []
+  #   for _, row in dataframe.iterrows():
+  #     row_records = self.create_row_records(row)
+  #     session_records = session_records + row_records
+  #   return session_records
 
-  def ingest_records(self, record_list:list[object], session:Session) -> None:
-    """
-    Commits all generated records to the database in a single transaction.
+  # def ingest_records(self, record_list:list[object], session:Session) -> None:
+  #   """
+  #   Commits all generated records to the database in a single transaction.
 
-    :param record_list: List of ORM objects to be inserted.
-    :type record_list: list
+  #   :param record_list: List of ORM objects to be inserted.
+  #   :type record_list: list
 
-    :param session: SQLAlchemy session for committing records.
-    :type session: Session 
-    """
-    session.add_all(record_list)
-    session.commit()
+  #   :param session: SQLAlchemy session for committing records.
+  #   :type session: Session 
+  #   """
+  #   session.add_all(record_list)
+  #   session.commit()
 
   def commit_object(self, obj, session:Session):
     """
@@ -249,6 +248,7 @@ class WorksheetImporter(DataImporter):
   """
   def __init__(self, name_convert_dict = 'config', cm_list = 'config', metals_dict = 'config', auto_generate_cmti_ids:bool=False):
     super().__init__(name_convert_dict, cm_list, metals_dict)
+    self.row_records = []
 
     # ID Manager currently relies on a session query to initialize IDs. Leave this out for now.
     # if auto_generate_cmti_ids:
@@ -440,8 +440,8 @@ class WorksheetImporter(DataImporter):
       longitude = mine.longitude,
       is_default = True,
     )
-    default_TSF.mines.append(mine)
     self.row_records.append(default_TSF)
+    default_TSF.mines.append(mine)
 
     # Default impoundment. Every default tailings facility gets one
     impountment_name = f"{mine.name.strip()}_defaultImpoundment"
@@ -460,7 +460,6 @@ class WorksheetImporter(DataImporter):
       stability_concerns = row.History_Stability_Concerns
     )
     self.row_records.append(default_impoundment)
-
     self.row_records.append(mine)
 
   def process_tsf(self, row:pd.Series, parent_mine:Mine):
@@ -474,6 +473,7 @@ class WorksheetImporter(DataImporter):
       is_default = False
     )
     tsf.mines.append(parent_mine)
+    self.row_records.append(tsf)
   
   def process_impoundment(self, row:pd.Series, parent_TSF:TailingsFacility):
     impoundment = Impoundment(
@@ -490,6 +490,7 @@ class WorksheetImporter(DataImporter):
       stability_concerns = row.History_Stability_Concerns
     )
     impoundment.parentTsf = parent_TSF
+    self.row_records.append(impoundment)
 
 class OMIImporter(DataImporter):
   def __init__(self, cm_list:list='config', metals_dict:dict='config', name_convert_dict:dict='config'):
