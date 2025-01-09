@@ -290,7 +290,6 @@ class WorksheetImporter(DataImporter):
     site_type = row['Site_Type']
     if site_type == "Mine":
       self.process_mine(row, comm_col_count, source_col_count)
-      # self.row_records.append(mine)
   
   def clean_input_table(self, input_table, drop_NA_columns=['Site_Name', 'Site_Type', 'CMIM_ID', 'Latitude', 'Longitude'], calculate_UTM=True):
       
