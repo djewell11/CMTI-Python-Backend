@@ -171,7 +171,7 @@ class Reference(Base):
   mine_id: Mapped["Mine"] = mapped_column(ForeignKey("mines.id"), primary_key=True)
   source_id: Mapped[str] = mapped_column(nullable=False, primary_key=True)
   source: Mapped[str] = mapped_column(nullable=False)
-  link: Mapped[str] = mapped_column(nullable=True)
+  link: Mapped[str] = mapped_column(nullable=True, server_default="Unknown")
 
   mine = relationship("Mine", back_populates="references")
 
