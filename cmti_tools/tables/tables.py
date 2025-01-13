@@ -55,7 +55,7 @@ class Mine(Base):
   # __table_args__ = (CheckConstraint(mine_type.in_(cat_columns_dict['Mine_Type'])),)
 
   def __repr__(self) -> str:
-    return f"{self.name!r}, ID: {self.id!r}, cmdb_id: {self.cmdb_id}"
+    return f"Mine: {self.name!r}, ID: {self.id!r}, cmdb_id: {self.cmdb_id}"
 
 class CommodityRecord(Base):
   __tablename__ = "commodities"
@@ -79,7 +79,7 @@ class CommodityRecord(Base):
   mine = relationship("Mine", back_populates="commodities")
 
   def __repr__(self) -> str:
-    return f"{self.commodity!r}, ID: {self.id!r}, Mine Name: {self.mine.name!r}, mine_id: {self.mine_id}, Produced: {self.produced}"
+    return f"CommodityRecord: {self.commodity!r}, ID: {self.id!r}, Mine Name: {self.mine.name!r}, mine_id: {self.mine_id}, Produced: {self.produced}"
 
 class Alias(Base):
   __tablename__ = "aliases"
@@ -104,7 +104,7 @@ class Owner(Base):
   )
 
   def __repr__(self) -> str:
-    return f"{self.name!r}, ID: {self.id!r}, Mines: {self.mines}"
+    return f"Owner: {self.name!r}, ID: {self.id!r}, Mines: {self.mines}"
 
 class TailingsFacility(Base):
   __tablename__ = "tailings_facilities"
@@ -125,7 +125,7 @@ class TailingsFacility(Base):
                                                            cascade = "all, delete-orphan")
   
   def __repr__(self) -> str:
-    return f"{self.name!r}, ID: {self.id!r}, cmdb_id: {self.cmdb_id}"
+    return f"TailingsFacility: {self.name!r}, ID: {self.id!r}, cmdb_id: {self.cmdb_id}, isDefault: {self.is_default}"
 
 class Impoundment(Base):
   __tablename__ = "impoundments"
@@ -148,7 +148,7 @@ class Impoundment(Base):
   parentTsf = relationship("TailingsFacility", back_populates="impoundments")
 
   def __repr__(self) -> str:
-    return f"{self.name!r}, ID: {self.id!r}, cmdb_id: {self.cmdb_id}"
+    return f"Impoundment: {self.name!r}, ID: {self.id!r}, cmdb_id: {self.cmdb_id}"
 
 class Orebody(Base):
   __tablename__ = "orebodies"
@@ -163,7 +163,7 @@ class Orebody(Base):
   mine = relationship("Mine", back_populates="orebody")
 
   def __repr__(self) -> str:
-    return f"{self.ore_type!r}, ID: {self.id!r}, mineral: {self.mineral}, Mine Name: {self.mine.name}, mine_id: {self.mine_id}"
+    return f"Orebody: {self.ore_type!r}, ID: {self.id!r}, mineral: {self.mineral}, Mine Name: {self.mine.name}, mine_id: {self.mine_id}"
 
 class Reference(Base):
   __tablename__ = "references"
@@ -177,7 +177,7 @@ class Reference(Base):
   mine = relationship("Mine", back_populates="references")
 
   def __repr__(self):
-    return f"Reference ID: {self.source}:{self.source_id}, Mine Name: {self.mine.name}, mine_id: {self.mine_id}"
+    return f"Reference: Source_ID: {self.source}:{self.source_id}, Mine Name: {self.mine.name}, mine_id: {self.mine_id}"
 
 class TailingsAssociation(Base):
   __tablename__ = "tsf_mine_associations"
