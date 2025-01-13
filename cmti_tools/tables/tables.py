@@ -82,6 +82,7 @@ class CommodityRecord(Base):
 class Alias(Base):
   __tablename__ = "aliases"
 
+  alias_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
   mine_id: Mapped["Mine"] = mapped_column(ForeignKey("mines.id"), primary_key=True)
   alias: Mapped[str] = mapped_column(nullable=False, primary_key=True)
 
