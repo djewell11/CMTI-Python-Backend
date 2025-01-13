@@ -3,6 +3,7 @@ from typing import Optional
 from datetime import datetime
 from sqlalchemy import ForeignKey
 from sqlalchemy import String
+from sqlalchemy import text
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
@@ -20,7 +21,7 @@ class Mine(Base):
   name: Mapped[str]
   prov_terr: Mapped[str] = mapped_column(String(2), nullable=False)
   last_revised: Mapped[datetime] = mapped_column(nullable=True)
-  nad: Mapped[int] = mapped_column(server_default=83)
+  nad: Mapped[int] = mapped_column(server_default=text("83"))
   utm_zone: Mapped[Optional[int]]
   easting: Mapped[Optional[float]]
   northing: Mapped[Optional[float]]
