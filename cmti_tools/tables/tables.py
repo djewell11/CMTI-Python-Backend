@@ -19,8 +19,8 @@ class Mine(Base):
   cmdb_id: Mapped[str] = mapped_column(nullable=False)
   name: Mapped[str]
   prov_terr: Mapped[str] = mapped_column(String(2), nullable=False)
-  last_revised: Mapped[datetime] = mapped_column(nullable=True) # Should this default to 'today'?
-  nad: Mapped[int] = mapped_column(default=83)
+  last_revised: Mapped[datetime] = mapped_column(nullable=True)
+  nad: Mapped[int] = mapped_column(server_default=83)
   utm_zone: Mapped[Optional[int]]
   easting: Mapped[Optional[float]]
   northing: Mapped[Optional[float]]
