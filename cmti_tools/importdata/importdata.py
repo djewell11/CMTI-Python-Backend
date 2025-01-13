@@ -326,7 +326,7 @@ class WorksheetImporter(DataImporter):
     cmti_defaults = {}
     for key, val in cmti_dtypes.items():
       if val[0] in ['i','I','u','f']:
-        cmti_defaults[key] = pd.NA
+        cmti_defaults[key] = None
       elif val == 'NAD':
         cmti_defaults[key] = 83
       elif val == 'Site_Aliases':

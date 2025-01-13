@@ -51,9 +51,6 @@ class Mine(Base):
   orebody = relationship("Orebody", back_populates="mine")
   references: Mapped[List["Reference"]] = relationship("Reference", back_populates="mine")
 
-  # Column value constraints
-  # __table_args__ = (CheckConstraint(mine_type.in_(cat_columns_dict['Mine_Type'])),)
-
   def __repr__(self) -> str:
     return f"Mine: {self.name!r}, ID: {self.id!r}, cmdb_id: {self.cmdb_id}"
 
