@@ -239,7 +239,7 @@ class DataImporter(ABC):
         elif dtype.startswith('f'):
           input_table[column] = pd.to_numeric(input_table[column], errors='coerce').astype('float')
       except Exception as e:
-        print(f"Failed on column: {column}")
+        raise
     return input_table
 
 class WorksheetImporter(DataImporter):
@@ -347,6 +347,7 @@ class WorksheetImporter(DataImporter):
           return int(val)
       converters['UTM_Zone'] = get_UTM
 
+    # If passing a directory for input_table, read the file. Otherwise, assume it's a DataFrame.
     if isinstance(input_table, str):
       try:
         cmti_df = pd.read_excel(input_table, header=0, converters=converters)
@@ -354,6 +355,11 @@ class WorksheetImporter(DataImporter):
         cmti_df = pd.read_csv(input_table, header=0, converters=converters)
     else:
       cmti_df = input_table
+      try:
+        for col, func in converters.items():
+          cmti_df[col] = cmti_df[col].apply(func)
+      except:
+        raise
     # Drop rows that are missing values in the drop_NA_columns list
     cmti_df = cmti_df.dropna(subset=drop_NA_columns)
     # Final type coercion
@@ -432,6 +438,7 @@ class WorksheetImporter(DataImporter):
 
     # Default tailings facility. Every mine gets one
     default_TSF = TailingsFacility(
+      mine=mine,
       name = f"defaultTSF_{mine.name}".strip(),
       cmdb_id = mine.cmdb_id,
       status = row.Mine_Status,
@@ -440,7 +447,7 @@ class WorksheetImporter(DataImporter):
       longitude = mine.longitude,
       is_default = True,
     )
-    self.row_records.append(default_TSF)
+    # self.row_records.append(default_TSF)
     default_TSF.mines.append(mine)
 
     # Default impoundment. Every default tailings facility gets one
