@@ -342,7 +342,10 @@ class WorksheetImporter(DataImporter):
     if calculate_UTM:
       def get_UTM(val):
         if pd.isna(val):
-          return tools.lon_to_utm_zone(val)
+          try:
+            return tools.lon_to_utm_zone(val)
+          except:
+            raise
         else:
           return int(val)
       converters['UTM_Zone'] = get_UTM
@@ -360,9 +363,9 @@ class WorksheetImporter(DataImporter):
           cmti_df[col] = cmti_df[col].apply(func)
       except:
         raise
+    # Final type coercion
     # Drop rows that are missing values in the drop_NA_columns list
     cmti_df = cmti_df.dropna(subset=drop_NA_columns)
-    # Final type coercion
     cmti_df = self.coerce_dtypes(cmti_types_table, cmti_df)
       # # Lastly, fill blank "last revised" with today's date. 
       #   # Note: This should have been done in the converters but I couldn't get it to work. Probably a better option would be to allow Nulls for times.
