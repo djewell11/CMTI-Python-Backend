@@ -59,6 +59,8 @@ class converter_factory:
           return default
         if isinstance(val, str):
           return tools.get_digits(val, 'int')
+        if isinstance(val, float):
+          return round(val)
         return val
       return get_int
     if dtype.startswith('f'):
@@ -325,11 +327,9 @@ class WorksheetImporter(DataImporter):
       cmti_dtypes[grade] = 'f'
     cmti_defaults = {}
     for key, val in cmti_dtypes.items():
-      if val[0] in ['i','I','u','f']:
+      if val == 'Site_Aliases':
         cmti_defaults[key] = None
-      elif val == 'NAD':
-        cmti_defaults[key] = 83
-      elif val == 'Site_Aliases':
+      elif val[0] in ['i','I','u','f']:
         cmti_defaults[key] = None
       elif val == 'U':
         cmti_defaults[key] = 'Unknown'
@@ -358,16 +358,25 @@ class WorksheetImporter(DataImporter):
         raise ve
 
     # Final type coercion and special cases
-    
+    # Assume NAD is 83
+    cmti_df['NAD'] = cmti_df['NAD'].fillna(83)
+
     # Calculate UTM Zone
     if calculate_UTM:
-      cmti_df['UTM_Zone'] = cmti_df.apply(lambda row: tools.lon_to_utm_zone(row['Longitude']), axis=1)
+      for row in cmti_df.itertuples():
+        if pd.isna(row.UTM_Zone):
+          try:
+            cmti_df.at[row.Index, 'UTM_Zone'] = tools.lon_to_utm_zone(row.Longitude)
+          except:
+            raise
 
     # Fill blank "last revised" with today's date. 
       #   # Note: This should have been done in the converters but I couldn't get it to work. Probably a better option would be to allow Nulls for times.
     cmti_df.Last_Revised = cmti_df.Last_Revised.fillna(datetime.now().date())
     
+    # Coerce all dtypes
     cmti_df = self.coerce_dtypes(cmti_types_table, cmti_df)
+    
     return cmti_df
 
   def process_mine(self, row:pd.Series, comm_col_count, source_col_count):
