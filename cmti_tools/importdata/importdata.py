@@ -338,38 +338,36 @@ class WorksheetImporter(DataImporter):
         
     cmti_types_table = pd.DataFrame(data={'Column': list(cmti_dtypes.keys()), 'Type': list(cmti_dtypes.values()), 'Default': list(cmti_defaults.values())})
     converters = converter_factory(cmti_types_table).create_converter_dict()
-    # UTM_Zone gets a special converter
-    if calculate_UTM:
-      def get_UTM(val):
-        if pd.isna(val):
-          try:
-            return tools.lon_to_utm_zone(val)
-          except:
-            raise
-        else:
-          return int(val)
-      converters['UTM_Zone'] = get_UTM
 
     # If passing a directory for input_table, read the file. Otherwise, assume it's a DataFrame.
     if isinstance(input_table, str):
       try:
-        cmti_df = pd.read_excel(input_table, header=0, converters=converters)
+        cmti_df = pd.read_excel(input_table, header=0)
       except:
-        cmti_df = pd.read_csv(input_table, header=0, converters=converters)
+        cmti_df = pd.read_csv(input_table, header=0)
     else:
       cmti_df = input_table
-      try:
-        for col, func in converters.items():
-          cmti_df[col] = cmti_df[col].apply(func)
-      except:
-        raise
-    # Final type coercion
-    # Drop rows that are missing values in the drop_NA_columns list
+    # Drop rows that are missing critical values in the drop_NA_columns list before converting types
     cmti_df = cmti_df.dropna(subset=drop_NA_columns)
-    cmti_df = self.coerce_dtypes(cmti_types_table, cmti_df)
-      # # Lastly, fill blank "last revised" with today's date. 
+
+    # Apply converters for initial cleanup
+    for col, func in converters.items():
+      try:
+        cmti_df[col] = cmti_df[col].apply(func)
+      except ValueError as ve:
+        raise ve
+
+    # Final type coercion and special cases
+    
+    # Calculate UTM Zone
+    if calculate_UTM:
+      cmti_df['UTM_Zone'] = cmti_df.apply(lambda row: tools.lon_to_utm_zone(row['Longitude']), axis=1)
+
+    # Fill blank "last revised" with today's date. 
       #   # Note: This should have been done in the converters but I couldn't get it to work. Probably a better option would be to allow Nulls for times.
     cmti_df.Last_Revised = cmti_df.Last_Revised.fillna(datetime.now().date())
+    
+    cmti_df = self.coerce_dtypes(cmti_types_table, cmti_df)
     return cmti_df
 
   def process_mine(self, row:pd.Series, comm_col_count, source_col_count):
