@@ -237,10 +237,11 @@ class DataImporter(ABC):
       try:
         dtype = input_types_table[input_types_table['Column'] == column]['Type'].iloc[0]
         if dtype.startswith('u') or dtype.startswith('i') or dtype.startswith('I'):
-          input_table[column] = pd.to_numeric(input_table[column], errors='raise').astype('Int64')
+          input_table[column] = pd.to_numeric(input_table[column], errors='ignore').astype('Int64')
         elif dtype.startswith('f'):
-          input_table[column] = pd.to_numeric(input_table[column], errors='raise').astype('float')
+          input_table[column] = pd.to_numeric(input_table[column], errors='ignore').astype('float')
       except Exception as e:
+        print(f"Error coercing column {column}: {e}")
         raise
     return input_table
 
