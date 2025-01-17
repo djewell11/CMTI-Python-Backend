@@ -293,7 +293,7 @@ class WorksheetImporter(DataImporter):
     if site_type == "Mine":
       self.process_mine(row, comm_col_count, source_col_count)
   
-  def clean_input_table(self, input_table, drop_NA_columns=['Site_Name', 'Site_Type', 'CMIM_ID', 'Latitude', 'Longitude'], calculate_UTM=True):
+  def clean_input_table(self, input_table, drop_NA_columns=['Site_Name', 'Site_Type', 'CMIM_ID', 'Latitude', 'Longitude'], calculate_UTM=True, coerce_dtypes=True):
       
     cmti_dtypes = {'Site_Name':'U', 'Site_Type':'U', 'CMIM_ID':'U', 'Site_Aliases': 'U', 'Last_Revised': 'datetime64[ns]',
       'NAD': 'Int64', 'UTM_Zone':'Int64', 'Easting':'Int64', 'Northing':'Int64', 'Latitude': 'f',
@@ -347,6 +347,7 @@ class WorksheetImporter(DataImporter):
         cmti_df = pd.read_csv(input_table, header=0)
     else:
       cmti_df = input_table
+
     # Drop rows that are missing critical values in the drop_NA_columns list before converting types
     cmti_df = cmti_df.dropna(subset=drop_NA_columns)
 
@@ -356,6 +357,9 @@ class WorksheetImporter(DataImporter):
         cmti_df[col] = cmti_df[col].apply(func)
       except ValueError as ve:
         raise ve
+      except KeyError as ke:
+        print(f"Column {col} not found in input table.")
+        pass
 
     # Final type coercion and special cases
     # Assume NAD is 83
@@ -364,10 +368,13 @@ class WorksheetImporter(DataImporter):
     # Calculate UTM Zone
     if calculate_UTM:
       for row in cmti_df.itertuples():
-        if pd.isna(row.UTM_Zone):
+        if pd.isna(row.Longitude):
+          cmti_df.at[row.Index, 'UTM_Zone'] = None
+        elif pd.isna(row.UTM_Zone):
           try:
             cmti_df.at[row.Index, 'UTM_Zone'] = tools.lon_to_utm_zone(row.Longitude)
           except:
+            print(f"Error calculating UTM Zone for row {row.Index}.")
             raise
 
     # Fill blank "last revised" with today's date. 
@@ -375,8 +382,9 @@ class WorksheetImporter(DataImporter):
     cmti_df.Last_Revised = cmti_df.Last_Revised.fillna(datetime.now().date())
     
     # Coerce all dtypes
-    cmti_df = self.coerce_dtypes(cmti_types_table, cmti_df)
-    
+    if coerce_dtypes:
+      cmti_df = self.coerce_dtypes(cmti_types_table, cmti_df)
+
     return cmti_df
 
   def process_mine(self, row:pd.Series, comm_col_count, source_col_count):
@@ -448,7 +456,6 @@ class WorksheetImporter(DataImporter):
 
     # Default tailings facility. Every mine gets one
     default_TSF = TailingsFacility(
-      mine=mine,
       name = f"defaultTSF_{mine.name}".strip(),
       cmdb_id = mine.cmdb_id,
       status = row.Mine_Status,

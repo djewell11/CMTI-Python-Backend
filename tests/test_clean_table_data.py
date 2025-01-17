@@ -20,7 +20,7 @@ def test_clean_table_data_worksheet():
         'Easting': 12345,
         'Northing': 54321,
         'NAD': '83',
-        'UTM_Zone': 19,
+        'UTM_Zone': None,
         'NTS_Area': '15K01',
         'Province_Territory': 'NB',
         'Mining_District': 'Havelock',
@@ -63,6 +63,7 @@ def test_clean_table_data_worksheet():
 
     assert cleaned_data.dtypes['NAD'] == 'Int64'
     assert cleaned_data.dtypes['Construction_Year'] == 'Int64'
+    assert cleaned_data.loc[0, 'UTM_Zone'] == 20
 
 def test_clean_table_omi():
     omi_df = pd.DataFrame(data={
