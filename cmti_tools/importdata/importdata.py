@@ -448,10 +448,10 @@ class WorksheetImporter(DataImporter):
     # References
     source_columns = [f"Source_{i}" for i in range(1, source_col_count+1)]
     for col in source_columns:
-      source = row[col]
+      source = str(row[col])
       if pd.notna(source) and source != "Unknown":
-        source_id = row[f"{col}_ID"]
-        link = row[f"{col}_Link"]
+        source_id = str(row[f"{col}_ID"])
+        link = str(row[f"{col}_Link"])
         reference = Reference(mine=mine, source=source, source_id=source_id, link=link)
         self.row_records.append(reference)
 
