@@ -140,6 +140,8 @@ class DataImporter(ABC):
     Initializes the DataImporter class with optional configurations for 
     name conversion, critical minerals, and metals classification.
     """
+    # self.records = []
+
     self.id_manager = ID_Manager()
 
     # Use ConfigParser to get data files if not provided
@@ -171,7 +173,7 @@ class DataImporter(ABC):
       self.metals_dict = metals_dict
 
   @abstractmethod
-  def create_row_records(self, row: pd.Series) -> list[object]:
+  def create_row_records(self, row: pd.Series) -> None:
     """
     Process a single row and generates a DeclarativeBase objects based on inputs. 
     Implemented by child classes.
@@ -185,47 +187,6 @@ class DataImporter(ABC):
     """
     pass
 
-  # def generate_records(self, dataframe:pd.DataFrame) -> list[object]:
-  #   """
-  #   Converts a DataFrame into a list of database records using create_row_records().
-    
-  #   :param dataframe: The input data as a pandas DataFrame.
-  #   :type dataframe: pd.DataFrame 
-  #   """
-  #   session_records = []
-  #   for _, row in dataframe.iterrows():
-  #     row_records = self.create_row_records(row)
-  #     session_records = session_records + row_records
-  #   return session_records
-
-  # def ingest_records(self, record_list:list[object], session:Session) -> None:
-  #   """
-  #   Commits all generated records to the database in a single transaction.
-
-  #   :param record_list: List of ORM objects to be inserted.
-  #   :type record_list: list
-
-  #   :param session: SQLAlchemy session for committing records.
-  #   :type session: Session 
-  #   """
-  #   session.add_all(record_list)
-  #   session.commit()
-
-  def commit_object(self, obj, session:Session):
-    """
-    Commit an object to session. Deprecated: each DataImporter child class has its own commit method. Will be removed eventually.
-
-    :param obj: An SQL Alchemy ORM object
-    :type obj: sqlalchemy.ORM.DeclarativeBase
-    """
-
-    try:
-      session.add(obj)
-      session.commit()
-    except IntegrityError as e:
-      print(e)
-      session.rollback()
-  
   def coerce_dtypes(self, input_types_table, input_table:pd.DataFrame) -> pd.DataFrame:
     """
     Coerces the data types of the input table based on the types_table.
@@ -244,55 +205,17 @@ class DataImporter(ABC):
         print(f"Error coercing column {column}: {e}")
         raise
     return input_table
-
+  
 class WorksheetImporter(DataImporter):
   """
   Imports worksheet data into the database.
   """
   def __init__(self, name_convert_dict = 'config', cm_list = 'config', metals_dict = 'config', auto_generate_cmti_ids:bool=False):
     super().__init__(name_convert_dict, cm_list, metals_dict)
-    self.row_records = []
 
     # ID Manager currently relies on a session query to initialize IDs. Leave this out for now.
     # if auto_generate_cmti_ids:
     #   self.id_manager = ID_Manager()
-  
-  def create_row_records(self, row, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None, comm_col_count:int=8, source_col_count:int=4):
-    """
-    Processes a worksheet row based on its 'Site_Type' and creates database records.
-
-    :param row: A pandas Series containing data from a worksheet row.
-    :type row: pd.Series
-
-    :param cm_list: Critical Minerals list
-    :type cm_list: list
-
-    :param metals_dict: Metals dictionary
-    :type metals_dict: dict
-
-    :param name_convert_dict: Name Convert dictionary
-    :type name_convert_dict: dict
-
-    :param comm_col_count: Commodity Column count to indicate amount of commodities in record
-    :type comm_col_count: int
-
-    :param source_col_count: Source Column count to indicate amount of sources in record
-    :type source_col_count: int
-
-    :return list: row_records
-    """
-    # Data tables will default to WorksheetImporter attributes but can be overridden
-    if cm_list is None:
-      cm_list = self.cm_list
-    if metals_dict is None:
-      metals_dict = self.metals_dict
-    if name_convert_dict is None:
-      name_convert_dict = self.name_convert_dict
-      
-    # The worksheet is based on 3 types of records. The imported data will change based on record type:
-    site_type = row['Site_Type']
-    if site_type == "Mine":
-      self.process_mine(row, comm_col_count, source_col_count)
   
   def clean_input_table(self, input_table, drop_NA_columns=['Site_Name', 'Site_Type', 'CMIM_ID', 'Latitude', 'Longitude'], calculate_UTM=True, coerce_dtypes=True):
       
@@ -388,11 +311,53 @@ class WorksheetImporter(DataImporter):
 
     return cmti_df
 
-  def process_mine(self, row:pd.Series, comm_col_count, source_col_count):
+  def create_row_records(self, row, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None, comm_col_count:int=8, source_col_count:int=4) -> list[DeclarativeBase]:
+    """
+    Processes a worksheet row based on its 'Site_Type' and creates database records.
+
+    :param row: A pandas Series containing data from a worksheet row.
+    :type row: pd.Series
+
+    :param cm_list: Critical Minerals list
+    :type cm_list: list
+
+    :param metals_dict: Metals dictionary
+    :type metals_dict: dict
+
+    :param name_convert_dict: Name Convert dictionary
+    :type name_convert_dict: dict
+
+    :param comm_col_count: Commodity Column count to indicate amount of commodities in record
+    :type comm_col_count: int
+
+    :param source_col_count: Source Column count to indicate amount of sources in record
+    :type source_col_count: int
+
+    :return list: row_records
+    """
+    # Data tables will default to WorksheetImporter attributes but can be overridden
+    if cm_list is None:
+      cm_list = self.cm_list
+    if metals_dict is None:
+      metals_dict = self.metals_dict
+    if name_convert_dict is None:
+      name_convert_dict = self.name_convert_dict
+      
+    # The worksheet is based on 3 types of records. The imported data will change based on record type:
+    site_type = row['Site_Type']
+    if site_type == "Mine":
+      return self.process_mine(row, comm_col_count, source_col_count)
+
+    
+
+  def process_mine(self, row:pd.Series, comm_col_count, source_col_count) -> list[DeclarativeBase]:
     """
     Processes mine-specific data and creates Mine, Owner, Alias, 
     Commodity, Reference, and default TSF and Impoundment records.
     """
+
+    records = []
+
     mine = Mine(
       cmdb_id = row.CMIM_ID,
       name = row.Site_Name,
@@ -419,7 +384,7 @@ class WorksheetImporter(DataImporter):
     for col in comm_columns:
       if pd.notna(row[col]):
         commodity_record = tools.get_commodity(row, col, self.cm_list, self.name_convert_dict, self.metals_dict, mine)
-        self.row_records.append(commodity_record)
+        records.append(commodity_record)
   
     # Aliases
     # There are often multiple comma-separated aliases. Split them up
@@ -430,12 +395,12 @@ class WorksheetImporter(DataImporter):
       for aliasName in aliases_list:
         alias = Alias(alias=aliasName)
         alias.mine=mine
-        self.row_records.append(alias)
+        records.append(alias)
 
     # Owners
     owner = Owner(name=row.Owner_Operator)
     mine.owners.append(owner)
-    self.row_records.append(owner)
+    records.append(owner)
     
     past_owners = row.Past_Owners
     if pd.notna(past_owners):
@@ -443,7 +408,7 @@ class WorksheetImporter(DataImporter):
       for past_owner in past_owners_list:
         owner = Owner(name=past_owner)
         owner.mines.append(mine)
-        self.row_records.append(owner)
+        records.append(owner)
 
     # References
     source_columns = [f"Source_{i}" for i in range(1, source_col_count+1)]
@@ -453,7 +418,7 @@ class WorksheetImporter(DataImporter):
         source_id = str(row[f"{col}_ID"])
         link = str(row[f"{col}_Link"])
         reference = Reference(mine=mine, source=source, source_id=source_id, link=link)
-        self.row_records.append(reference)
+        records.append(reference)
 
     # Default tailings facility. Every mine gets one
     default_TSF = TailingsFacility(
@@ -465,8 +430,8 @@ class WorksheetImporter(DataImporter):
       longitude = mine.longitude,
       is_default = True,
     )
-    # self.row_records.append(default_TSF)
     default_TSF.mines.append(mine)
+    records.append(default_TSF)
 
     # Default impoundment. Every default tailings facility gets one
     impountment_name = f"{mine.name.strip()}_defaultImpoundment"
@@ -484,8 +449,10 @@ class WorksheetImporter(DataImporter):
       rating_index = row.Rating_Index,
       stability_concerns = row.History_Stability_Concerns
     )
-    self.row_records.append(default_impoundment)
-    self.row_records.append(mine)
+    records.append(default_impoundment)
+    records.append(mine)
+
+    return records
 
   def process_tsf(self, row:pd.Series, parent_mine:Mine):
     tsf = TailingsFacility(
@@ -498,7 +465,7 @@ class WorksheetImporter(DataImporter):
       is_default = False
     )
     tsf.mines.append(parent_mine)
-    self.row_records.append(tsf)
+    return tsf
   
   def process_impoundment(self, row:pd.Series, parent_TSF:TailingsFacility):
     impoundment = Impoundment(
@@ -515,7 +482,7 @@ class WorksheetImporter(DataImporter):
       stability_concerns = row.History_Stability_Concerns
     )
     impoundment.parentTsf = parent_TSF
-    self.row_records.append(impoundment)
+    return impoundment
 
 class OMIImporter(DataImporter):
   def __init__(self, cm_list:list='config', metals_dict:dict='config', name_convert_dict:dict='config'):

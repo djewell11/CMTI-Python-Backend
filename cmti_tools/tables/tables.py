@@ -176,7 +176,7 @@ class Reference(Base):
   mine = relationship("Mine", back_populates="references")
 
   def __repr__(self):
-    return f"Reference: Source_ID: {self.source}:{self.source_id}, Mine Name: {self.mine.name}, mine_id: {self.mine_id}"
+    return f"Reference: {self.source}, Source_ID: {self.source_id}, Mine Name: {self.mine.name}, mine_id: {self.mine_id}"
 
 class TailingsAssociation(Base):
   __tablename__ = "tsf_mine_associations"
