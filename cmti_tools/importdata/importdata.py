@@ -482,7 +482,7 @@ class WorksheetImporter(DataImporter):
       stability_concerns = row.History_Stability_Concerns
     )
     impoundment.parentTsf = parent_TSF
-    return impoundment
+    return impoundment  
 
 class OMIImporter(DataImporter):
   def __init__(self, cm_list:list='config', metals_dict:dict='config', name_convert_dict:dict='config'):
@@ -573,8 +573,9 @@ class OMIImporter(DataImporter):
       
       # Commodities
       for comm_col in ['P_COMMOD', 'S_COMMOD']:
-        comm_record = tools.get_commodity(row, comm_col, self.cm_list, self.name_convert_dict, self.metals_dict, mine)
-        row_records.append(comm_record)
+        if pd.notna(row[comm_col]):
+          comm_record = tools.get_commodity(row, comm_col, self.cm_list, self.name_convert_dict, self.metals_dict, mine)
+          row_records.append(comm_record)
 
       # Default TSF
       tsf = TailingsFacility(is_default = True, name = f"default_TSF_{mine.name}".strip())
