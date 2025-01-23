@@ -454,7 +454,7 @@ class WorksheetImporter(DataImporter):
 
     return records
 
-  def process_tsf(self, row:pd.Series, parent_mine:Mine):
+  def process_tsf(self, row:pd.Series, parent_mines:Mine | list[Mine]):
     tsf = TailingsFacility(
       name = row.Site_Name,
       cmdb_id = row.CMIM_ID,
@@ -464,7 +464,11 @@ class WorksheetImporter(DataImporter):
       longitude = row.Longitude,
       is_default = False
     )
-    tsf.mines.append(parent_mine)
+    if isinstance(parent_mines, list):
+      for mine in parent_mines:
+        tsf.mines.append(mine)
+    else:
+      tsf.mines.append(parent_mines)
     return tsf
   
   def process_impoundment(self, row:pd.Series, parent_TSF:TailingsFacility):
