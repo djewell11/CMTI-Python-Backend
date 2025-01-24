@@ -146,10 +146,13 @@ def get_commodity(row:pd.Series, commodity_column:str, critical_mineral_list:lis
   # commodityCols = list(filter(lambda x: x.startswith("Commodity"), dataframe.columns))
   # Check each "commodity" column in table to see if it has a value
     # If it has a value, create an ORM object. This commodity does not necessarily need to have quantities
-  comm = row[commodity_column].capitalize()
-  comm_name = convert_commodity_name(comm, name_convert_dict, name_type)
-  comm_short = convert_commodity_name(comm, name_convert_dict, output_type="symbol")
-  commodity = CommodityRecord(mine=mine, commodity=comm_name)
+  try:
+    comm = row[commodity_column].capitalize()
+    comm_name = convert_commodity_name(comm, name_convert_dict, name_type)
+    comm_short = convert_commodity_name(comm, name_convert_dict, output_type="symbol")
+    commodity = CommodityRecord(mine=mine, commodity=comm_name)
+  except:
+    raise
   # Check if metal and critical
   try:
     commodity.metal_type = metals_dict.get(comm_short)
