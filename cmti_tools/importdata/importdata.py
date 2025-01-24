@@ -901,7 +901,6 @@ class BCAHMImporter(DataImporter):
       # If either lat or lon are missing, don't add that record
       if (pd.isna(mine_vals["latitude"]) or mine_vals["latitude"] == 'Null') or (pd.isna(mine_vals["longitude"]) or mine_vals["longitude"] == 'Null'):
           raise ValueError("Latitude or Longitude missing from record.")
-          return
       
       # Check coordinates for null strings as well
       if pd.isna(mine_vals['northing']) or mine_vals['northing'] == 'Null':
@@ -922,8 +921,9 @@ class BCAHMImporter(DataImporter):
       
       # Commodities
       for comm_col in ['COMMOD_C1', 'COMMOD_C2', 'COMMOD_C3']:
-        commodity_record = tools.get_commodity(row, comm_col, cm_list, name_convert_dict, metals_dict, mine)
-        row_records.append(commodity_record)
+        if pd.notna(comm_col):
+          commodity_record = tools.get_commodity(row, comm_col, cm_list, name_convert_dict, metals_dict, mine)
+          row_records.append(commodity_record)
 
       # TSF
       tsf = TailingsFacility(is_default = True, name = f"default_TSF_{mine_vals['name']}".strip())
