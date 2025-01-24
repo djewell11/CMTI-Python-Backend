@@ -181,7 +181,7 @@ class DataImporter(ABC):
     pass
 
   @abstractmethod
-  def clean_input_table(self, input_table:pd.DataFrame) -> pd.DataFrame:
+  def clean_input_table(self, input_table:pd.DataFrame, force_dtypes:bool=True) -> pd.DataFrame:
     """
     Clean values in the input table and make column data types consistent.
     """
@@ -217,7 +217,7 @@ class WorksheetImporter(DataImporter):
     # if auto_generate_cmti_ids:
     #   self.id_manager = ID_Manager()
   
-  def clean_input_table(self, input_table, drop_NA_columns=['Site_Name', 'Site_Type', 'CMIM_ID', 'Latitude', 'Longitude'], calculate_UTM=True, coerce_dtypes=True):
+  def clean_input_table(self, input_table, drop_NA_columns=['Site_Name', 'Site_Type', 'CMIM_ID', 'Latitude', 'Longitude'], calculate_UTM=True, force_dtypes=True):
       
     cmti_dtypes = {'Site_Name':'U', 'Site_Type':'U', 'CMIM_ID':'U', 'Site_Aliases': 'U', 'Last_Revised': 'datetime64[ns]',
       'NAD': 'Int64', 'UTM_Zone':'Int64', 'Easting':'Int64', 'Northing':'Int64', 'Latitude': 'f',
@@ -306,7 +306,7 @@ class WorksheetImporter(DataImporter):
     cmti_df.Last_Revised = cmti_df.Last_Revised.fillna(datetime.now().date())
     
     # Coerce all dtypes
-    if coerce_dtypes:
+    if force_dtypes:
       cmti_df = self.coerce_dtypes(cmti_types_table, cmti_df)
 
     return cmti_df
@@ -489,7 +489,7 @@ class WorksheetImporter(DataImporter):
     return impoundment  
 
 class OMIImporter(DataImporter):
-  def __init__(self, cm_list:list='config', metals_dict:dict='config', name_convert_dict:dict='config'):
+  def __init__(self, cm_list:list='config', metals_dict:dict='config', name_convert_dict:dict='config', prov_id:ProvID=None, force_dtypes:bool=True):
     """
     Initializes the OMIImporter class with configuration data.
     
@@ -503,9 +503,9 @@ class OMIImporter(DataImporter):
     :type name_convert_dict: dict
     """
     super().__init__(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_convert_dict)
-    self.prov_id = ProvID("ON")
+    self.prov_id = prov_id if prov_id is not None else ProvID("ON")
   
-  def clean_input_table(self, input_table):
+  def clean_input_table(self, input_table, force_dtypes:bool=True):
     omi_dtypes = {
       'MDI_IDENT': 'U',
       'NAME': 'U',
@@ -536,7 +536,8 @@ class OMIImporter(DataImporter):
       omi_df = input_table
     
     # Enforce types
-    omi_df = self.coerce_dtypes(omi_types_table, omi_df)
+    if force_dtypes:
+      omi_df = self.coerce_dtypes(omi_types_table, omi_df)
 
     return omi_df
 
@@ -633,7 +634,7 @@ class OAMImporter(DataImporter):
     else:
       return val
 
-  def clean_input_table(self, input_table):
+  def clean_input_table(self, input_table, force_dtypes:bool=True):
     oam_dtypes = {
       'OID': 'U',
       'Lat_DD': 'f4',
@@ -656,7 +657,7 @@ class OAMImporter(DataImporter):
       'County': 'U',
       'Landowner': 'U',
       'Last_Operator': 'U',
-      'Start_Date': 'f4',
+      'Start_Date': 'Int64',
       'Peak_Production': 'U',
       'Last_Updated': 'f4'
   }
@@ -664,9 +665,9 @@ class OAMImporter(DataImporter):
     # Take keys and values as columns and types for dataframe
     # Set default values based on datatype
     oam_defaults = ["Unknown" if t == "U" else pd.NA for t in oam_dtypes]
-    omi_types_table = pd.DataFrame(data={'Column': oam_dtypes.keys(), 'Type': oam_dtypes.values(), 'Default': oam_defaults})
+    oam_types_table = pd.DataFrame(data={'Column': oam_dtypes.keys(), 'Type': oam_dtypes.values(), 'Default': oam_defaults})
 
-    converters = converter_factory(omi_types_table).create_converter_dict()
+    converters = converter_factory(oam_types_table).create_converter_dict()
     if isinstance(input_table, str):
       try:
         oam_df = pd.read_csv(input_table, header=0, converters=converters)
@@ -676,11 +677,12 @@ class OAMImporter(DataImporter):
       oam_df = input_table
 
     # Coerce types
-    oam_df = self.coerce_dtypes(omi_types_table, oam_df)
+    if force_dtypes:
+      oam_df = self.coerce_dtypes(oam_types_table, oam_df)
 
     return oam_df
 
-  def create_row_records(self, row: pd.Series, oam_comm_names:dict, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None):
+  def create_row_records(self, row: pd.Series, oam_comm_names:dict=None, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None):
     """
     Processes a row of OAM data and creates associated database records.
 
@@ -792,7 +794,7 @@ class BCAHMImporter(DataImporter):
     super().__init__(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_convert_dict)
     self.provID = ProvID('BC')
 
-  def clean_input_table(self, input_table):
+  def clean_input_table(self, input_table, force_dtypes:bool=True):
     bcahm_dtypes = {
       "OBJECTID": "u4",
       "MINFILNO": "U",
@@ -848,7 +850,8 @@ class BCAHMImporter(DataImporter):
       bcahm_df = input_table
 
     # Coerce types
-    bcahm_df = self.coerce_dtypes(bcahm_types_table, bcahm_df)
+    if force_dtypes:
+      bcahm_df = self.coerce_dtypes(bcahm_types_table, bcahm_df)
 
     return bcahm_df
 
@@ -901,9 +904,9 @@ class BCAHMImporter(DataImporter):
           return
       
       # Check coordinates for null strings as well
-      if mine_vals['northing'] == 'Null' or pd.isna(mine_vals['northing']):
+      if pd.isna(mine_vals['northing']) or mine_vals['northing'] == 'Null':
         del(mine_vals['northing'])
-      if mine_vals['easting'] == 'Null' or pd.isna(mine_vals['easting']):
+      if pd.isna(mine_vals['easting']) or mine_vals['easting'] == 'Null':
         del(mine_vals['easting'])
       if pd.isna(mine_vals['utm_zone']) or mine_vals['utm_zone'] == 'Null':
         mine_vals['utm_zone'] = tools.lon_to_utm_zone(mine_vals['longitude'])
