@@ -899,8 +899,8 @@ class BCAHMImporter(DataImporter):
       }
 
       # If either lat or lon are missing, don't add that record
-      if (pd.isna(mine_vals["latitude"]) or mine_vals["latitude"] == 'Null') or \
-        (pd.isna(mine_vals["longitude"]) or mine_vals["longitude"] == 'Null'):
+      if (pd.isna(mine_vals["latitude"]) or mine_vals["latitude"] == 'Null') or (pd.isna(mine_vals["longitude"]) or mine_vals["longitude"] == 'Null'):
+          raise ValueError("Latitude or Longitude missing from record.")
           return
       
       # Check coordinates for null strings as well
