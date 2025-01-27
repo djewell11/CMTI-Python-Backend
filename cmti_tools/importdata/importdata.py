@@ -196,7 +196,10 @@ class DataImporter(ABC):
     # Final type coercion
     for column in input_table.columns:
       try:
-        dtype = input_types_table[input_types_table['Column'] == column]['Type'].iloc[0]
+        dtype_row = input_types_table[input_types_table['Column'] == column]
+        if dtype_row.empty:
+            raise KeyError(f"Column '{column}' not found in input_types_table.")
+        dtype = dtype_row['Type'].iloc[0]
         if dtype.startswith('u') or dtype.startswith('i') or dtype.startswith('I'):
           input_table[column] = pd.to_numeric(input_table[column], errors='coerce').astype('Int64')
         elif dtype.startswith('f'):
@@ -544,9 +547,9 @@ class OMIImporter(DataImporter):
         omi_df[col] = omi_df[col].apply(func)
       except ValueError as ve:
         raise ve
-      except KeyError as ke:
+      except KeyError:
         print(f"Column {col} not found in input table.")
-        pass
+        raise
 
     # Enforce types
     if force_dtypes:
@@ -829,7 +832,7 @@ class BCAHMImporter(DataImporter):
       "STATUS": "U",
       "LATITUDE": "f4",
       "LONGITUDE": "f4",
-      "UTM_ZONE": "f4",
+      "UTM_ZONE": "Int64",
       "UTM_NORT": "Int64",
       "UTM_EAST": "Int64",
       "ELEV": "f4",
@@ -891,11 +894,11 @@ class BCAHMImporter(DataImporter):
     # Calculate UTM Zone
     if calculate_UTM:
       for row in bcahm_df.itertuples():
-        if pd.isna(row.Longitude):
+        if pd.isna(row.LONGITUDE):
           bcahm_df.at[row.Index, 'UTM_Zone'] = None
-        elif pd.isna(row.UTM_Zone):
+        elif pd.isna(row.UTM_ZONE):
           try:
-            bcahm_df.at[row.Index, 'UTM_Zone'] = tools.lon_to_utm_zone(row.Longitude)
+            bcahm_df.at[row.Index, 'UTM_ZONE'] = tools.lon_to_utm_zone(row.LONGITUDE)
           except:
             print(f"Error calculating UTM Zone for row {row.Index}.")
             raise
@@ -972,7 +975,7 @@ class BCAHMImporter(DataImporter):
       
       # Commodities
       for comm_col in ['COMMOD_C1', 'COMMOD_C2', 'COMMOD_C3']:
-        if pd.notna(comm_col):
+        if pd.notna(row[comm_col]):
           commodity_record = tools.get_commodity(row, comm_col, cm_list, name_convert_dict, metals_dict, mine)
           row_records.append(commodity_record)
 

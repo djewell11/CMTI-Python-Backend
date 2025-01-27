@@ -69,13 +69,16 @@ def test_clean_table_omi():
     omi_df = pd.DataFrame(data={
         'MDI_IDENT': 'MDI130M', 
         'NAME': 'Skelin Quarry', 
-        'Status': 'Inactive', 
+        'STATUS': 'Inactive', 
+        'TWP_AREA': 'TWP 1',
         'P_COMMOD': 'COPPER',
         'S_COMMOD': 'ZINC',
         'ALL_NAMES': 'Speyside Quarry, S-Skelin Quarry',
         'LONGITUDE': -79.961,
         'LATITUDE': 43.590,
         'RGP_DIST': 'Southern Ontario',
+        'DEP_CLASS': 'Quarry',
+        'LL_DATUM': 'NAD83',
         'DETAIL': 'some website dot com'
     },
     index = [0]
@@ -83,7 +86,8 @@ def test_clean_table_omi():
 
     omi_importer = OMIImporter(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_dict)
     cleaned_data = omi_importer.clean_input_table(omi_df)
-    assert cleaned_data.dtypes['Status'] == 'object'
+
+    assert cleaned_data.dtypes['STATUS'] == 'object'
     assert cleaned_data.dtypes['LONGITUDE'] == 'float64'
 
 def test_clean_table_oam():
@@ -119,27 +123,45 @@ def test_clean_table_oam():
 def test_clean_table_bcahm():
 
     bcahm_df = pd.DataFrame(data={
-            'OBJECTID': 1,
-            'MINFILNO': '082NE001',
-            'NAME1': 'MCKINLEY',
-            'NAME2': 'MCKINLEY (L.140S)',
-            'STATUS': 'Past Producer',
-            'LATITUDE': 49.541,
-            'LONGITUDE': -118.388,
-            'UTM_NORT': 5488505,
-            'UTM_EAST': 399620,
-            'UTM_ZONE': 11,
-            'COMMOD_C1': 'CU',
-            'COMMOD_C2': 'AG',
-            'COMMOD_C3': 'PB',
-            'First_Year': 1949.0,
-            'Last_Year': 1949,
-            'NTSMAP_C1': '082E09W',
-            'DEPOSITTYPE_D1': 'Cu skarn',
-            'DEPOSITCLASS_D1': 'Skarn',
-            'DEPOSITTYPE_D2': 'Pb-An-skarn',
-            'DEPOSITCLASS_D2': None
-        }, index=[0])
+      "OBJECTID": 1,
+      "MINFILNO": "BCABC0001",
+      "NAME1": "BC Metals",
+      "NAME2": "BC Ore",
+      "STATUS": "Active",
+      "LATITUDE": 47.1234,
+      "LONGITUDE": -123.1234,
+      "UTM_ZONE": pd.NA,
+      "UTM_NORT": 1234567,
+      "UTM_EAST": 7654321,
+      "ELEV": 45.5,
+      "COMMOD_C1": "Gold",
+      "COMMOD_C2": "Silver",
+      "COMMOD_C3": "Nickel",
+      "DEPOSITTYPE_D1": "Surficial Placers",
+      "DEPOSITTYPE_D2": "Unkown",
+      "DEPOSITCLASS_D1": "Placer",
+      "DEPOSITCLASS_D2": "Unknown",
+      "NTSMAP_C1": "085NEW",
+      "NTSMAP_C2": "086NEW",
+      "Permit1": "M123",
+      "Permit2": "Null",
+      "Mine_Name": "BC Metals",
+      "Mine_Statu": "Active",
+      "Region": "BC",
+      "Tailings": "yes",
+      "Disposal_Method": "Dry Stack",
+      "Mined": 2462,
+      "Milled": 726,
+      "Mine_type": "Placer",
+      "Permitee1": "BC Metal Inc",
+      "Permittee2": "Null",
+      "URL": "www dot bcmetals dot com",
+      "Current_st": "Site Not Visited",
+      "Permit1_Status": "Active",
+      "Permit2_Status": "Null",
+      "First_Year": "1901",
+      "Last_Year": "2001"
+    }, index=[0])
     
     bcahm_importer = BCAHMImporter(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_dict)
     clean_data = bcahm_importer.clean_input_table(bcahm_df)
