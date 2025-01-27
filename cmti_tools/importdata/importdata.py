@@ -505,7 +505,7 @@ class OMIImporter(DataImporter):
     super().__init__(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_convert_dict)
     self.prov_id = prov_id if prov_id is not None else ProvID("ON")
   
-  def clean_input_table(self, input_table, force_dtypes:bool=True):
+  def clean_input_table(self, input_table, drop_NA_columns=['MDI_IDENT', 'NAME', 'LONGITUDE', 'LATITUDE'], force_dtypes=True):
     omi_dtypes = {
       'MDI_IDENT': 'U',
       'NAME': 'U',
@@ -535,6 +535,19 @@ class OMIImporter(DataImporter):
     elif isinstance(input_table, pd.DataFrame):
       omi_df = input_table
     
+    # Drop rows that are missing critical values in the drop_NA_columns list before converting types
+    omi_df = omi_df.dropna(subset=drop_NA_columns)
+    
+    # Apply converters for initial cleanup
+    for col, func in converters.items():
+      try:
+        omi_df[col] = omi_df[col].apply(func)
+      except ValueError as ve:
+        raise ve
+      except KeyError as ke:
+        print(f"Column {col} not found in input table.")
+        pass
+
     # Enforce types
     if force_dtypes:
       omi_df = self.coerce_dtypes(omi_types_table, omi_df)
@@ -634,7 +647,7 @@ class OAMImporter(DataImporter):
     else:
       return val
 
-  def clean_input_table(self, input_table, force_dtypes:bool=True):
+  def clean_input_table(self, input_table, drop_NA_columns=['OID', 'Lat_DD', 'Long_DD', 'Name'],  force_dtypes=True):
     oam_dtypes = {
       'OID': 'U',
       'Lat_DD': 'f4',
@@ -675,6 +688,19 @@ class OAMImporter(DataImporter):
         oam_df = pd.read_excel(input_table, header=0, converters=converters)
     else:
       oam_df = input_table
+
+    # Drop rows that are missing critical values in the drop_NA_columns list before converting types
+    oam_df = oam_df.dropna(subset=drop_NA_columns)
+
+    # Apply converters for initial cleanup
+    for col, func in converters.items():
+      try:
+        oam_df[col] = oam_df[col].apply(func)
+      except ValueError as ve:
+        raise ve
+      except KeyError as ke:
+        print(f"Column {col} not found in input table.")
+        pass
 
     # Coerce types
     if force_dtypes:
@@ -794,7 +820,7 @@ class BCAHMImporter(DataImporter):
     super().__init__(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_convert_dict)
     self.provID = ProvID('BC')
 
-  def clean_input_table(self, input_table, force_dtypes:bool=True):
+  def clean_input_table(self, input_table, drop_NA_columns=['OBJECTID', 'MINFILNO', 'NAME1', 'LATITUDE', 'LONGITUDE'], calculate_UTM=True, force_dtypes=True):
     bcahm_dtypes = {
       "OBJECTID": "u4",
       "MINFILNO": "U",
@@ -848,6 +874,31 @@ class BCAHMImporter(DataImporter):
         bcahm_df = pd.read_csv(input_table, header=0, converters=converters)
     else:
       bcahm_df = input_table
+
+    # Drop rows that are missing critical values in the drop_NA_columns list before converting types
+    bcahm_df = bcahm_df.dropna(subset=drop_NA_columns)
+
+    # Apply converters for initial cleanup
+    for col, func in converters.items():
+      try:
+        bcahm_df[col] = bcahm_df[col].apply(func)
+      except ValueError as ve:
+        raise ve
+      except KeyError as ke:
+        print(f"Column {col} not found in input table.")
+        pass
+
+    # Calculate UTM Zone
+    if calculate_UTM:
+      for row in bcahm_df.itertuples():
+        if pd.isna(row.Longitude):
+          bcahm_df.at[row.Index, 'UTM_Zone'] = None
+        elif pd.isna(row.UTM_Zone):
+          try:
+            bcahm_df.at[row.Index, 'UTM_Zone'] = tools.lon_to_utm_zone(row.Longitude)
+          except:
+            print(f"Error calculating UTM Zone for row {row.Index}.")
+            raise
 
     # Coerce types
     if force_dtypes:
