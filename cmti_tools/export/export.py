@@ -1,6 +1,6 @@
 import pandas as pd
 import csv
-from cmti_tools.tables.tables import Mine
+from cmti_tools.tables import Mine
 from cmti_tools.tools import convert_commodity_name
 from sqlalchemy import select
 
