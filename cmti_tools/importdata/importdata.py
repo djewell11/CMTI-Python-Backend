@@ -995,9 +995,10 @@ class BCAHMImporter(DataImporter):
         row_records.append(minefileref)
 
       # Orebody
-      orebody = Orebody(mine = mine, ore_type = row["DEPOSITTYPE_D1"], ore_class = row["DEPOSITCLASS_D1"])
-      row_records.append(orebody)
-      if row["DEPOSITTYPE_D2"] != "Null":
+      if row["DEPOSITTYPE_D1"] != "Null" and pd.notna(row["DEPOSITTYPE_D1"]):
+        orebody = Orebody(mine = mine, ore_type = row["DEPOSITTYPE_D1"], ore_class = row["DEPOSITCLASS_D1"])
+        row_records.append(orebody)
+      if row["DEPOSITTYPE_D2"] != "Null" and pd.notna(row["DEPOSITTYPE_D2"]):
         orebody2 = Orebody(mine = mine, ore_type = row["DEPOSITTYPE_D2"], ore_class = row["DEPOSITCLASS_D2"])
         row_records.append(orebody2)
 
