@@ -47,10 +47,10 @@ class ProvID:
     :return: int
     """
     ids = []
-    with session.query(Mine).filter(Mine.prov_terr == self.code) as q:
-      for record in q:
-        id_num = int(record[2:]) # The integer portion of the ID
-        ids.append(id_num)
+    for mine in session.query(Mine).filter(Mine.prov_terr == self.code):
+      mine_id = mine.cmdb_id
+      id_num = int(mine_id[2:]) # The integer portion of the ID
+      ids.append(id_num)
     return max(ids) if len(ids) > 0 else 0
 
   def format_id(self, id_val:int) -> str:
@@ -113,4 +113,4 @@ class ID_Manager:
 
   def update_all(self, session):
     for prov in self.all:
-      prov.max_id = prov.query_session_id(session)
+      prov.update_id(prov.query_session_id(session))
