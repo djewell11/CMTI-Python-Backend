@@ -42,16 +42,15 @@ class ProvID:
 
   def query_session_id(self, session):
     """
-    Query the session to get the highest ID for a given prov_terr.
+    Query the session to get the highest ID for a given provID.
 
     :return: int
     """
-    stmt = select(Mine.cmdb_id).filter(Mine.prov_terr==self.code)
     ids = []
-    with session.execute(stmt).scalars() as q:
+    with session.query(Mine).filter(Mine.prov_terr == self.code) as q:
       for record in q:
-        id_num = record[2:]
-        ids.append(int(id_num))
+        id_num = int(record[2:]) # The integer portion of the ID
+        ids.append(id_num)
     return max(ids) if len(ids) > 0 else 0
 
   def format_id(self, id_val:int) -> str:
@@ -82,7 +81,7 @@ class ID_Manager:
 
   def __init__(self):
     # Create a list to hold all ProvID objects
-    self.all_ids = []
+    self.all = []
 
     # Initialize highest ID for each prov_terr
     self.AB = ProvID('AB')
