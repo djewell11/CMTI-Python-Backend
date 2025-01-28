@@ -112,5 +112,5 @@ class ID_Manager:
     self.all_ids.append(self.YT)
 
   def update_all(self, session):
-    for prov in self.all_ids:
+    for prov in self.all:
       prov.max_id = prov.query_session_id(session)
