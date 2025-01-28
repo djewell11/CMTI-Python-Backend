@@ -13,9 +13,8 @@ class ProvID:
   # Holds the highest ID for a prov_terr and can generate a new one
   def __init__(self, code:str):
     self._code = code
-    # self._max_id = self.get_highest_id()
     self._max_id = 0
-    self._formatted_id = self.format_id()
+    self._formatted_id = self.format_id(self.max_id)
 
   @property
   def code(self):
@@ -35,10 +34,13 @@ class ProvID:
   def formatted_id(self):
     return self._formatted_id
   @formatted_id.setter
-  def formatted_id(self, value):
-    self._formatted_id = self.format_id()
+  def formatted_id(self, val:str):
+    try:
+      self._formatted_id = val
+    except ValueError:
+      raise ValueError("formatted_id must be a string. Please use the format_id method to generate a new formatted_id.")
 
-  def query_highest_id(self, session):
+  def query_session_id(self, session):
     """
     Query the session to get the highest ID for a given prov_terr.
 
@@ -46,32 +48,43 @@ class ProvID:
     """
     stmt = select(Mine.cmdb_id).filter(Mine.prov_terr==self.code)
     ids = []
-    with self.session.execute(stmt).scalars() as q:
-      for r in q:
-        id_num = r[2:]
+    with session.execute(stmt).scalars() as q:
+      for record in q:
+        id_num = record[2:]
         ids.append(int(id_num))
     return max(ids) if len(ids) > 0 else 0
 
-  def format_id(self):
+  def format_id(self, id_val:int) -> str:
     """
     Concatenates province/territory code and max_id to create ID string.
 
     :return: str
     """
-    return f"{self.code}{self.max_id:06d}"
+    return f"{self.code}{id_val:06d}"
 
-  def update_id(self):
-    self.max_id += 1
-    self.formatted_id = self.format_id()
+  def update_id(self, id_val:int):
+    """
+    Updates the max_id and formatted_id attributes.
+    """
+    try:        
+      if id_val > self.max_id:
+        self.max_id = id_val
+        self.formatted_id = self.format_id(id_val)
+      else:
+        raise ValueError(f"New ID must be greater than the current max_id ({self.max_id}).")
+    except ValueError as e:
+      raise(f"{e}. Please provide an integer for id_val.")
 
 class ID_Manager:
   """
-  A container providing easy access to ProvID objects.
+  A container providing easy access to a ProvID object for all Canadian jurisdictions.
   """
 
   def __init__(self):
-    # Initialize highest ID for each prov_terr
+    # Create a list to hold all ProvID objects
     self.all_ids = []
+
+    # Initialize highest ID for each prov_terr
     self.AB = ProvID('AB')
     self.all_ids.append(self.AB)
     self.BC = ProvID('BC')
@@ -98,3 +111,7 @@ class ID_Manager:
     self.all_ids.append(self.NU)
     self.YT = ProvID('YT')
     self.all_ids.append(self.YT)
+
+  def update_all(self, session):
+    for prov in self.all_ids:
+      prov.max_id = prov.query_highest_id(session)
