@@ -114,4 +114,4 @@ class ID_Manager:
 
   def update_all(self, session):
     for prov in self.all_ids:
-      prov.max_id = prov.query_highest_id(session)
+      prov.max_id = prov.query_session_id(session)
