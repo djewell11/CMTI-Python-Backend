@@ -97,9 +97,10 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, ignore_d
         new_row['Owner'] = r.owners[0].name
 
       # Alias
-      new_alias = ""
+      alias_list = []
       for alias in r.aliases:
-        new_alias = f"{new_alias}, {alias.alias}"
+        alias_list.append(alias)
+      new_alias = ', '.join(alias_list)
       new_row['Site_Aliases'] = new_alias
 
       # TSF and impoundment should get their own queries
