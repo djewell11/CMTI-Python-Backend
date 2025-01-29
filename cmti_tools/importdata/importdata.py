@@ -492,7 +492,7 @@ class WorksheetImporter(DataImporter):
     return impoundment  
 
 class OMIImporter(DataImporter):
-  def __init__(self, cm_list:list='config', metals_dict:dict='config', name_convert_dict:dict='config', prov_id:ProvID=None, force_dtypes:bool=True):
+  def __init__(self, cm_list:list='config', metals_dict:dict='config', name_convert_dict:dict='config', force_dtypes:bool=True):
     """
     Initializes the OMIImporter class with configuration data.
     
@@ -506,7 +506,6 @@ class OMIImporter(DataImporter):
     :type name_convert_dict: dict
     """
     super().__init__(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_convert_dict)
-    self.prov_id = prov_id if prov_id is not None else ProvID("ON")
   
   def clean_input_table(self, input_table, drop_NA_columns=['MDI_IDENT', 'NAME', 'LONGITUDE', 'LATITUDE'], force_dtypes=True):
     omi_dtypes = {

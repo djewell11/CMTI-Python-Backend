@@ -73,6 +73,12 @@ class ProvID:
         print(f"New ID must be greater than the current max_id ({self.max_id}).")
     except ValueError as e:
       raise(f"{e}. Please provide an integer for id_val.")
+  
+  def generate_id(self):
+    """
+    Generates a new ID by incrementing the max_id by 1.
+    """
+    self.update_id(self.max_id + 1)
 
 class ID_Manager:
   """
