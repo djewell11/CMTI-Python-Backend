@@ -740,8 +740,6 @@ class OAMImporter(DataImporter):
 
     row_records = []
     try:
-      provID = getattr(self.id_manager, row["Jurisdiction"])
-
       mine = Mine(
         name = row["Name"].title(),
         latitude = row["Lat_DD"],
@@ -814,7 +812,6 @@ class BCAHMImporter(DataImporter):
     :type name_convert_dict: dict
     """
     super().__init__(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_convert_dict)
-    self.provID = ProvID('BC')
 
   def clean_input_table(self, input_table, drop_NA_columns=['OBJECTID', 'MINFILNO', 'NAME1', 'LATITUDE', 'LONGITUDE'], calculate_UTM=True, force_dtypes=True):
     bcahm_dtypes = {
@@ -930,7 +927,6 @@ class BCAHMImporter(DataImporter):
 
     row_records = []
     try:
-      bcahm_id = self.provID
       mine_vals = {
         "name": row["NAME1"],
         "latitude": row["LATITUDE"],
