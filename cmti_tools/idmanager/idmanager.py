@@ -70,7 +70,7 @@ class ProvID:
         self.max_id = id_val
         self.formatted_id = self.format_id(id_val)
       else:
-        raise ValueError(f"New ID must be greater than the current max_id ({self.max_id}).")
+        print(f"New ID must be greater than the current max_id ({self.max_id}).")
     except ValueError as e:
       raise(f"{e}. Please provide an integer for id_val.")
 
@@ -113,4 +113,6 @@ class ID_Manager:
 
   def update_all(self, session):
     for prov in self.all:
-      prov.update_id(prov.query_session_id(session))
+      session_max = prov.query_session_id(session)
+      if session_max > prov.max_id:
+        prov.update_id(session_max)
