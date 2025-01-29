@@ -573,10 +573,7 @@ class OMIImporter(DataImporter):
       name_convert_dict = self.name_convert_dict
     row_records = []
     try:
-      row_id = self.prov_id.formatted_id
-      self.prov_id.update_id()
       mine = Mine(
-        cmdb_id = row_id,
         name = row['NAME'],
         latitude = row['LATITUDE'],
         longitude = row['LONGITUDE'],
@@ -744,11 +741,8 @@ class OAMImporter(DataImporter):
     row_records = []
     try:
       provID = getattr(self.id_manager, row["Jurisdiction"])
-      provID.update_id()
-      cmdb_id = provID.formatted_id
 
       mine = Mine(
-        cmdb_id = cmdb_id,
         name = row["Name"].title(),
         latitude = row["Lat_DD"],
         longitude = row["Long_DD"],
@@ -963,9 +957,8 @@ class BCAHMImporter(DataImporter):
       if pd.isna(mine_vals['utm_zone']) or mine_vals['utm_zone'] == 'Null':
         mine_vals['utm_zone'] = tools.lon_to_utm_zone(mine_vals['longitude'])
       
-      mine = Mine(cmdb_id = bcahm_id.formatted_id, **mine_vals)
+      mine = Mine(**mine_vals)
       row_records.append(mine)
-      bcahm_id.update_id()
 
       # Create alias if there's another name
       if pd.notna(row["NAME2"]):
@@ -982,12 +975,10 @@ class BCAHMImporter(DataImporter):
       tsf = TailingsFacility(is_default = True, name = f"default_TSF_{mine_vals['name']}".strip())
       mine.tailings_facilities.append(tsf)
       row_records.append(tsf)
-      bcahm_id.update_id()
 
       # Impoundment
       impoundment = Impoundment(parentTsf=tsf, is_default=True, name=f"{tsf.name}_impoundment")
       row_records.append(impoundment)
-      bcahm_id.update_id()
 
       #Reference
       reference = Reference(mine = mine, source = "BCAHM", source_id = str(row.OBJECTID))
