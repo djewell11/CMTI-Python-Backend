@@ -99,10 +99,11 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, ignore_d
       # Alias
       alias_list = []
       for alias in r.aliases:
+        alias_name = alias.alias
         if len(r.aliases) <= 1:
-          alias_list.append(alias)
-        elif alias not in alias_list and alias != 'Unknown': # Avoid duplicates and 'Unknown'
-          alias_list.append(alias)
+          alias_list.append(alias_name)
+        elif alias_name not in alias_name and alias_name != 'Unknown': # Avoid duplicates and 'Unknown'
+          alias_list.append(alias_name)
       new_alias = ', '.join(alias_list)
       new_row['Site_Aliases'] = new_alias
 
