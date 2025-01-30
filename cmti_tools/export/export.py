@@ -99,7 +99,10 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, ignore_d
       # Alias
       alias_list = []
       for alias in r.aliases:
-        alias_list.append(alias)
+        if len(r.aliases) <= 1:
+          alias_list.append(alias)
+        elif alias not in alias_list and alias != 'Unknown': # Avoid duplicates and 'Unknown'
+          alias_list.append(alias)
       new_alias = ', '.join(alias_list)
       new_row['Site_Aliases'] = new_alias
 
@@ -111,13 +114,14 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, ignore_d
       # References
       source_number = 1
       for source in r.references:
-        if source_number <= 4 : # Currently only storing 3 sources
+        if source_number <= 3 and r.references.source != 'Unknown': # Currently only storing 3 sources
           new_row[f'Source_{source_number}'] = source.source
           new_row[f'Source_{source_number}_ID'] = source.source_id
           new_row[f'Source_{source_number}_Link'] = source.link
           source_number += 1
         else:
           print(f"More than 4 sources detected for site {r.id}")
+  
 
       new_rows.append(new_row)
   new_records = pd.DataFrame(new_rows)

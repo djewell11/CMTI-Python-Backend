@@ -395,8 +395,8 @@ class WorksheetImporter(DataImporter):
     if pd.notna(aliases):
       # Check if more than one
       aliases_list = [alias.strip() for alias in aliases.split(",")]
-      for aliasName in aliases_list:
-        alias = Alias(alias=aliasName)
+      for alias_name in aliases_list:
+        alias = Alias(alias=alias_name)
         alias.mine=mine
         records.append(alias)
 
