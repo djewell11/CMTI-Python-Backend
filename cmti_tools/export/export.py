@@ -113,15 +113,26 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, ignore_d
       # Impoundment
 
       # References
+      # Get all non-null references
+      refs = [ref for ref in r.references if ref.source != 'Unknown' and pd.notna(ref.source)]
       source_number = 1
-      for ref in r.references:
-        if source_number <= 4 and ref.source != 'Unknown':
-          new_row[f'Source_{source_number}'] = ref.source
-          new_row[f'Source_{source_number}_ID'] = ref.source_id
-          new_row[f'Source_{source_number}_Link'] = ref.link
-          source_number += 1
-        else:
-          print(f"More than 4 sources detected for site {r.id}")
+      while source_number <= 4 and source_number <= len(refs):
+        ref = refs[source_number - 1]
+        new_row[f'Source_{source_number}'] = ref.source
+        new_row[f'Source_{source_number}_ID'] = ref.source_id
+        new_row[f'Source_{source_number}_Link'] = ref.link
+        source_number += 1
+
+
+      # source_number = 1
+      # for ref in r.references:
+      #   if source_number <= 4 and ref.source != 'Unknown':
+      #     new_row[f'Source_{source_number}'] = ref.source
+      #     new_row[f'Source_{source_number}_ID'] = ref.source_id
+      #     new_row[f'Source_{source_number}_Link'] = ref.link
+      #     source_number += 1
+      #   else:
+      #     print(f"More than 4 sources detected for site {r.id}")
   
       # Add the new_row dict to the list of rows
       new_rows.append(new_row)
