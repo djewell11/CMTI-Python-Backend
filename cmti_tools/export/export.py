@@ -114,17 +114,18 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, ignore_d
 
       # References
       source_number = 1
-      for source in r.references:
-        if source_number <= 3 and r.references.source != 'Unknown': # Currently only storing 3 sources
-          new_row[f'Source_{source_number}'] = source.source
-          new_row[f'Source_{source_number}_ID'] = source.source_id
-          new_row[f'Source_{source_number}_Link'] = source.link
+      for ref in r.references:
+        if source_number <= 4 and ref.source != 'Unknown':
+          new_row[f'Source_{source_number}'] = ref.source
+          new_row[f'Source_{source_number}_ID'] = ref.source_id
+          new_row[f'Source_{source_number}_Link'] = ref.link
           source_number += 1
         else:
           print(f"More than 4 sources detected for site {r.id}")
   
-
+      # Add the new_row dict to the list of rows
       new_rows.append(new_row)
+
   new_records = pd.DataFrame(new_rows)
   out_df = pd.concat([worksheet, new_records], axis=0, ignore_index=True, join='outer')
   return out_df
