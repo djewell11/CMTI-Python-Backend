@@ -114,7 +114,7 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, ignore_d
 
       # References
       # Get all non-null references
-      refs = [ref for ref in r.references if ref.source != 'Unknown' and pd.notna(ref.source)]
+      refs = [ref for ref in r.references if (ref.source != 'Unknown' and pd.notna(ref.source))]
       source_number = 1
       while source_number <= 4 and source_number <= len(refs):
         ref = refs[source_number - 1]
