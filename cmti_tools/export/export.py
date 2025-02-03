@@ -144,7 +144,7 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
       # Add the new_row dict to the list of rows
       new_rows.append(new_row)
 
-  new_records = pd.DataFrame(new_rows)
+  new_records = pd.DataFrame(new_rows, columns=worksheet.columns)
   if method == 'append':
     out_df = pd.concat([worksheet, new_records], axis=0, ignore_index=True, join='outer')
   elif method == 'overwrite':
