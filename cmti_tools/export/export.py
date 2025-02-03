@@ -1,3 +1,4 @@
+from typing import Literal
 import pandas as pd
 import csv
 from cmti_tools.tables import Mine
@@ -32,7 +33,7 @@ def orm_to_csv(orm_class:object, out_name:str, session):
     [writer.writerow([getattr(row, column.name) for column in orm_class.__mapper__.columns]) for row in query]
   session.close()
 
-def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, ignore_default_records:bool=True):
+def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:Literal['append', 'overwrite']='append', ignore_default_records:bool=True):
 
   """
   Converts database (in form of sqlalchemy Session) to a Pandas dataframe.
@@ -49,10 +50,16 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, ignore_d
 
   # new_records = pd.DataFrame(columns=worksheet.columns)
   new_rows = []
-  existing_ids = worksheet['CMIM_ID'].tolist()
-  new_sites_stmt = select(Mine).filter(Mine.cmdb_id not in existing_ids)
-  with session.execute(new_sites_stmt).scalars() as new_sites:
-    for r in new_sites:
+  if method == 'append':
+    existing_ids = worksheet['CMIM_ID'].tolist()
+    query_stmt = select(Mine).filter(Mine.cmdb_id not in existing_ids)
+  elif method == 'overwrite':
+    query_stmt = select(Mine)
+  else:
+    raise ValueError("Method must be 'append' or 'overwrite'")
+  
+  with session.execute(query_stmt).scalars() as site_records:
+    for r in site_records:
       new_row = {} # Each value is assigned to a dictionary
 
       # Direct values of mine table
@@ -138,7 +145,10 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, ignore_d
       new_rows.append(new_row)
 
   new_records = pd.DataFrame(new_rows)
-  out_df = pd.concat([worksheet, new_records], axis=0, ignore_index=True, join='outer')
+  if method == 'append':
+    out_df = pd.concat([worksheet, new_records], axis=0, ignore_index=True, join='outer')
+  elif method == 'overwrite':
+    out_df = new_records
   return out_df
 
 # def export_database():
