@@ -1080,8 +1080,9 @@ class NSMTDImporter(DataImporter):
                   dates.append(date_ints)
           except:
             raise
-        mine.start_year = min(dates)
-        mine.end_year = max(dates)
+        if len(dates) > 0:
+          mine.start_year = min(dates)
+          mine.end_year = max(dates)
 
       mine = Mine(**mine_vals)
       row_records.append(mine)
