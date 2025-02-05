@@ -1002,6 +1002,7 @@ class NSMTDImporter(DataImporter):
 
   def clean_input_table(self, input_table, force_dtypes = True):
     nsmtd_defaults = {
+      'OBJECTID': 'Int64',
       'Name': 'U',
       'Latitude': 'f4',
       'Longitude': 'f4',
@@ -1125,7 +1126,7 @@ class NSMTDImporter(DataImporter):
       row_records.append(impoundment)
 
       #Reference
-      reference = Reference(mine = mine, source = "NSMTD", source_id = row.index)
+      reference = Reference(mine = mine, source = "NSMTD", source_id = row['OBJECTID'])
       row_records.append(reference)
 
       return row_records
