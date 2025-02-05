@@ -1068,17 +1068,20 @@ class NSMTDImporter(DataImporter):
         "mine_status": "Inactive"
       }
       # Parse date range
-      dates = []
-      for date in row["Dates"]:
-        if pd.notna(date):
-          eras = date.split(",")
-          for era in eras:
-            era_dates = era.split("-")
-            if len(era_dates) == 4: # Sometimes written as, e.g., 1850-65
-              date_ints = [int(d) for d in era_dates]
-              dates.append(date_ints)
-      mine.start_year = min(dates)
-      mine.end_year = max(dates)
+      if pd.notna(date):
+        dates = []
+        for date in row["Dates"]:
+          try:
+              eras = date.split(",")
+              for era in eras:
+                era_dates = era.split("-")
+                if len(era_dates) == 4: # Sometimes written as, e.g., 1850-65
+                  date_ints = [int(d) for d in era_dates]
+                  dates.append(date_ints)
+          except:
+            raise
+        mine.start_year = min(dates)
+        mine.end_year = max(dates)
 
       mine = Mine(**mine_vals)
       row_records.append(mine)
