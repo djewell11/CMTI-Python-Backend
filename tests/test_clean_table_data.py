@@ -1,4 +1,4 @@
-from cmti_tools.importdata import WorksheetImporter, OMIImporter, OAMImporter, BCAHMImporter
+from cmti_tools.importdata import WorksheetImporter, OMIImporter, OAMImporter, BCAHMImporter, NSMTDImporter
 from cmti_tools import create_module_variables
 import pandas as pd
 
@@ -123,47 +123,64 @@ def test_clean_table_oam():
 def test_clean_table_bcahm():
 
     bcahm_df = pd.DataFrame(data={
-      "OBJECTID": 1,
-      "MINFILNO": "BCABC0001",
-      "NAME1": "BC Metals",
-      "NAME2": "BC Ore",
-      "STATUS": "Active",
-      "LATITUDE": 47.1234,
-      "LONGITUDE": -123.1234,
-      "UTM_ZONE": pd.NA,
-      "UTM_NORT": 1234567,
-      "UTM_EAST": 7654321,
-      "ELEV": 45.5,
-      "COMMOD_C1": "Gold",
-      "COMMOD_C2": "Silver",
-      "COMMOD_C3": "Nickel",
-      "DEPOSITTYPE_D1": "Surficial Placers",
-      "DEPOSITTYPE_D2": "Unkown",
-      "DEPOSITCLASS_D1": "Placer",
-      "DEPOSITCLASS_D2": "Unknown",
-      "NTSMAP_C1": "085NEW",
-      "NTSMAP_C2": "086NEW",
-      "Permit1": "M123",
-      "Permit2": "Null",
-      "Mine_Name": "BC Metals",
-      "Mine_Statu": "Active",
-      "Region": "BC",
-      "Tailings": "yes",
-      "Disposal_Method": "Dry Stack",
-      "Mined": 2462,
-      "Milled": 726,
-      "Mine_type": "Placer",
-      "Permitee1": "BC Metal Inc",
-      "Permittee2": "Null",
-      "URL": "www dot bcmetals dot com",
-      "Current_st": "Site Not Visited",
-      "Permit1_Status": "Active",
-      "Permit2_Status": "Null",
-      "First_Year": "1901",
-      "Last_Year": "2001"
+        "OBJECTID": 1,
+        "MINFILNO": "BCABC0001",
+        "NAME1": "BC Metals",
+        "NAME2": "BC Ore",
+        "STATUS": "Active",
+        "LATITUDE": 47.1234,
+        "LONGITUDE": -123.1234,
+        "UTM_ZONE": pd.NA,
+        "UTM_NORT": 1234567,
+        "UTM_EAST": 7654321,
+        "ELEV": 45.5,
+        "COMMOD_C1": "Gold",
+        "COMMOD_C2": "Silver",
+        "COMMOD_C3": "Nickel",
+        "DEPOSITTYPE_D1": "Surficial Placers",
+        "DEPOSITTYPE_D2": "Unkown",
+        "DEPOSITCLASS_D1": "Placer",
+        "DEPOSITCLASS_D2": "Unknown",
+        "NTSMAP_C1": "085NEW",
+        "NTSMAP_C2": "086NEW",
+        "Permit1": "M123",
+        "Permit2": "Null",
+        "Mine_Name": "BC Metals",
+        "Mine_Statu": "Active",
+        "Region": "BC",
+        "Tailings": "yes",
+        "Disposal_Method": "Dry Stack",
+        "Mined": 2462,
+        "Milled": 726,
+        "Mine_type": "Placer",
+        "Permitee1": "BC Metal Inc",
+        "Permittee2": "Null",
+        "URL": "www dot bcmetals dot com",
+        "Current_st": "Site Not Visited",
+        "Permit1_Status": "Active",
+        "Permit2_Status": "Null",
+        "First_Year": "1901",
+        "Last_Year": "2001"
     }, index=[0])
     
     bcahm_importer = BCAHMImporter(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_dict)
     clean_data = bcahm_importer.clean_input_table(bcahm_df)
     assert clean_data.dtypes['First_Year'] == 'Int64'
     assert clean_data.dtypes['UTM_NORT'] == 'Int64'
+
+
+def test_clean_table_nsmtd():
+    nsmtd_df = pd.DataFrame(data={
+        'Name': 'Forest Hill (McConnell)',
+        'Latitude': 5018046.700,
+        'Longitude': 598196.893,
+        'Tonnes': 6038.0,
+        'Commodity': 'Gold',
+        'Dates': '1896-1916',
+        'AreaHa': 0.996788
+    }, index=[0])
+
+    nsmtd_importer = NSMTDImporter(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_dict)
+    clean_data = nsmtd_importer.clean_input_table(nsmtd_df)
+
+    assert clean_data.dtypes['Tonnes'] == 'Int64'

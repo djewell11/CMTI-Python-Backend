@@ -1014,7 +1014,7 @@ class NSMTDImporter(DataImporter):
       'AreaHa': 'f4',
       'Shape_Area': 'f4'}
 
-    nsmtd_types_table = pd.DataFrame(data={'Column': list(nsmtd_defaults.keys()), 'Type': list(nsmtd_defaults.values())})
+    nsmtd_types_table = pd.DataFrame(data={'Column': nsmtd_defaults.keys(), 'Type': nsmtd_defaults.values(), 'Default': nsmtd_defaults.values()})
     converters = converter_factory(nsmtd_types_table).create_converter_dict()
 
     if isinstance(input_table, str):
@@ -1114,7 +1114,7 @@ class NSMTDImporter(DataImporter):
       impoundment_vals = {
         "parentTsf": tsf,
         "is_default": True,
-        "area": row["AreaHa"]/10000,
+        "area": row["AreaHa"]/100,
         "volume": row["Tonnes"]
       }
       impoundment = Impoundment(**impoundment_vals)
