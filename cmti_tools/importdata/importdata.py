@@ -1068,7 +1068,7 @@ class NSMTDImporter(DataImporter):
         "mine_status": "Inactive"
       }
       # Parse date range
-      if pd.notna(date):
+      if pd.notna(row["Dates"]):
         dates = []
         for date in row["Dates"]:
           try:
