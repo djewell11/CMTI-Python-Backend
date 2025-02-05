@@ -994,3 +994,136 @@ class BCAHMImporter(DataImporter):
       return row_records
     except Exception as e:
       raise(e)
+    
+class NSMTDImporter(DataImporter):
+  
+  def __init__(self, name_convert_dict = None, cm_list = None, metals_dict = None):
+    super().__init__(name_convert_dict, cm_list, metals_dict)
+
+  def clean_input_table(self, input_table, force_dtypes = True):
+    nsmtd_defaults = {
+      'Name': 'U',
+      'Latitude': 'f4',
+      'Longitude': 'f4',
+      'Tonnes': 'int',
+      'Commodity': 'U',
+      'Crusher1': 'Int64',
+      'Crusher2': 'Int64',
+      'Dates': 'U',
+      'InfoSource': 'U',
+      'AreaHa': 'f4',
+      'Shape_Area': 'f4'}
+
+    nsmtd_types_table = pd.DataFrame(data={'Column': list(nsmtd_defaults.keys()), 'Type': list(nsmtd_defaults.values())})
+    converters = converter_factory(nsmtd_types_table).create_converter_dict()
+
+    if isinstance(input_table, str):
+      try:
+        nsmtd_df = pd.read_excel(input_table, header=0, converters=converters)
+      except:
+        nsmtd_df = pd.read_csv(input_table, header=0, converters=converters)
+    else:
+      nsmtd_df = input_table
+
+    if force_dtypes:
+      nsmtd_df = self.coerce_dtypes(nsmtd_types_table, nsmtd_df)
+    
+    return nsmtd_df
+  
+  def create_row_records(self,  row: pd.Series, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None):
+    """
+    Processes a row of data from the BCAHM dataset and creates associated database records.
+    
+    :param row: The data row to be processed.
+    :type row: pd.Series
+
+    :param cm_list: List of critical minerals, defaults to the class attribute.
+    :type cm_list: list
+
+    :param metals_dict: Dictionary of metals and their properties, defaults to the class attribute.
+    :type metals_dict: dict
+
+    :param name_convert_dict: Dictionary for commodity name conversion, defaults to the class attribute.
+    :type name_convert_dict: dict
+    
+    :return list[object]: A list of created data records.
+    """
+    # Data tables will default to BCAHMImporter attributes but can be overridden
+    if cm_list is None:
+      cm_list = self.cm_list
+    if metals_dict is None:
+      metals_dict = self.metals_dict
+    if name_convert_dict is None:
+      name_convert_dict = self.name_convert_dict
+
+    row_records = []
+    try:
+
+      mine_names = row["Name"].split('(')
+      mine_vals = {
+        "name": mine_names[0].strip(),
+        "latitude": row["Latitude"],
+        "longitude": row["Longitude"],
+        "prov_terr": "NS",
+        "mine_status": "Inactive"
+      }
+      # Parse date range
+      dates = []
+      for date in row["Dates"]:
+        if pd.notna(date):
+          eras = date.split(",")
+          for era in eras:
+            era_dates = era.split("-")
+            if len(era_dates) == 4: # Sometimes written as, e.g., 1850-65
+              date_ints = [int(d) for d in era_dates]
+              dates.append(date_ints)
+      mine.start_year = min(dates)
+      mine.end_year = max(dates)
+
+      mine = Mine(**mine_vals)
+      row_records.append(mine)
+
+      # Aliases
+      if len(mine_names) > 1:
+        aliases = mine_names[1].split(',')
+        for alias in aliases:
+          # One of these wil have a closing bracket, make sure it's removed
+          alias_name = alias.strip(')').strip() # Second .strip() removes whitespace
+          mine_alias = Alias(mine=mine, alias=alias_name)
+          row_records.append(mine_alias)
+
+      # Commodities
+      comms = row["Commodity"].split(",")
+      for comm_name in comms:
+        if pd.notna(comm_name):
+          comm_name = tools.convert_commodity_name(comm_name, name_convert_dict, output_type='symbol', show_warning=False)
+          commodity_record = CommodityRecord(
+            mine=mine,
+            commodity=comm_name
+          )
+          commodity_record.is_critical = True if comm_name in cm_list else False
+          commodity_record.is_metal = metals_dict.get(comm_name)
+          row_records.append(commodity_record)
+
+      # TSF
+      tsf = TailingsFacility(is_default = True, name = f"default_TSF_{mine_vals['name']}".strip())
+      mine.tailings_facilities.append(tsf)
+      row_records.append(tsf)
+
+      # Impoundment
+      impoundment_vals = {
+        "parentTsf": tsf,
+        "is_default": True,
+        "area": row["AreaHa"]/10000,
+        "volume": row["Tonnes"]
+      }
+      impoundment = Impoundment(**impoundment_vals)
+      row_records.append(impoundment)
+
+      #Reference
+      reference = Reference(mine = mine, source = "NSMTD", source_id = row.index)
+      row_records.append(reference)
+
+      return row_records
+    except Exception as e:
+      raise(e) 
