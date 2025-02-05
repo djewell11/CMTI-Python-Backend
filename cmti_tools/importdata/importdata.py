@@ -1117,6 +1117,7 @@ class NSMTDImporter(DataImporter):
 
       # Impoundment
       impoundment_vals = {
+        "name": f"{tsf.name}_impoundment",
         "parentTsf": tsf,
         "is_default": True,
         "area": row["AreaHa"]/100,
