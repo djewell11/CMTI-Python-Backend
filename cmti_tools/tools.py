@@ -55,16 +55,22 @@ def get_digits(value: str, output: str = 'float'):
   :return: A numerical value with units removed.
   :rtype: Either float or int, according to param 'output'.
   """
-  stripped = re.findall(r"[-+]?(?:\d*\.*\d+)", value)[0]
   try:
     if output == 'float':
-      return float(stripped)
+      parsed = re.search(r"[+-]*\d+\.*\d*", value)
+      if parsed is not None:
+        stripped = parsed.group()
+        return float(stripped)
     elif output == 'int':
-      return int(stripped)
+      parsed = re.search(r"\d+", value)
+      if parsed is not None:
+        stripped = parsed.group()
+        return int(stripped)
     else:
       raise ValueError("'output' must be 'float' or 'int'")
   except ValueError as e:
-    pass
+    raise
+
 
 def convert_commodity_name(name:str, name_convert_dict:dict, output_type:str="full", show_warning=False):
   """
