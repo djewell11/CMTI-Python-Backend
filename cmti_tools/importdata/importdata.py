@@ -649,8 +649,8 @@ class OAMImporter(DataImporter):
   def clean_input_table(self, input_table, drop_NA_columns=['OID', 'Lat_DD', 'Long_DD', 'Name'],  force_dtypes=True):
     oam_dtypes = {
       'OID': 'U',
-      'Lat_DD': 'f4',
-      'Long_DD': 'f4',
+      'Lat_DD': 'f8',
+      'Long_DD': 'f8',
       'Jurisdiction': 'U',
       'Juris_ID': 'U',
       'Name': 'U',
