@@ -649,8 +649,8 @@ class OAMImporter(DataImporter):
   def clean_input_table(self, input_table, drop_NA_columns=['OID', 'Lat_DD', 'Long_DD', 'Name'],  force_dtypes=True):
     oam_dtypes = {
       'OID': 'U',
-      'Lat_DD': 'f8',
-      'Long_DD': 'f8',
+      'Lat_DD': 'f4',
+      'Long_DD': 'f4',
       'Jurisdiction': 'U',
       'Juris_ID': 'U',
       'Name': 'U',
@@ -680,6 +680,7 @@ class OAMImporter(DataImporter):
     oam_types_table = pd.DataFrame(data={'Column': oam_dtypes.keys(), 'Type': oam_dtypes.values(), 'Default': oam_defaults})
 
     converters = converter_factory(oam_types_table).create_converter_dict()
+    
     if isinstance(input_table, str):
       try:
         oam_df = pd.read_csv(input_table, header=0, converters=converters)

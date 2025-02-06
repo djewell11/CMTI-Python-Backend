@@ -1,5 +1,6 @@
 import csv
 import pathlib
+import re
 from configparser import ConfigParser
 from configparser import Error as ConfigError
 import pandas as pd
@@ -54,7 +55,7 @@ def get_digits(value: str, output: str = 'float'):
   :return: A numerical value with units removed.
   :rtype: Either float or int, according to param 'output'.
   """
-  stripped = "".join(list(filter(lambda x: x.isdigit(), value.replace(' ', ''))))
+  stripped = re.findall(r"[-+]?(?:\d*\.*\d+)", value)[0]
   try:
     if output == 'float':
       return float(stripped)

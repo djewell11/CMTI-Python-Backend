@@ -99,7 +99,7 @@ def test_clean_table_oam():
         {
             'OID': 10782,
             'Lat_DD': 54.766,
-            'Long_DD': -102.754,
+            'Long_DD': "-102.754",
             'Jurisdiction': 'SK',
             'Name': 'Western Nuclear',
             'Status': 'Abandoned',
@@ -117,6 +117,8 @@ def test_clean_table_oam():
     oam_importer = OAMImporter(oam_comm_names=oam_comm_names, cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_dict)
     clean_data = oam_importer.clean_input_table(oam_df)
 
+    assert clean_data['Lat_DD'][0] == 54.766
+    assert clean_data['Long_DD'][0] == -102.754
     assert clean_data.dtypes['Last_Year'] == 'Int64'
     assert clean_data.dtypes['Mined_Quantity'] == 'float'
 
