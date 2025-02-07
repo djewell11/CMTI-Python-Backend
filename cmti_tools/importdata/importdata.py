@@ -680,7 +680,7 @@ class OAMImporter(DataImporter):
     oam_types_table = pd.DataFrame(data={'Column': oam_dtypes.keys(), 'Type': oam_dtypes.values(), 'Default': oam_defaults})
 
     converters = converter_factory(oam_types_table).create_converter_dict()
-    
+
     if isinstance(input_table, str):
       try:
         oam_df = pd.read_csv(input_table, header=0, converters=converters)
@@ -1061,9 +1061,8 @@ class NSMTDImporter(DataImporter):
     row_records = []
     try:
 
-      mine_names = row["Name"].split('(')
       mine_vals = {
-        "name": mine_names[0].strip(),
+        "name": row['Name'],
         "latitude": row["Latitude"],
         "longitude": row["Longitude"],
         "prov_terr": "NS",
@@ -1090,13 +1089,16 @@ class NSMTDImporter(DataImporter):
       row_records.append(mine)
 
       # Aliases
-      if len(mine_names) > 1:
-        aliases = mine_names[1].split(',')
-        for alias in aliases:
-          # One of these wil have a closing bracket, make sure it's removed
-          alias_name = alias.strip(')').strip() # Second .strip() removes whitespace
-          mine_alias = Alias(mine=mine, alias=alias_name)
-          row_records.append(mine_alias)
+      # if len(mine_names) > 1:
+      #   aliases = mine_names[1].split(',')
+      #   for alias in aliases:
+      #     # One of these wil have a closing bracket, make sure it's removed
+      #     alias_name = alias.strip(')').strip() # Second .strip() removes whitespace
+      #     mine_alias = Alias(mine=mine, alias=alias_name)
+      #     row_records.append(mine_alias)
+      alias_name = row['Name'].split('(')[0].strip()
+      alias = Alias(mine=mine, alias=alias_name)
+      row_records.append(alias)
 
       # Commodities
       comms = row["Commodity"].split(",")
