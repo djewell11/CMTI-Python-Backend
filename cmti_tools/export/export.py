@@ -114,7 +114,7 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
       new_row['Site_Aliases'] = new_alias
 
       # Tailings Facilities
-      tsf = [_tsf for _tsf in r.tailings_facilities if tsf.is_default == True][0] # We're assuming only one default TSF
+      tsf = [_tsf for _tsf in r.tailings_facilities if _tsf.is_default == True][0] # We're assuming only one default TSF
       new_row['Hazard_Class'] = tsf.hazard_class
 
       impoundment = [_imp for _imp in r.tailings_facilities if _imp.is_default == True][0] # We're assuming only one default impoundment
