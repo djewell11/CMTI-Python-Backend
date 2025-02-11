@@ -48,7 +48,6 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
   :type ignore_default_records: bool.
   """
 
-  # new_records = pd.DataFrame(columns=worksheet.columns)
   new_rows = []
   if method == 'append':
     existing_ids = worksheet['CMIM_ID'].tolist()
@@ -114,10 +113,20 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
       new_alias = ', '.join(alias_list)
       new_row['Site_Aliases'] = new_alias
 
-      # TSF and impoundment should get their own queries
-      # check ignore_defaults
+      # Tailings Facilities
+      tsf = [_tsf for _tsf in r.tailings_facilities if tsf.is_default == True][0] # We're assuming only one default TSF
+      new_row['Hazard_Class'] = tsf.hazard_class
 
-      # Impoundment
+      impoundment = [_imp for _imp in r.tailings_facilities if _imp.is_default == True][0] # We're assuming only one default impoundment
+      new_row['Tailings_Area'] = impoundment.area
+      new_row['Tailings_Capacity'] = impoundment.capacity
+      new_row['Tailings_Volume'] = impoundment.volume
+      new_row['Acid_Generating'] = impoundment.acid_generating
+      new_row['Tailings_Storage_Method'] = impoundment.storage_method
+      new_row['Current_Max_Height'] = impoundment.max_height
+      new_row['Treatment'] = impoundment.treatment
+      new_row['Rating_Index'] = impoundment.rating_index
+      new_row['History_Stability_Concerns'] = impoundment.stability_concerns
 
       # References
       # Get all non-null references
@@ -130,17 +139,6 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
         new_row[f'Source_{source_number}_Link'] = ref.link
         source_number += 1
 
-
-      # source_number = 1
-      # for ref in r.references:
-      #   if source_number <= 4 and ref.source != 'Unknown':
-      #     new_row[f'Source_{source_number}'] = ref.source
-      #     new_row[f'Source_{source_number}_ID'] = ref.source_id
-      #     new_row[f'Source_{source_number}_Link'] = ref.link
-      #     source_number += 1
-      #   else:
-      #     print(f"More than 4 sources detected for site {r.id}")
-  
       # Add the new_row dict to the list of rows
       new_rows.append(new_row)
 
