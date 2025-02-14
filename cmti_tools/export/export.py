@@ -125,7 +125,6 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
         tsf_common_values = {}
 
         tsf_common_values['Hazard_Class'] = tsf.hazard_class
-        tsf_common_values['Tailings_Storage_Method'] = tsf.storage_method
 
         # If TSF is not the mine's default, it gets its own row
         if not tsf.is_default:
