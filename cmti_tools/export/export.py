@@ -137,20 +137,17 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
           tsf_row['Longitude'] = tsf.longitude or r.longitude
           tsf_row['CMIM_ID'] = tsf.cmdb_id
           tsf_row['NAD'] = r.nad
-          tsf_row['UTM_Zone'] = tsf.utm_zone or r.utm_zone or lon_to_utm_zone(tsf_row['Longitude'])
-          tsf_row['Easting'] = tsf.easting or r.easting
-          tsf_row['Northing'] = tsf.northing or r.northing
+          tsf_row['UTM_Zone'] = r.utm_zone or lon_to_utm_zone(tsf_row['Longitude'])
+          tsf_row['Easting'] = r.easting
+          tsf_row['Northing'] = r.northing
           tsf_row['Country'] = "Canada"
-          tsf_row['Province_Territory'] = tsf.prov_terr or r.prov_terr
-          tsf_row['Mine_Type'] = tsf.mine_type or r.mine_type
-          tsf_row['Mining_Method'] = tsf.mining_method or r.mining_method
+          tsf_row['Province_Territory'] = r.prov_terr
+          tsf_row['Mine_Type'] = r.mine_type
+          tsf_row['Mining_Method'] = r.mining_method
           tsf_row['Mine_Status'] = tsf.status or r.mine_status
-          tsf_row['Dev_Stage'] = tsf.development_stage
+          tsf_row['Dev_Stage'] = r.development_stage
           tsf_row['Site_Access'] = tsf.site_access
           tsf_row['Hazard_Class'] = tsf.hazard_class
-          tsf_row['Construction_Year'] = tsf.construction_year
-          tsf_row['Year_Opened'] = tsf.year_opened
-          tsf_row['Year_Closed'] = tsf.year_closed
 
           # Combine common and non-default TSF values, with priority to non-default values
           tsf_row = tsf_common_values | tsf_row
@@ -179,16 +176,15 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
             impoundment_row['Longitude'] = impoundment.longitude or impoundment.parentTsf.longitude or r.longitude
             impoundment_row['CMIM_ID'] = impoundment.cmdb_id
             impoundment_row['NAD'] = r.nad
-            impoundment_row['UTM_Zone'] = impoundment.utm_zone or impoundment.parentTsf.utm_zone or lon_to_utm_zone(impoundment_row['Longitude'])
-            impoundment_row['Easting'] = impoundment.easting or impoundment.parentTsf.easting or r.easting
-            impoundment_row['Northing'] = impoundment.northing or impoundment.parentTsf.northing or r.northing
+            impoundment_row['UTM_Zone'] = r.utm_zone or lon_to_utm_zone(impoundment_row['Longitude'])
+            impoundment_row['Easting'] = r.easting
+            impoundment_row['Northing'] = r.northing
             impoundment_row['Country'] = "Canada"
-            impoundment_row['Province_Territory'] = impoundment.prov_terr or impoundment.parentTsf.prov_terr or r.prov_terr
-            impoundment_row['Mine_Type'] = impoundment.mine_type or impoundment.parentTsf.mine_type or r.mine_type
-            impoundment_row['Mining_Method'] = impoundment.mining_method or impoundment.parentTsf.mining_method or r.mining_method
-            impoundment_row['Mine_Status'] = impoundment.status
-            impoundment_row['Dev_Stage'] = impoundment.development_stage
-            impoundment_row['Site_Access'] = impoundment.site_access
+            impoundment_row['Province_Territory'] = r.prov_terr
+            impoundment_row['Mine_Type'] = r.mine_type
+            impoundment_row['Mining_Method'] = r.mining_method
+            impoundment_row['Mine_Status'] = impoundment.parentTsf.status
+            impoundment_row['Site_Access'] = r.site_access
 
             # Combine common and non-default impoundment values
             impoundment_row = tsf_row | impoundment_common_values | impoundment_row
