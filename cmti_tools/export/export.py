@@ -3,6 +3,7 @@ import pandas as pd
 import csv
 from cmti_tools.tables import Mine
 from cmti_tools.tools import convert_commodity_name
+from cmti_tools.tools import lon_to_utm_zone
 from sqlalchemy import select
 
 def orm_to_csv(orm_class:object, out_name:str, session):
@@ -57,6 +58,7 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
   else:
     raise ValueError("Method must be 'append' or 'overwrite'")
   
+  # Get all mine records
   with session.execute(query_stmt).scalars() as site_records:
     for r in site_records:
       new_row = {} # Each value is assigned to a dictionary
@@ -114,20 +116,93 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
       new_row['Site_Aliases'] = new_alias
 
       # Tailings Facilities
-      tsf = [_tsf for _tsf in r.tailings_facilities if _tsf.is_default == True][0] # We're assuming only one default TSF
-      new_row['Hazard_Class'] = tsf.hazard_class
 
-      impoundment = [_imp for _imp in tsf.impoundments if _imp.is_default == True][0] # We're assuming only one default impoundment
-      new_row['Tailings_Area'] = impoundment.area
-      new_row['Tailings_Capacity'] = impoundment.capacity
-      new_row['Tailings_Volume'] = impoundment.volume
-      new_row['Acid_Generating'] = impoundment.acid_generating
-      new_row['Tailings_Storage_Method'] = impoundment.storage_method
-      new_row['Current_Max_Height'] = impoundment.max_height
-      new_row['Treatment'] = impoundment.treatment
-      new_row['Rating_Index'] = impoundment.rating_index
-      new_row['History_Stability_Concerns'] = impoundment.stability_concerns
+      # This probably ain't it.
+      # Relies on one default TSF per mine and one default impoundment per TSF. Conceptually there's no reason for this not to be true, but it's not enforced.
 
+      for tsf in r.tailings_facilities:
+        # Some k/v pairs are used in parent if no non-default TSF exists
+        tsf_common_values = {}
+
+        tsf_common_values['Hazard_Class'] = tsf.hazard_class
+        tsf_common_values['Tailings_Storage_Method'] = tsf.storage_method
+
+        # If TSF is not the mine's default, it gets its own row
+        if not tsf.is_default:
+          tsf_row = {}
+          tsf_row['Site_Name'] = tsf.name
+          tsf_row['Site_Type'] = 'TSF'
+          tsf_row['Latitude'] = tsf.latitude or r.latitude
+          tsf_row['Parent'] = r.name
+          tsf_row['Parent_ID'] = r.cmdb_id
+          tsf_row['Longitude'] = tsf.longitude or r.longitude
+          tsf_row['CMIM_ID'] = tsf.cmdb_id
+          tsf_row['NAD'] = r.nad
+          tsf_row['UTM_Zone'] = tsf.utm_zone or r.utm_zone or lon_to_utm_zone(tsf_row['Longitude'])
+          tsf_row['Easting'] = tsf.easting or r.easting
+          tsf_row['Northing'] = tsf.northing or r.northing
+          tsf_row['Country'] = "Canada"
+          tsf_row['Province_Territory'] = tsf.prov_terr or r.prov_terr
+          tsf_row['Mine_Type'] = tsf.mine_type or r.mine_type
+          tsf_row['Mining_Method'] = tsf.mining_method or r.mining_method
+          tsf_row['Mine_Status'] = tsf.status or r.mine_status
+          tsf_row['Dev_Stage'] = tsf.development_stage
+          tsf_row['Site_Access'] = tsf.site_access
+          tsf_row['Hazard_Class'] = tsf.hazard_class
+          tsf_row['Construction_Year'] = tsf.construction_year
+          tsf_row['Year_Opened'] = tsf.year_opened
+          tsf_row['Year_Closed'] = tsf.year_closed
+
+          tsf_row.update(tsf_common_values) # Combine common and non-default TSF values
+
+        # impoundment = [_imp for _imp in tsf.impoundments if _imp.is_default == True][0] # We're assuming only one default impoundment
+        for impoundment in tsf.impoundments:
+          # Some k/v pairs are assigned to parent if non-default impoundment exists
+          impoundment_common_values = {}
+
+          impoundment_common_values['Tailings_Area'] = impoundment.area
+          impoundment_common_values['Tailings_Capacity'] = impoundment.capacity
+          impoundment_common_values['Tailings_Volume'] = impoundment.volume
+          impoundment_common_values['Acid_Generating'] = impoundment.acid_generating
+          impoundment_common_values['Tailings_Storage_Method'] = impoundment.storage_method
+          impoundment_common_values['Current_Max_Height'] = impoundment.max_height
+          impoundment_common_values['Treatment'] = impoundment.treatment
+          impoundment_common_values['Rating_Index'] = impoundment.rating_index
+          impoundment_common_values['History_Stability_Concerns'] = impoundment.stability_concerns
+
+          if not tsf.is_default:
+            impoundment_row = {}
+            impoundment_row['Site_Name'] = impoundment.name
+            impoundment_row['Site_Type'] = 'Impoundment'
+            impoundment_row['Parent'] = impoundment.parentTsf.name
+            impoundment_row['Parent_ID'] = impoundment.parentTsf.cmdb_id
+            impoundment_row['Latitude'] = impoundment.latitude or impoundment.parentTsf.latitude or r.latitude
+            impoundment_row['Longitude'] = impoundment.longitude or impoundment.parentTsf.longitude or r.longitude
+            impoundment_row['CMIM_ID'] = impoundment.cmdb_id
+            impoundment_row['NAD'] = r.nad
+            impoundment_row['UTM_Zone'] = impoundment.utm_zone or impoundment.parentTsf.utm_zone or lon_to_utm_zone(impoundment_row['Longitude'])
+            impoundment_row['Easting'] = impoundment.easting or impoundment.parentTsf.easting or r.easting
+            impoundment_row['Northing'] = impoundment.northing or impoundment.parentTsf.northing or r.northing
+            impoundment_row['Country'] = "Canada"
+            impoundment_row['Province_Territory'] = impoundment.prov_terr or impoundment.parentTsf.prov_terr or r.prov_terr
+            impoundment_row['Mine_Type'] = impoundment.mine_type or impoundment.parentTsf.mine_type or r.mine_type
+            impoundment_row['Mining_Method'] = impoundment.mining_method or impoundment.parentTsf.mining_method or r.mining_method
+            impoundment_row['Mine_Status'] = impoundment.status
+            impoundment_row['Dev_Stage'] = impoundment.development_stage
+            impoundment_row['Site_Access'] = impoundment.site_access
+
+            impoundment_row.update(impoundment_common_values) # Combine common and non-default impoundment values
+
+            new_rows.append(tsf_row | impoundment_row) # Use data from parent TSF if missing from impoundment
+          
+          tsf_row = impoundment_row | tsf_row
+          
+          if not tsf.is_default:
+            new_rows.append(tsf_row)
+          else:
+            new_row = new_row | tsf_row
+            new_rows.append(new_row)        
+        
       # References
       # Get all non-null references
       refs = [ref for ref in r.references if pd.notna(ref.source) and ref.source != 'Unknown']
