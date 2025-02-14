@@ -152,9 +152,9 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
           tsf_row['Year_Opened'] = tsf.year_opened
           tsf_row['Year_Closed'] = tsf.year_closed
 
-          tsf_row.update(tsf_common_values) # Combine common and non-default TSF values
+          # Combine common and non-default TSF values, with priority to non-default values
+          tsf_row = tsf_common_values | tsf_row
 
-        # impoundment = [_imp for _imp in tsf.impoundments if _imp.is_default == True][0] # We're assuming only one default impoundment
         for impoundment in tsf.impoundments:
           # Some k/v pairs are assigned to parent if non-default impoundment exists
           impoundment_common_values = {}
@@ -169,7 +169,7 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
           impoundment_common_values['Rating_Index'] = impoundment.rating_index
           impoundment_common_values['History_Stability_Concerns'] = impoundment.stability_concerns
 
-          if not tsf.is_default:
+          if not impoundment.is_default:
             impoundment_row = {}
             impoundment_row['Site_Name'] = impoundment.name
             impoundment_row['Site_Type'] = 'Impoundment'
@@ -190,17 +190,17 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
             impoundment_row['Dev_Stage'] = impoundment.development_stage
             impoundment_row['Site_Access'] = impoundment.site_access
 
-            impoundment_row.update(impoundment_common_values) # Combine common and non-default impoundment values
+            # Combine common and non-default impoundment values
+            impoundment_row = tsf_row | impoundment_common_values | impoundment_row
+            new_rows.append(impoundment_row) # Use data from parent TSF if missing from impoundment, giving priority to impoundment
 
-            new_rows.append(tsf_row | impoundment_row) # Use data from parent TSF if missing from impoundment
+          else: # If impoundment is default, add common impoundment values to tsf
+            tsf_common_values = tsf_common_values | impoundment_common_values
           
-          tsf_row = impoundment_row | tsf_row
-          
-          if not tsf.is_default:
-            new_rows.append(tsf_row)
+          if tsf.is_default:
+            new_row = new_row | tsf_common_values
           else:
-            new_row = new_row | tsf_row
-            new_rows.append(new_row)        
+            new_rows.append(tsf_row)
         
       # References
       # Get all non-null references
