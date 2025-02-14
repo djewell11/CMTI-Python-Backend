@@ -172,8 +172,8 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
             impoundment_row['Site_Type'] = 'Impoundment'
             impoundment_row['Parent'] = impoundment.parentTsf.name
             impoundment_row['Parent_ID'] = impoundment.parentTsf.cmdb_id
-            impoundment_row['Latitude'] = impoundment.latitude or impoundment.parentTsf.latitude or r.latitude
-            impoundment_row['Longitude'] = impoundment.longitude or impoundment.parentTsf.longitude or r.longitude
+            impoundment_row['Latitude'] = impoundment.parentTsf.latitude or r.latitude
+            impoundment_row['Longitude'] = impoundment.parentTsf.longitude or r.longitude
             impoundment_row['CMIM_ID'] = impoundment.cmdb_id
             impoundment_row['NAD'] = r.nad
             impoundment_row['UTM_Zone'] = r.utm_zone or lon_to_utm_zone(impoundment_row['Longitude'])
