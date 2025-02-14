@@ -146,7 +146,7 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
           tsf_row['Mining_Method'] = r.mining_method
           tsf_row['Mine_Status'] = tsf.status or r.mine_status
           tsf_row['Dev_Stage'] = r.development_stage
-          tsf_row['Site_Access'] = tsf.site_access
+          tsf_row['Site_Access'] = r.site_access
           tsf_row['Hazard_Class'] = tsf.hazard_class
 
           # Combine common and non-default TSF values, with priority to non-default values
