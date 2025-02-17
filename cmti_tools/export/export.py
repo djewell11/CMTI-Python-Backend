@@ -85,20 +85,26 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
       # Values of children of mine object
       # Commodities
       comm_number = 1
+      comms = {} # Store commodities outside of loop scope to append to non-default TSF and impoundment rows later
       for comm in r.commodities:
         # Maintain list of existing commodities to avoid duplicates
         row_commodities = [new_row[f'Commodity{n}'] for n in range(1, comm_number)]
         comm_col = f'Commodity{comm_number}'
         code = convert_commodity_name(comm.commodity, name_convert_dict, 'symbol', show_warning=False)
         if code not in row_commodities:
-          new_row[comm_col] = code
-          new_row[f'{code}_Grade'] = comm.grade
-          new_row[f'{code}_Produced'] = comm.produced
-          new_row[f'{code}_Contained'] = comm.contained
+          # new_row[comm_col] = code
+          # new_row[f'{code}_Grade'] = comm.grade
+          # new_row[f'{code}_Produced'] = comm.produced
+          # new_row[f'{code}_Contained'] = comm.contained
+          comms[comm_col] = code
+          comms[f'{code}_Grade'] = comm.grade
+          comms[f'{code}_Produced'] = comm.produced
+          comms[f'{code}_Contained'] = comm.contained
           comm_number += 1
         else:
           # print(f"{comm} already in row")
           pass
+      new_row = new_row | comms
 
       # Owner
       if len(r.owners) == 1:
@@ -149,6 +155,10 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
           tsf_row['Site_Access'] = r.site_access
           tsf_row['Hazard_Class'] = tsf.hazard_class
 
+          # Unpack commodities
+          comms_no_quants = {k: v for k, v in comms.items() if not k.endswith('Grade') and not k.endswith('Produced') and not k.endswith('Contained')}
+          tsf_row = tsf_row | comms_no_quants
+
           # Combine common and non-default TSF values, with priority to non-default values
           tsf_row = tsf_common_values | tsf_row
 
@@ -186,6 +196,7 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
             impoundment_row['Mine_Status'] = impoundment.parentTsf.status
             impoundment_row['Site_Access'] = r.site_access
 
+            impoundment_row = impoundment_row | comms_no_quants
             # Combine common and non-default impoundment values
             impoundment_row = tsf_row | impoundment_common_values | impoundment_row
             new_rows.append(impoundment_row) # Use data from parent TSF if missing from impoundment, giving priority to impoundment
