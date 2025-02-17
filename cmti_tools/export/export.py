@@ -88,7 +88,8 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
       comms = {} # Store commodities outside of loop scope to append to non-default TSF and impoundment rows later
       for comm in r.commodities:
         # Maintain list of existing commodities to avoid duplicates
-        row_commodities = [new_row[f'Commodity{n}'] for n in range(1, comm_number)]
+        # row_commodities = [new_row[f'Commodity{n}'] for n in range(1, comm_number)]
+        row_commodities = [comms[f'Commodity{n}'] for n in range(1, comm_number)]
         comm_col = f'Commodity{comm_number}'
         code = convert_commodity_name(comm.commodity, name_convert_dict, 'symbol', show_warning=False)
         if code not in row_commodities:
