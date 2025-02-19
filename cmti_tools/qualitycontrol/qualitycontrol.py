@@ -1,9 +1,6 @@
 import pandas as pd
 from pint import UnitRegistry
 
-ureg = UnitRegistry()
-ureg.define('m3 = meter ** 3')
-
 def check_categorical_values(row:pd.Series, qa_dict:dict, ignore_unknown=True, ignore_na=True, ignore_blank=True):
   """
   Verifies that value given matches list of approved values in template. #TODO determine behaviour for bad values (currently prints to console).
@@ -42,24 +39,27 @@ def check_categorical_values(row:pd.Series, qa_dict:dict, ignore_unknown=True, i
           else:
             print_bad_value(col_key, col_value)
 
-def check_units(value: int|float, expected_unit: str):
+def check_units(value: int|float|str, expected_unit: str):
   """
   Conforms units for quantified values, removes unit from string, and returns a numerical value.
 
   :param value: The input value.
-  :type value: int or float
+  :type value: int, float, or str
 
   :param expected_unit: The desired output unit.
   :type expected_unit: str
 
   """
-  try:
-    val = value.replace(' ', '')
-    quantity = ureg(val)
-    converted = quantity.to(expected_unit)
+  ureg = UnitRegistry()
+  ureg.define('km2 = kilometer ** 2')
+  ureg.define('m2 = meter ** 2')
+  ureg.define('m3 = meter ** 3')
+
+  try:  
+    converted = ureg(value).to(expected_unit)
     return converted.magnitude
   except Exception as e:
-    pass
+    raise
 
 # Data Grading
 

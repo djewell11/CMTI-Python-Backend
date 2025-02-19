@@ -22,12 +22,12 @@ def test_check_units():
     Tests the check_units function.
     Confirms unit conversion from cubic meters to liters works correctly.
     """
-    value = '100 m3'
-    unit = 'liter'
+    value = '1km2'
+    unit = 'm2'
     # Convert units using check_units
     converted = check_units(value, unit)
     # Check if units were properly converted, allowing for rounding error
-    assert converted == pytest.approx(100000, 0.1)
+    assert converted == pytest.approx(1_000_000, 0.1)
 
 # Initialize DataGrader with a custom scoring criteria
 grader = DataGrader(
