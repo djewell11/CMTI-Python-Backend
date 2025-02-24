@@ -11,6 +11,7 @@ import cmti_tools.tools as tools
 from cmti_tools.tables import *
 from cmti_tools.idmanager import ProvID
 from cmti_tools.idmanager import ID_Manager
+from cmti_tools.qualitycontrol import convert_unit
 
 pd.options.mode.chained_assignment = None
 
@@ -67,9 +68,10 @@ class converter_factory:
       def get_float(val):
         if pd.isna(val):
           return default
-        if isinstance(val, str):
-          return tools.get_digits(val, 'float')
-        return val
+        # if isinstance(val, str):
+        #   return tools.get_digits(val, 'float') # This was interfering with convert_unit in the worksheet importer. TODO: Implement convert_unit here in converter_factory
+        else:
+          return val
       return get_float
     if dtype == 'U':
       def get_str(val):
@@ -191,7 +193,6 @@ class DataImporter(ABC):
     """
     Coerces the data types of the input table based on the types_table.
     """
-    # types_table = pd.DataFrame(data={'Column': list(input_dtypes.keys()), 'Type': list(input_dtypes.values()), 'Default': list(input_dtypes.values())})
 
     # Final type coercion
     for column in input_table.columns:
@@ -220,7 +221,38 @@ class WorksheetImporter(DataImporter):
     # if auto_generate_cmti_ids:
     #   self.id_manager = ID_Manager()
   
-  def clean_input_table(self, input_table, drop_NA_columns=['Site_Name', 'Site_Type', 'CMIM_ID', 'Latitude', 'Longitude'], calculate_UTM=True, force_dtypes=True):
+  def clean_input_table(
+      self,
+      input_table, 
+      drop_NA_columns=['Site_Name', 'Site_Type', 'CMIM_ID', 'Latitude', 'Longitude'], 
+      calculate_UTM=True, 
+      force_dtypes=True, 
+      convert_units_dict:dict={'Tailings_Area':'km2', 'Tailings_Volume':'m3', 'Tailings_Capacity':'m3', 'Current_Max_Height':'m'},
+      **kwargs
+    ):
+
+    '''
+    :param input_table: The input table to be cleaned.
+    :type input_table: pd.DataFrame or str
+
+    :param drop_NA_columns: Columns where row should be dropped if value is missing. Provides a way of removing rows that lack required values before committing to database. 
+      Default: ['Site_Name', 'Site_Type', 'CMIM_ID', 'Latitude', 'Longitude']
+    :type drop_NA_columns: list
+
+    :param calculate_UTM: If True, calculate UTM Zone based on Longitude. Default: True
+    :type calculate_UTM: bool
+
+    :param force_dtypes: If True, enforce data types for all columns. Default: True
+    :type force_dtypes: bool
+
+    :param convert_units_dict: Dictionary where key == column and value == desired unit. Leave empty to ignore. Default: {}
+    :type convert_units_dict: dict
+
+    :param kwargs: Additional keyword arguments for unit definitions:
+      :param unit_definitions: Dictionary of unit definitions to be added to Pint UnitRegistry. Values should follow pattern '{unit} = {str of definition}'. E.g.: 'm2 = meter ** 2'.
+        Default: None
+      :type unit_definitions: dict
+    '''
       
     cmti_dtypes = {'Site_Name':'U', 'Site_Type':'U', 'CMIM_ID':'U', 'Site_Aliases': 'U', 'Last_Revised': 'datetime64[ns]',
       'NAD': 'Int64', 'UTM_Zone':'Int64', 'Easting':'Int64', 'Northing':'Int64', 'Latitude': 'f',
@@ -280,13 +312,14 @@ class WorksheetImporter(DataImporter):
 
     # Apply converters for initial cleanup
     for col, func in converters.items():
-      try:
-        cmti_df[col] = cmti_df[col].apply(func)
-      except ValueError as ve:
-        raise ve
-      except KeyError as ke:
-        print(f"Column {col} not found in input table.")
-        pass
+      if cmti_df.get(col) is not None:
+        try:
+          cmti_df[col] = cmti_df[col].apply(func)
+        except ValueError as ve:
+          raise ve
+        except KeyError as ke:
+          print(f"Column {col} not found in input table.")
+          pass
 
     # Final type coercion and special cases
     # Assume NAD is 83
@@ -308,6 +341,33 @@ class WorksheetImporter(DataImporter):
       #   # Note: This should have been done in the converters but I couldn't get it to work. Probably a better option would be to allow Nulls for times.
     cmti_df.Last_Revised = cmti_df.Last_Revised.fillna(datetime.now().date())
     
+    # Perform unit conversions according to convert_units_dict
+    # Check kwargs for new Pint UnitRegistry definitions
+
+    if convert_units_dict: # If not empty
+      from pint import UnitRegistry
+      ureg = UnitRegistry()
+
+      # Default unit definitions
+      ureg.define('km2 = kilometer ** 2')
+      ureg.define('m2 = meter ** 2')
+      ureg.define('Ha = hectare = 10000m2 = 0.01km2')
+
+      if kwargs.get('unit_definitions'):
+        for unit, definition in kwargs['unit_definitions'].items():
+          ureg.define(f'{unit} = {definition}')
+
+      for col, unit in convert_units_dict.items():
+        column = cmti_df.get(col)
+        if column is not None:
+          try:
+            converted = column.apply(convert_unit, args=(unit, None, ureg,))
+            cmti_df[col] = converted
+          except:
+            raise
+        else:
+          raise KeyError(f"convert_unit_dict column {col} not found in input table.")
+
     # Coerce all dtypes
     if force_dtypes:
       cmti_df = self.coerce_dtypes(cmti_types_table, cmti_df)

@@ -1,6 +1,6 @@
 import pytest
 import pandas as pd
-from cmti_tools.qualitycontrol import check_categorical_values, check_units, DataGrader
+from cmti_tools.qualitycontrol import check_categorical_values, check_units, convert_unit, DataGrader
 
 def test_categorical_vals(capfd):
     """
@@ -17,7 +17,7 @@ def test_categorical_vals(capfd):
     # Check that test_categorical_vals catches bad values
     assert "Test Site -- Status: Unknown" in output.out
 
-def test_check_units():
+def test_convert_unit():
     """
     Tests the check_units function.
     Confirms unit conversion from cubic meters to liters works correctly.
@@ -25,9 +25,20 @@ def test_check_units():
     value = '1km2'
     unit = 'm2'
     # Convert units using check_units
-    converted = check_units(value, unit)
+    converted = convert_unit(value, unit)
+
+    # Convert dimensionless value with provided unit
+    dimless_value = 1000000
+    dimless_converted = convert_unit(dimless_value, 'km2', dimensionless_value_unit='m2')
+
+    # Convert (or not) dimensionless value with no provided unit
+    dimless_no_value = convert_unit(dimless_value, 'm2')
+
+
     # Check if units were properly converted, allowing for rounding error
     assert converted == pytest.approx(1_000_000, 0.1)
+    assert dimless_converted == pytest.approx(1, 0.1)
+    assert dimless_no_value == pytest.approx(1000000, 0.1)
 
 # Initialize DataGrader with a custom scoring criteria
 grader = DataGrader(

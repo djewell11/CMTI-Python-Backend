@@ -1,6 +1,7 @@
 from cmti_tools.importdata import WorksheetImporter, OMIImporter, OAMImporter, BCAHMImporter, NSMTDImporter
 from cmti_tools import create_module_variables
 import pandas as pd
+from pytest import approx
 
 module_variables = create_module_variables()
 name_dict = module_variables.get('name_convert_dict')
@@ -50,7 +51,7 @@ def test_clean_table_data_worksheet():
         'Construction_Year': 1901,
         'Year_Opened': 1902,
         'Year_Closed': 2002,
-        'Tailings_Area': 500,
+        'Tailings_Area': '25000 m2',
         'Tailings_Volume': 2500,
         'Tailings_Capacity': 4000,
         'Tailings_Storage_Method': 'Dry Stack',
@@ -63,6 +64,7 @@ def test_clean_table_data_worksheet():
 
     assert cleaned_data.dtypes['NAD'] == 'Int64'
     assert cleaned_data.dtypes['Construction_Year'] == 'Int64'
+    assert cleaned_data.loc[0, 'Tailings_Area'] == approx(0.025, 0.1)
     assert cleaned_data.loc[0, 'UTM_Zone'] == 20
 
 def test_clean_table_omi():

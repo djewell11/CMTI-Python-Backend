@@ -61,6 +61,48 @@ def check_units(value: int|float|str, expected_unit: str):
   except Exception as e:
     raise
 
+def convert_unit(value, desired_unit:str=None, dimensionless_value_unit:str = None, ureg:UnitRegistry = None):
+  """
+  Converts a value to a desired unit using a pint.UnitRegistry object.
+
+  :param value: The input value.
+  :type value: int, float, or str
+
+  :param desired_unit: The desired output unit. If None, the usual defaults are used.
+  :type desired_unit: str
+
+  :param ureg: A pint.UnitRegistry object.
+  :type ureg: pint.UnitRegistry
+
+  :param dimensionless_value_unit: The unit of the input value if dimensionless. If None, dimensionless values are ignored. Will not overwrite strings with dimensions. Default: None.
+  :type dimensionless_value_unit: str 
+
+  :return: The converted value.
+  :rtype: int, float
+  """
+
+  if ureg is None:
+    ureg = UnitRegistry()
+    ureg.define('km2 = kilometer ** 2')
+    ureg.define('m2 = meter ** 2')
+    ureg.define('Ha = hectare = 10000 m2')
+    ureg.define('m3 = meter ** 3')
+
+  Q = ureg.Quantity
+
+  dimensionless = True if type(value) in [int, float] or value.isnumeric() else False
+  
+  # If value is a number, add dimensionless_value_unit or ignore
+  if dimensionless:
+    if dimensionless_value_unit is not None:
+      converted = Q(float(value), dimensionless_value_unit).to(desired_unit)
+      return converted.magnitude
+    else:
+      return value
+  else: # Can only have dimension if it's a string
+    converted = Q(value).to(desired_unit)
+    return converted.magnitude
+
 # Data Grading
 
 points_assignment = {
