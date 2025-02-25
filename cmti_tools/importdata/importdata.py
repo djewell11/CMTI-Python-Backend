@@ -36,12 +36,17 @@ class converter_factory:
   create_converter_dict():
     Calls create_converter for each Column value in types_table and returns a dictionary of converter functions.
   """
-  def __init__(self, types_table):
+
+  def __init__(self, types_table, unit_conversion_dict:dict=None, **kwargs):
     """
     :param types_table: A DataFrame with columns "Column", "Type", and "Default". Column values must be unique.
     :type types_table: pandas.DataFrame.
+
+    :param unit_conversion_dict: A dictionary of unit conversions for specific columns. Key = column, value = desired unit. Default: None.
     """
     self.types_table = types_table
+    self.unit_conversion_dict = unit_conversion_dict
+    self.dimensionless_value_unit = kwargs.get('dimensionless_value_unit', None)
 
   def create_converter(self, column:str):
     """
@@ -54,7 +59,17 @@ class converter_factory:
     """
     dtype = self.types_table.loc[self.types_table.Column == column, 'Type'].values[0]
     default = self.types_table.loc[self.types_table.Column == column, 'Default'].values[0]
-    if dtype.startswith('u') or dtype.startswith('i') or dtype.startswith('I'):
+    
+    # Create a converter function based on dtype
+
+    # First, check if column in unit_conversion_dict
+    if self.unit_conversion_dict is not None and self.unit_conversion_dict.get(column):
+      def convert_val(val):
+        if pd.notna(val):
+          return convert_unit(val, desired_unit=self.unit_conversion_dict[column], dimensionless_value_unit=self.dimensionless_value_unit)
+      return convert_val
+    
+    elif dtype.startswith('u') or dtype.startswith('i') or dtype.startswith('I'):
       def get_int(val):
         if pd.isna(val):
           return default
@@ -64,16 +79,18 @@ class converter_factory:
           return round(val)
         return val
       return get_int
-    if dtype.startswith('f'):
+    
+    elif dtype.startswith('f'):
       def get_float(val):
         if pd.isna(val):
           return default
-        # if isinstance(val, str):
-        #   return tools.get_digits(val, 'float') # This was interfering with convert_unit in the worksheet importer. TODO: Implement convert_unit here in converter_factory
+        if isinstance(val, str):
+          return tools.get_digits(val, 'float') # This was interfering with convert_unit in the worksheet importer. TODO: Implement convert_unit here in converter_factory
         else:
           return val
       return get_float
-    if dtype == 'U':
+    
+    elif dtype == 'U':
       def get_str(val):
         if pd.isna(val):
           return default
@@ -81,7 +98,8 @@ class converter_factory:
           return val.strip()
         return val
       return get_str
-    if dtype == 'datetime64[ns]':
+    
+    elif dtype == 'datetime64[ns]':
       def get_datetime(val):
         if pd.isnull(val):
           return datetime.now()
@@ -97,38 +115,43 @@ class converter_factory:
     converters = {}
     for i, row in self.types_table.iterrows():
       converters[row.Column] = self.create_converter(row.Column)
+    if self.unit_conversion_dict is not None:
+      for column in self.unit_conversion_dict.keys():
+        converters[column] = self.create_converter(column)
+
     return converters
 
-def clean_table_data(in_table:pd.DataFrame, types_table:pd.DataFrame, drop_NA_columns:list=None) -> pd.DataFrame:
-  """
-  Enforces dtypes for in_table columns and inserts default values.
+# Deprecated (?)
+# This function was replaced by abstract methods within the DataImporter classes.
 
-  :param in_table: The table being cleaned.
-  :type in_table: Pandas DataFrame.
+# def clean_table_data(in_table:pd.DataFrame, types_table:pd.DataFrame, drop_NA_columns:list=None) -> pd.DataFrame:
+#   """
+#   Enforces dtypes for in_table columns and inserts default values.
 
-  :param types_table: A DataFrame with columns "Column", "Type", and "Default".
-  :type types_table: Pandas DataFrame.
+#   :param in_table: The table being cleaned.
+#   :type in_table: Pandas DataFrame.
 
-  :param drop_NA_columns: Columns where row should be dropped if value is missing. Provides a way of removing rows that lack required values before committing to database. Default: None.
-  :type drop_NA_columns: list.
-  """
+#   :param types_table: A DataFrame with columns "Column", "Type", and "Default".
+#   :type types_table: Pandas DataFrame.
 
-  pd.set_option('future.no_silent_downcasting', True)
+#   :param drop_NA_columns: Columns where row should be dropped if value is missing. Provides a way of removing rows that lack required values before committing to database. Default: None.
+#   :type drop_NA_columns: list.
+#   """
 
-  # Drop rows with NA values in critical columns
-  if drop_NA_columns is not None:
-    in_table.dropna(subset=drop_NA_columns, how='any', inplace=True)
-  # Fill NAs with defaults
-  na_dict = dict(zip(types_table.Column, types_table.Default))
-  dtype_dict = dict(zip(types_table.Column, types_table.Type))
-  out_table = in_table.fillna(na_dict)
-  # Enforce type
-  # Numeric columns use to_numeric instead of astype.
-  out_table.select_dtypes(include='number').apply(func=lambda col: pd.to_numeric(col, errors='coerce', dtype_backend='numpy_nullable'), axis=0)
+#   pd.set_option('future.no_silent_downcasting', True)
 
-  #TODO: If needed - isolate string columns and apply defaults/NA. isolate bad numeric values and insert default.
+#   # Drop rows with NA values in critical columns
+#   if drop_NA_columns is not None:
+#     in_table.dropna(subset=drop_NA_columns, how='any', inplace=True)
+#   # Fill NAs with defaults
+#   na_dict = dict(zip(types_table.Column, types_table.Default))
+#   # dtype_dict = dict(zip(types_table.Column, types_table.Type))
+#   out_table = in_table.fillna(na_dict)
+#   # Enforce type
+#   # Numeric columns use to_numeric instead of astype.
+#   out_table.select_dtypes(include='number').apply(func=lambda col: pd.to_numeric(col, errors='coerce', dtype_backend='numpy_nullable'), axis=0)
 
-  return out_table
+#   return out_table
 
 # Abstract Classes implementation
 
@@ -183,7 +206,7 @@ class DataImporter(ABC):
     pass
 
   @abstractmethod
-  def clean_input_table(self, input_table:pd.DataFrame, force_dtypes:bool=True) -> pd.DataFrame:
+  def clean_input_table(self, input_table:pd.DataFrame, force_dtypes:bool=True, convert_units:bool=True) -> pd.DataFrame:
     """
     Clean values in the input table and make column data types consistent.
     """
@@ -227,8 +250,7 @@ class WorksheetImporter(DataImporter):
       drop_NA_columns=['Site_Name', 'Site_Type', 'CMIM_ID', 'Latitude', 'Longitude'], 
       calculate_UTM=True, 
       force_dtypes=True, 
-      convert_units_dict:dict={'Tailings_Area':'km2', 'Tailings_Volume':'m3', 'Tailings_Capacity':'m3', 'Current_Max_Height':'m'},
-      **kwargs
+      convert_units:bool=True
     ):
 
     '''
@@ -296,7 +318,25 @@ class WorksheetImporter(DataImporter):
         cmti_defaults[key] = pd.NaT   
         
     cmti_types_table = pd.DataFrame(data={'Column': list(cmti_dtypes.keys()), 'Type': list(cmti_dtypes.values()), 'Default': list(cmti_defaults.values())})
-    converters = converter_factory(cmti_types_table).create_converter_dict()
+    if convert_units:
+      unit_conversion_dict={
+        'Tailings_Area': 'km2',
+        'Tailings_Volume': 'm3',
+        'Tailings_Capacity': 'm3',
+        'Current_Max_Height': 'm'}
+      unit_conversion_dict.update(dict.fromkeys([col for col in input_table.columns if 'Produced' in col], 'kg'))
+      unit_conversion_dict.update(dict.fromkeys([col for col in input_table.columns if 'Contained' in col], 'kg')) # Maybe redundant/inefficient to have each in their own loop, but makes it easier to change later.
+      # Also inefficient, but overwrite gold and silver values
+      unit_conversion_dict['Au_Produced'] = 'oz'
+      unit_conversion_dict['Au_Contained'] = 'oz'
+      unit_conversion_dict['Ag_Produced'] = 'oz'
+      unit_conversion_dict['Ag_Contained'] = 'oz'
+    else:
+      unit_conversion_dict = None
+
+    # Currently not dealing with grades. It's a bit of a mess in the CMTI data.
+
+    converters = converter_factory(cmti_types_table, unit_conversion_dict).create_converter_dict()
 
     # If passing a directory for input_table, read the file. Otherwise, assume it's a DataFrame.
     if isinstance(input_table, str):
@@ -317,7 +357,7 @@ class WorksheetImporter(DataImporter):
           cmti_df[col] = cmti_df[col].apply(func)
         except ValueError as ve:
           raise ve
-        except KeyError as ke:
+        except KeyError:
           print(f"Column {col} not found in input table.")
           pass
 
@@ -341,33 +381,6 @@ class WorksheetImporter(DataImporter):
       #   # Note: This should have been done in the converters but I couldn't get it to work. Probably a better option would be to allow Nulls for times.
     cmti_df.Last_Revised = cmti_df.Last_Revised.fillna(datetime.now().date())
     
-    # Perform unit conversions according to convert_units_dict
-    # Check kwargs for new Pint UnitRegistry definitions
-
-    if convert_units_dict: # If not empty
-      from pint import UnitRegistry
-      ureg = UnitRegistry()
-
-      # Default unit definitions
-      ureg.define('km2 = kilometer ** 2')
-      ureg.define('m2 = meter ** 2')
-      ureg.define('Ha = hectare = 10000m2 = 0.01km2')
-
-      if kwargs.get('unit_definitions'):
-        for unit, definition in kwargs['unit_definitions'].items():
-          ureg.define(f'{unit} = {definition}')
-
-      for col, unit in convert_units_dict.items():
-        column = cmti_df.get(col)
-        if column is not None:
-          try:
-            converted = column.apply(convert_unit, args=(unit, None, ureg,))
-            cmti_df[col] = converted
-          except:
-            raise
-        else:
-          raise KeyError(f"convert_unit_dict column {col} not found in input table.")
-
     # Coerce all dtypes
     if force_dtypes:
       cmti_df = self.coerce_dtypes(cmti_types_table, cmti_df)
@@ -567,7 +580,7 @@ class OMIImporter(DataImporter):
     """
     super().__init__(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_convert_dict)
   
-  def clean_input_table(self, input_table, drop_NA_columns=['MDI_IDENT', 'NAME', 'LONGITUDE', 'LATITUDE'], force_dtypes=True):
+  def clean_input_table(self, input_table, drop_NA_columns=['MDI_IDENT', 'NAME', 'LONGITUDE', 'LATITUDE'], force_dtypes=True, clean_input_table=False):
     omi_dtypes = {
       'MDI_IDENT': 'U',
       'NAME': 'U',
@@ -588,6 +601,7 @@ class OMIImporter(DataImporter):
     omi_types_table = pd.DataFrame(data={'Column': omi_dtypes.keys(), 'Type': omi_dtypes.values(), 'Default': omi_defaults})
 
     converters = converter_factory(omi_types_table).create_converter_dict()
+    converters
 
     if isinstance(input_table, str):
       try:
@@ -706,7 +720,7 @@ class OAMImporter(DataImporter):
     else:
       return val
 
-  def clean_input_table(self, input_table, drop_NA_columns=['OID', 'Lat_DD', 'Long_DD', 'Name'],  force_dtypes=True):
+  def clean_input_table(self, input_table, drop_NA_columns=['OID', 'Lat_DD', 'Long_DD', 'Name'],  force_dtypes=True, convert_units=False):
     oam_dtypes = {
       'OID': 'U',
       'Lat_DD': 'f4',
@@ -738,8 +752,10 @@ class OAMImporter(DataImporter):
     # Set default values based on datatype
     oam_defaults = ["Unknown" if t == "U" else pd.NA for t in oam_dtypes]
     oam_types_table = pd.DataFrame(data={'Column': oam_dtypes.keys(), 'Type': oam_dtypes.values(), 'Default': oam_defaults})
+    conversion_dict = None # Placeholder for unit conversion dictionary
+    
+    converters = converter_factory(oam_types_table, conversion_dict).create_converter_dict()
 
-    converters = converter_factory(oam_types_table).create_converter_dict()
 
     if isinstance(input_table, str):
       try:
@@ -874,7 +890,7 @@ class BCAHMImporter(DataImporter):
     """
     super().__init__(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_convert_dict)
 
-  def clean_input_table(self, input_table, drop_NA_columns=['OBJECTID', 'MINFILNO', 'NAME1', 'LATITUDE', 'LONGITUDE'], calculate_UTM=True, force_dtypes=True):
+  def clean_input_table(self, input_table, drop_NA_columns=['OBJECTID', 'MINFILNO', 'NAME1', 'LATITUDE', 'LONGITUDE'], calculate_UTM=True, force_dtypes=True, convert_units=False):
     bcahm_dtypes = {
       "OBJECTID": "u4",
       "MINFILNO": "U",
@@ -918,8 +934,9 @@ class BCAHMImporter(DataImporter):
 
     bcahm_defaults = ["Unknown" if t == "U" else pd.NA for t in bcahm_dtypes]
     bcahm_types_table = pd.DataFrame(data={'Column': bcahm_dtypes.keys(), 'Type': bcahm_dtypes.values(), 'Default': bcahm_defaults})
+    conversion_dict = None # Placeholder for unit conversion dictionary
 
-    converters = converter_factory(bcahm_types_table).create_converter_dict()
+    converters = converter_factory(bcahm_types_table, conversion_dict).create_converter_dict()
 
     if isinstance(input_table, str):
       try:
@@ -1061,7 +1078,7 @@ class NSMTDImporter(DataImporter):
   def __init__(self, name_convert_dict = None, cm_list = None, metals_dict = None):
     super().__init__(name_convert_dict, cm_list, metals_dict)
 
-  def clean_input_table(self, input_table, force_dtypes = True):
+  def clean_input_table(self, input_table, force_dtypes = True, convert_units=True):
     nsmtd_defaults = {
       'OBJECTID': 'Int64',
       'Name': 'U',
@@ -1077,7 +1094,14 @@ class NSMTDImporter(DataImporter):
       'Shape_Area': 'f4'}
 
     nsmtd_types_table = pd.DataFrame(data={'Column': nsmtd_defaults.keys(), 'Type': nsmtd_defaults.values(), 'Default': nsmtd_defaults.values()})
-    converters = converter_factory(nsmtd_types_table).create_converter_dict()
+    if convert_units:
+      unit_converters = {'AreaHa': 'km2'}
+      dimless_unit = {'dimensionless_value_unit': 'Ha'}
+    else:
+      unit_converters = None
+      dimless_unit = None
+
+    converters = converter_factory(nsmtd_types_table, unit_conversion_dict=unit_converters, kwargs=dimless_unit).create_converter_dict()
 
     if isinstance(input_table, str):
       try:
@@ -1183,7 +1207,7 @@ class NSMTDImporter(DataImporter):
         "name": f"{tsf.name}_impoundment",
         "parentTsf": tsf,
         "is_default": True,
-        "area": row["AreaHa"]/100,
+        "area": row["AreaHa"], # If running clean_input_table, this will be in km2
         "volume": row["Tonnes"]
       }
       impoundment = Impoundment(**impoundment_vals)

@@ -39,28 +39,6 @@ def check_categorical_values(row:pd.Series, qa_dict:dict, ignore_unknown=True, i
           else:
             print_bad_value(col_key, col_value)
 
-def check_units(value: int|float|str, expected_unit: str):
-  """
-  Conforms units for quantified values, removes unit from string, and returns a numerical value.
-
-  :param value: The input value.
-  :type value: int, float, or str
-
-  :param expected_unit: The desired output unit.
-  :type expected_unit: str
-
-  """
-  ureg = UnitRegistry()
-  ureg.define('km2 = kilometer ** 2')
-  ureg.define('m2 = meter ** 2')
-  ureg.define('m3 = meter ** 3')
-
-  try:  
-    converted = ureg(value).to(expected_unit)
-    return converted.magnitude
-  except Exception as e:
-    raise
-
 def convert_unit(value, desired_unit:str=None, dimensionless_value_unit:str = None, ureg:UnitRegistry = None):
   """
   Converts a value to a desired unit using a pint.UnitRegistry object.
@@ -104,6 +82,7 @@ def convert_unit(value, desired_unit:str=None, dimensionless_value_unit:str = No
     return converted.magnitude
 
 # Data Grading
+# TODO: Tidy this up and move it into a class
 
 points_assignment = {
     'Mine_Type': 3,
