@@ -68,18 +68,21 @@ def convert_unit(value, desired_unit:str=None, dimensionless_value_unit:str = No
 
   Q = ureg.Quantity
 
-  dimensionless = True if type(value) in [int, float] or value.isnumeric() else False
+  dimensionless = True if type(value) in [int, float] or (isinstance(value, str) and value.isnumeric()) else False
   
   # If value is a number, add dimensionless_value_unit or ignore
-  if dimensionless:
-    if dimensionless_value_unit is not None:
-      converted = Q(float(value), dimensionless_value_unit).to(desired_unit)
+  try:
+    if dimensionless:
+      if dimensionless_value_unit is not None:
+        converted = Q(float(value), dimensionless_value_unit).to(desired_unit)
+        return converted.magnitude
+      else:
+        return value
+    else: # Can only have dimension if it's a string
+      converted = Q(value).to(desired_unit)
       return converted.magnitude
-    else:
-      return value
-  else: # Can only have dimension if it's a string
-    converted = Q(value).to(desired_unit)
-    return converted.magnitude
+  except:
+    raise
 
 # Data Grading
 # TODO: Tidy this up and move it into a class

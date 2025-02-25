@@ -1,6 +1,6 @@
 import pytest
 import pandas as pd
-from cmti_tools.qualitycontrol import check_categorical_values, check_units, convert_unit, DataGrader
+from cmti_tools.qualitycontrol import check_categorical_values, convert_unit, DataGrader
 
 def test_categorical_vals(capfd):
     """
