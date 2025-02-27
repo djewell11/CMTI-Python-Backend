@@ -37,6 +37,11 @@ def test_convert_unit_spaces():
     dimless_spaces_converted = convert_unit(dimless_spaces, 'km2', dimensionless_value_unit='m2')
     assert dimless_spaces_converted == pytest.approx(1, 0.1)
 
+def test_convert_unit_no_unit():
+    value = 1000
+    converted = convert_unit(value, 'm')
+    assert converted == pytest.approx(1000, 0.1)
+
 # Initialize DataGrader with a custom scoring criteria
 grader = DataGrader(
     main = {

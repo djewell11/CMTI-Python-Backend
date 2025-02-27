@@ -77,7 +77,7 @@ def convert_unit(value, desired_unit:str, dimensionless_value_unit:str = None, u
     return Q(value).to(desired_unit).magnitude
   except DimensionalityError:
     try:
-      if dimensionless_value_unit is not None:
+      if pd.notna(dimensionless_value_unit):
         value_dim = f'{value} {dimensionless_value_unit}'
       return Q(value_dim).to(desired_unit).magnitude
     except:
