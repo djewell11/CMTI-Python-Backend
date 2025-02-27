@@ -46,9 +46,8 @@ class converter_factory:
     """
     self.types_table = types_table
     self.unit_conversion_dict = unit_conversion_dict
-    self.dimensionless_value_unit = kwargs.get('dimensionless_value_unit', None)
 
-  def create_converter(self, column:str):
+  def create_converter(self, column:str, dimensionless_value_unit:str=None):
     """
     Creates a function for the input column that either returns the default or performs some cleanup action.
 
@@ -66,7 +65,7 @@ class converter_factory:
     if self.unit_conversion_dict is not None and self.unit_conversion_dict.get(column):
       def convert_val(val):
         if pd.notna(val):
-          return convert_unit(val, desired_unit=self.unit_conversion_dict[column], dimensionless_value_unit=self.dimensionless_value_unit)
+          return convert_unit(val, desired_unit=self.unit_conversion_dict[column], dimensionless_value_unit=dimensionless_value_unit)
       return convert_val
     
     elif dtype.startswith('u') or dtype.startswith('i') or dtype.startswith('I'):
@@ -250,7 +249,8 @@ class WorksheetImporter(DataImporter):
       drop_NA_columns=['Site_Name', 'Site_Type', 'CMIM_ID', 'Latitude', 'Longitude'], 
       calculate_UTM=True, 
       force_dtypes=True, 
-      convert_units:bool=True
+      convert_units:bool=True,
+      **kwargs
     ):
 
     '''
@@ -319,18 +319,29 @@ class WorksheetImporter(DataImporter):
         
     cmti_types_table = pd.DataFrame(data={'Column': list(cmti_dtypes.keys()), 'Type': list(cmti_dtypes.values()), 'Default': list(cmti_defaults.values())})
     if convert_units:
-      unit_conversion_dict={
+
+      def create_default_unit_conversion_dict():
+        """
+        Creates a default unit conversion dictionary for the WorksheetImporter.
+        """
+        unit_conversion_dict={
         'Tailings_Area': 'km2',
         'Tailings_Volume': 'm3',
         'Tailings_Capacity': 'm3',
         'Current_Max_Height': 'm'}
-      unit_conversion_dict.update(dict.fromkeys([col for col in input_table.columns if 'Produced' in col], 'kg'))
-      unit_conversion_dict.update(dict.fromkeys([col for col in input_table.columns if 'Contained' in col], 'kg')) # Maybe redundant/inefficient to have each in their own loop, but makes it easier to change later.
-      # Also inefficient, but overwrite gold and silver values
-      unit_conversion_dict['Au_Produced'] = 'oz'
-      unit_conversion_dict['Au_Contained'] = 'oz'
-      unit_conversion_dict['Ag_Produced'] = 'oz'
-      unit_conversion_dict['Ag_Contained'] = 'oz'
+        unit_conversion_dict.update(dict.fromkeys([col for col in input_table.columns if 'Produced' in col], 'kg'))
+        unit_conversion_dict.update(dict.fromkeys([col for col in input_table.columns if 'Contained' in col], 'kg')) # Maybe redundant/inefficient to have each in their own loop, but makes it easier to change later.
+        # Also inefficient, but overwrite gold and silver values
+        unit_conversion_dict['Au_Produced'] = 'oz'
+        unit_conversion_dict['Au_Contained'] = 'oz'
+        unit_conversion_dict['Ag_Produced'] = 'oz'
+        unit_conversion_dict['Ag_Contained'] = 'oz'
+        
+        return unit_conversion_dict
+
+      # Get the unit conversion dictionary from the kwargs, if it exists or create a default one using the function above.
+      unit_conversion_dict = kwargs.get('unit_conversion_dict', create_default_unit_conversion_dict())
+      
     else:
       unit_conversion_dict = None
 

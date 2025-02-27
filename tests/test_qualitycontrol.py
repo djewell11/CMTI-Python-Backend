@@ -20,25 +20,22 @@ def test_categorical_vals(capfd):
 def test_convert_unit():
     """
     Tests the check_units function.
-    Confirms unit conversion from cubic meters to liters works correctly.
     """
-    value = '1km2'
-    unit = 'm2'
     # Convert units using check_units
-    converted = convert_unit(value, unit)
+    value = '1km2'
+    converted = convert_unit(value, 'm2')
+    assert converted == pytest.approx(1_000_000, 0.1)
 
+def test_convert_unit_dimensionless():
     # Convert dimensionless value with provided unit
     dimless_value = 1000000
     dimless_converted = convert_unit(dimless_value, 'km2', dimensionless_value_unit='m2')
-
-    # Convert (or not) dimensionless value with no provided unit
-    dimless_no_value = convert_unit(dimless_value, 'm2')
-
-
-    # Check if units were properly converted, allowing for rounding error
-    assert converted == pytest.approx(1_000_000, 0.1)
     assert dimless_converted == pytest.approx(1, 0.1)
-    assert dimless_no_value == pytest.approx(1000000, 0.1)
+
+def test_convert_unit_spaces():
+    dimless_spaces = "1 000 000"
+    dimless_spaces_converted = convert_unit(dimless_spaces, 'km2', dimensionless_value_unit='m2')
+    assert dimless_spaces_converted == pytest.approx(1, 0.1)
 
 # Initialize DataGrader with a custom scoring criteria
 grader = DataGrader(

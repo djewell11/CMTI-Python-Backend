@@ -39,7 +39,7 @@ def check_categorical_values(row:pd.Series, qa_dict:dict, ignore_unknown=True, i
           else:
             print_bad_value(col_key, col_value)
 
-def convert_unit(value, desired_unit:str=None, dimensionless_value_unit:str = None, ureg:UnitRegistry = None):
+def convert_unit(value, desired_unit:str, dimensionless_value_unit:str = None, ureg:UnitRegistry = None):
   """
   Converts a value to a desired unit using a pint.UnitRegistry object.
 
@@ -59,6 +59,9 @@ def convert_unit(value, desired_unit:str=None, dimensionless_value_unit:str = No
   :rtype: int, float
   """
 
+  from pint import DimensionalityError
+  from warnings import warn
+
   if ureg is None:
     ureg = UnitRegistry()
     ureg.define('km2 = kilometer ** 2')
@@ -68,19 +71,21 @@ def convert_unit(value, desired_unit:str=None, dimensionless_value_unit:str = No
 
   Q = ureg.Quantity
 
-  dimensionless = True if type(value) in [int, float] or (isinstance(value, str) and value.isnumeric()) else False
-  
-  # If value is a number, add dimensionless_value_unit or ignore
+  # Handle strings and numbers differently
+  value = value.replace(' ', '') if isinstance(value, str) else value
   try:
-    if dimensionless:
+    return Q(value).to(desired_unit).magnitude
+  except DimensionalityError:
+    try:
       if dimensionless_value_unit is not None:
-        converted = Q(float(value), dimensionless_value_unit).to(desired_unit)
-        return converted.magnitude
-      else:
-        return value
-    else: # Can only have dimension if it's a string
-      converted = Q(value).to(desired_unit)
-      return converted.magnitude
+        value_dim = f'{value} {dimensionless_value_unit}'
+      return Q(value_dim).to(desired_unit).magnitude
+    except:
+      return value
+    
+  except DimensionalityError:
+    warn(f"Could not convert {value} to {desired_unit}. Returning original value.")
+    return value
   except:
     raise
 
