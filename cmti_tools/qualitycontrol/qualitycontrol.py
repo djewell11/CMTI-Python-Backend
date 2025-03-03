@@ -76,15 +76,20 @@ def convert_unit(value, desired_unit:str, dimensionless_value_unit:str = None, u
   
   value = value.replace(' ', '') if isinstance(value, str) else value
   try:
+    # Try a simple conversion, if value contains unit
     return Q(value).to(desired_unit).magnitude
   except DimensionalityError:
     try:
+      # If value has no dimension, but a dimensionless unit is provided, try to add it
       if dimensionless_value_unit is not None:
         # This should handle strings or stringified numbers
         value_dim = f'{value} {dimensionless_value_unit}'
-      return Q(value_dim).to(desired_unit).magnitude
+        return Q(value_dim).to(desired_unit).magnitude
+      else:
+        # If no dimensionless unit is provided, return the value as is
+        return value
     except:
-      return value
+      raise
     
 # Data Grading
 # TODO: Tidy this up and move it into a class

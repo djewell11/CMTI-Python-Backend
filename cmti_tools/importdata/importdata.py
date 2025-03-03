@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.orm import DeclarativeBase # Imported for typehints
 from sqlalchemy.exc import IntegrityError
 from abc import ABC, abstractmethod
+from warnings import warn
 
 import cmti_tools.tools as tools
 from cmti_tools.tables import *
@@ -368,6 +369,7 @@ class WorksheetImporter(DataImporter):
       
     else:
       unit_conversion_dict = None
+      dimensionless_value_units = None
 
     # Currently not dealing with grades. It's a bit of a mess in the CMTI data.
 
