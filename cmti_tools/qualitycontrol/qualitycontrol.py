@@ -60,6 +60,7 @@ def convert_unit(value, desired_unit:str, dimensionless_value_unit:str = None, u
   """
 
   from pint import DimensionalityError
+  from pint import UndefinedUnitError
 
   if ureg is None:
     ureg = UnitRegistry()
@@ -88,6 +89,9 @@ def convert_unit(value, desired_unit:str, dimensionless_value_unit:str = None, u
       else:
         # If no dimensionless unit is provided, return the value as is
         return value
+    except UndefinedUnitError:
+      # If the unit is not defined, return the value as is
+      return value
     except:
       raise
     
