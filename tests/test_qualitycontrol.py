@@ -42,6 +42,12 @@ def test_convert_unit_no_unit():
     converted = convert_unit(value, 'm')
     assert converted == pytest.approx(1000, 0.1)
 
+def test_convert_unit_bad_value():
+    value = None
+    converted = convert_unit(value, 'm')
+
+    assert converted == None
+
 # Initialize DataGrader with a custom scoring criteria
 grader = DataGrader(
     main = {

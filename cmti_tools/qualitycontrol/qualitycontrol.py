@@ -60,7 +60,6 @@ def convert_unit(value, desired_unit:str, dimensionless_value_unit:str = None, u
   """
 
   from pint import DimensionalityError
-  from warnings import warn
 
   if ureg is None:
     ureg = UnitRegistry()
@@ -71,24 +70,22 @@ def convert_unit(value, desired_unit:str, dimensionless_value_unit:str = None, u
 
   Q = ureg.Quantity
 
-  # Handle strings and numbers differently
+  # Pint doesn't like None values. Exit early if value is None.
+  if pd.isna(value):
+    return None
+  
   value = value.replace(' ', '') if isinstance(value, str) else value
   try:
     return Q(value).to(desired_unit).magnitude
   except DimensionalityError:
     try:
-      if pd.notna(dimensionless_value_unit):
+      if dimensionless_value_unit is not None:
+        # This should handle strings or stringified numbers
         value_dim = f'{value} {dimensionless_value_unit}'
       return Q(value_dim).to(desired_unit).magnitude
     except:
       return value
     
-  except DimensionalityError:
-    warn(f"Could not convert {value} to {desired_unit}. Returning original value.")
-    return value
-  except:
-    raise
-
 # Data Grading
 # TODO: Tidy this up and move it into a class
 

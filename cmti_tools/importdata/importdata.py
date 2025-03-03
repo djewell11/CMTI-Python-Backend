@@ -46,8 +46,9 @@ class converter_factory:
     """
     self.types_table = types_table
     self.unit_conversion_dict = unit_conversion_dict
+    self.kwargs = kwargs
 
-  def create_converter(self, column:str, dimensionless_value_unit:str=None):
+  def create_converter(self, column:str):
     """
     Creates a function for the input column that either returns the default or performs some cleanup action.
 
@@ -58,15 +59,26 @@ class converter_factory:
     """
     dtype = self.types_table.loc[self.types_table.Column == column, 'Type'].values[0]
     default = self.types_table.loc[self.types_table.Column == column, 'Default'].values[0]
+
+    dimensionless_value_units = self.kwargs.get('dimensionless_value_unit', {})
     
     # Create a converter function based on dtype
 
-    # First, check if column in unit_conversion_dict
-    if self.unit_conversion_dict is not None and self.unit_conversion_dict.get(column):
-      def convert_val(val):
-        if pd.notna(val):
-          return convert_unit(val, desired_unit=self.unit_conversion_dict[column], dimensionless_value_unit=dimensionless_value_unit)
-      return convert_val
+    # If unit_conversion dict is in use, create these first.
+    if self.unit_conversion_dict is not None:
+      # Check if column in unit_conversion_dict
+      if self.unit_conversion_dict.get(column) is not None:
+        desired_unit = self.unit_conversion_dict[column]
+        def convert_val(val):
+          if pd.notna(val):
+            try:
+              dimless_unit = dimensionless_value_units.get(column, None)
+              return convert_unit(val, desired_unit=desired_unit, dimensionless_value_unit=dimless_unit)
+            except TypeError:
+              return val
+          else:
+            return default
+        return convert_val
     
     elif dtype.startswith('u') or dtype.startswith('i') or dtype.startswith('I'):
       def get_int(val):
@@ -274,6 +286,9 @@ class WorksheetImporter(DataImporter):
       :param unit_definitions: Dictionary of unit definitions to be added to Pint UnitRegistry. Values should follow pattern '{unit} = {str of definition}'. E.g.: 'm2 = meter ** 2'.
         Default: None
       :type unit_definitions: dict
+
+      :param dimensionless_value_units: Dictionary of dimensionless value units. Key = column, value = unit. If None, a default list will be used. Set as {} to disable. Default: None
+      :type dimensionless_value_units: dict
     '''
       
     cmti_dtypes = {'Site_Name':'U', 'Site_Type':'U', 'CMIM_ID':'U', 'Site_Aliases': 'U', 'Last_Revised': 'datetime64[ns]',
@@ -320,6 +335,15 @@ class WorksheetImporter(DataImporter):
     cmti_types_table = pd.DataFrame(data={'Column': list(cmti_dtypes.keys()), 'Type': list(cmti_dtypes.values()), 'Default': list(cmti_defaults.values())})
     if convert_units:
 
+      if 'dimensionless_value_units' not in kwargs:
+        # Create a default dimensionless_value_units dictionary
+        dimensionless_value_units = {
+          'Tailings_Area': 'km2',
+          'Tailings_Volume': 'm3',
+          'Tailings_Capacity': 'm3',
+          'Current_Max_Height': 'm'
+          }
+
       def create_default_unit_conversion_dict():
         """
         Creates a default unit conversion dictionary for the WorksheetImporter.
@@ -347,7 +371,7 @@ class WorksheetImporter(DataImporter):
 
     # Currently not dealing with grades. It's a bit of a mess in the CMTI data.
 
-    converters = converter_factory(cmti_types_table, unit_conversion_dict).create_converter_dict()
+    converters = converter_factory(cmti_types_table, unit_conversion_dict, dimensionless_value_units=dimensionless_value_units).create_converter_dict()
 
     # If passing a directory for input_table, read the file. Otherwise, assume it's a DataFrame.
     if isinstance(input_table, str):
@@ -363,7 +387,7 @@ class WorksheetImporter(DataImporter):
 
     # Apply converters for initial cleanup
     for col, func in converters.items():
-      if cmti_df.get(col) is not None:
+      if cmti_df.get(col) is not None and func is not None:
         try:
           cmti_df[col] = cmti_df[col].apply(func)
         except ValueError as ve:
@@ -1107,12 +1131,12 @@ class NSMTDImporter(DataImporter):
     nsmtd_types_table = pd.DataFrame(data={'Column': nsmtd_defaults.keys(), 'Type': nsmtd_defaults.values(), 'Default': nsmtd_defaults.values()})
     if convert_units:
       unit_converters = {'AreaHa': 'km2'}
-      dimless_unit = {'dimensionless_value_unit': 'Ha'}
+      dimless_units = {'dimensionless_value_unit': 'Ha'}
     else:
       unit_converters = None
       dimless_unit = None
 
-    converters = converter_factory(nsmtd_types_table, unit_conversion_dict=unit_converters, kwargs=dimless_unit).create_converter_dict()
+    converters = converter_factory(nsmtd_types_table, unit_conversion_dict=unit_converters, kwargs=dimless_units).create_converter_dict()
 
     if isinstance(input_table, str):
       try:
