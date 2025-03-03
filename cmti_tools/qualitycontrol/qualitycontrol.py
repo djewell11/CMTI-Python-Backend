@@ -86,14 +86,14 @@ def convert_unit(value, desired_unit:str, dimensionless_value_unit:str = None, u
         # This should handle strings or stringified numbers
         value_dim = f'{value} {dimensionless_value_unit}'
         return Q(value_dim).to(desired_unit).magnitude
-      else:
-        # If no dimensionless unit is provided, return the value as is
-        return value
-    except UndefinedUnitError:
-      # If the unit is not defined, return the value as is
-      return value
     except:
-      raise
+      # If no dimensionless unit is provided, return the value as is
+      return value
+  except UndefinedUnitError:
+    # If the unit is not defined, return the value as is
+      return value
+  except:
+    raise
     
 # Data Grading
 # TODO: Tidy this up and move it into a class
