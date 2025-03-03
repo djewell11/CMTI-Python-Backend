@@ -103,6 +103,7 @@ def test_clean_table_oam():
             'Lat_DD': 54.766,
             'Long_DD': "-102.754",
             'Jurisdiction': 'SK',
+            'Juris_ID': 'SK000001',
             'Name': 'Western Nuclear',
             'Status': 'Abandoned',
             'Last_Operator': 'Mine Operator Inc.',

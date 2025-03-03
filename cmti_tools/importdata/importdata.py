@@ -46,7 +46,8 @@ class converter_factory:
     :param unit_conversion_dict: A dictionary of unit conversions for specific columns. Key = column, value = desired unit. Default: None.
     """
     self.types_table = types_table
-    self.unit_conversion_dict = unit_conversion_dict
+    # Replace "None" with an empty dict if no unit_conversion_dict is provided to avoid errors in create_converter.
+    self.unit_conversion_dict = unit_conversion_dict if unit_conversion_dict is not None else {}
     self.kwargs = kwargs
 
   def create_converter(self, column:str):
@@ -58,65 +59,111 @@ class converter_factory:
 
     :return: Function
     """
-    dtype = self.types_table.loc[self.types_table.Column == column, 'Type'].values[0]
+    col_dtype = self.types_table.loc[self.types_table.Column == column, 'Type'].values[0]
     default = self.types_table.loc[self.types_table.Column == column, 'Default'].values[0]
 
     dimensionless_value_units = self.kwargs.get('dimensionless_value_unit', {})
     
     # Create a converter function based on dtype
 
-    # If unit_conversion dict is in use, create these first.
-    if self.unit_conversion_dict is not None:
-      # Check if column in unit_conversion_dict
-      if self.unit_conversion_dict.get(column) is not None:
-        desired_unit = self.unit_conversion_dict[column]
-        def convert_val(val):
-          if pd.notna(val):
-            try:
-              dimless_unit = dimensionless_value_units.get(column, None)
-              return convert_unit(val, desired_unit=desired_unit, dimensionless_value_unit=dimless_unit)
-            except TypeError:
-              return val
-          else:
+    # # If unit_conversion dict is in use, create these first.
+    # if self.unit_conversion_dict is not None:
+    #   # Check if column in unit_conversion_dict
+    #   if self.unit_conversion_dict.get(column) is not None:
+    #     desired_unit = self.unit_conversion_dict[column]
+    #     def convert_val(val):
+    #       if pd.notna(val):
+    #         try:
+    #           dimless_unit = dimensionless_value_units.get(column, None)
+    #           return convert_unit(val, desired_unit=desired_unit, dimensionless_value_unit=dimless_unit)
+    #         except TypeError:
+    #           return val
+    #       else:
+    #         return default
+    #     return convert_val
+    
+    match col_dtype:
+
+      # Create a function for each dtype. If the value is NA, return the default value. If column has a unit_conversion, convert the value.
+      case 'Int64' | 'UInt64' | 'u' | 'u4' | 'u8' | 'int':
+        def get_int(val):
+          if pd.isna(val):
             return default
-        return convert_val
-    
-    elif dtype.startswith('u') or dtype.startswith('i') or dtype.startswith('I'):
-      def get_int(val):
-        if pd.isna(val):
-          return default
-        if isinstance(val, str):
-          return tools.get_digits(val, 'int')
-        if isinstance(val, float):
-          return round(val)
-        return val
-      return get_int
-    
-    elif dtype.startswith('f'):
-      def get_float(val):
-        if pd.isna(val):
-          return default
-        if isinstance(val, str):
-          return tools.get_digits(val, 'float') # This was interfering with convert_unit in the worksheet importer. TODO: Implement convert_unit here in converter_factory
-        else:
+          # if isinstance(val, str):
+          #   val = tools.get_digits(val, 'int')
+          # elif isinstance(val, float):
+          #   val = round(val)
+          # if column in self.unit_conversion_dict.keys():
+          val = convert_unit(val, desired_unit=self.unit_conversion_dict.get(column), dimensionless_value_unit=dimensionless_value_units.get(column))
           return val
-      return get_float
+        return get_int
+      
+      case 'f' | 'float' | 'float64' | 'f4':
+        def get_float(val):
+          if pd.isna(val):
+            return default
+          # if isinstance(val, str):
+          #   val = tools.get_digits(val, 'float')
+          # if column in self.unit_conversion_dict.keys():
+          val = convert_unit(val, desired_unit=self.unit_conversion_dict.get(column), dimensionless_value_unit=dimensionless_value_units.get(column))
+          return val
+        return get_float
+      
+      case 'U':
+        def get_str(val):
+          if pd.isna(val):
+            return default
+          if isinstance(val, str):
+            return val.strip()
+          return val
+        return get_str
+      
+      case 'datetime64[ns]':
+        def get_datetime(val):
+          if pd.isnull(val):
+            return datetime.now()
+          return val
+        return get_datetime
+      
+      case _:
+        raise ValueError(f"Invalid dtype for column/value: {column} / {col_dtype}")
+
+    # if dtype.startswith('u') or dtype.startswith('i') or dtype.startswith('I'):
+    #   def get_int(val):
+    #     if pd.isna(val):
+    #       return default
+    #     if isinstance(val, str):
+    #       return tools.get_digits(val, 'int')
+    #     if isinstance(val, float):
+    #       return round(val)
+    #     return val
+    #   return get_int
     
-    elif dtype == 'U':
-      def get_str(val):
-        if pd.isna(val):
-          return default
-        if isinstance(val, str):
-          return val.strip()
-        return val
-      return get_str
+    # elif dtype.startswith('f'):
+    #   def get_float(val):
+    #     if pd.isna(val):
+    #       return default
+    #     if isinstance(val, str):
+    #       return tools.get_digits(val, 'float') # This was interfering with convert_unit in the worksheet importer. TODO: Implement convert_unit here in converter_factory
+    #     else:
+    #       return val
+    #   return get_float
     
-    elif dtype == 'datetime64[ns]':
-      def get_datetime(val):
-        if pd.isnull(val):
-          return datetime.now()
-        return val
-      return get_datetime
+    # elif dtype == 'U':
+    #   def get_str(val):
+    #     if pd.isna(val):
+    #       return default
+    #     if isinstance(val, str):
+    #       return val.strip()
+    #     return val
+    #   return get_str
+    
+    # elif dtype == 'datetime64[ns]':
+    #   def get_datetime(val):
+    #     if pd.isnull(val):
+    #       return datetime.now()
+    #     return val
+    #   return get_datetime
 
   def create_converter_dict(self):
     """
@@ -125,12 +172,9 @@ class converter_factory:
     :return: dict.
     """
     converters = {}
+    # Fill converters dict with a function for each column
     for i, row in self.types_table.iterrows():
       converters[row.Column] = self.create_converter(row.Column)
-    if self.unit_conversion_dict is not None:
-      for column in self.unit_conversion_dict.keys():
-        converters[column] = self.create_converter(column)
-
     return converters
 
 # Deprecated (?)
@@ -337,13 +381,7 @@ class WorksheetImporter(DataImporter):
     if convert_units:
 
       if 'dimensionless_value_units' not in kwargs:
-        # Create a default dimensionless_value_units dictionary
-        dimensionless_value_units = {
-          'Tailings_Area': 'km2',
-          'Tailings_Volume': 'm3',
-          'Tailings_Capacity': 'm3',
-          'Current_Max_Height': 'm'
-          }
+        dimensionless_value_units = {}
 
       def create_default_unit_conversion_dict():
         """
@@ -389,7 +427,7 @@ class WorksheetImporter(DataImporter):
 
     # Apply converters for initial cleanup
     for col, func in converters.items():
-      if cmti_df.get(col) is not None and func is not None:
+      if cmti_df.get(col) is not None:
         try:
           cmti_df[col] = cmti_df[col].apply(func)
         except ValueError as ve:
@@ -789,10 +827,9 @@ class OAMImporter(DataImporter):
     # Set default values based on datatype
     oam_defaults = ["Unknown" if t == "U" else pd.NA for t in oam_dtypes]
     oam_types_table = pd.DataFrame(data={'Column': oam_dtypes.keys(), 'Type': oam_dtypes.values(), 'Default': oam_defaults})
-    conversion_dict = None # Placeholder for unit conversion dictionary
+    conversion_dict = None # Placeholder for unit conversion dictionary if needed.
     
     converters = converter_factory(oam_types_table, conversion_dict).create_converter_dict()
-
 
     if isinstance(input_table, str):
       try:

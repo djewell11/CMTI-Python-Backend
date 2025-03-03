@@ -72,8 +72,8 @@ def convert_unit(value, desired_unit:str, dimensionless_value_unit:str = None, u
   Q = ureg.Quantity
 
   # Pint doesn't like None values. Exit early if value is None.
-  if pd.isna(value):
-    return None
+  if pd.isna(value) or desired_unit is None:
+    return value
   
   value = value.replace(' ', '') if isinstance(value, str) else value
   try:
@@ -90,7 +90,8 @@ def convert_unit(value, desired_unit:str, dimensionless_value_unit:str = None, u
         # If no dimensionless unit is provided, return the value as is
         return value
     except:
-      raise
+      # This shouldn't be reachable, but if it is, raise an error
+      raise(f"Could not convert value: {value} to desired unit.")
   except UndefinedUnitError:
     # If the unit is not defined, return the value as is
       return value
