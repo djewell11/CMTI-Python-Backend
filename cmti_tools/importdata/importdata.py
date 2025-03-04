@@ -89,12 +89,12 @@ class converter_factory:
         def get_int(val):
           if pd.isna(val):
             return default
-          # if isinstance(val, str):
-          #   val = tools.get_digits(val, 'int')
-          # elif isinstance(val, float):
-          #   val = round(val)
-          # if column in self.unit_conversion_dict.keys():
-          val = convert_unit(val, desired_unit=self.unit_conversion_dict.get(column), dimensionless_value_unit=dimensionless_value_units.get(column))
+          if isinstance(val, str):
+            val = tools.get_digits(val, 'int')
+          elif isinstance(val, float):
+            val = round(val)
+          if column in self.unit_conversion_dict.keys():
+            val = convert_unit(val, desired_unit=self.unit_conversion_dict.get(column), dimensionless_value_unit=dimensionless_value_units.get(column))
           return val
         return get_int
       
@@ -102,10 +102,10 @@ class converter_factory:
         def get_float(val):
           if pd.isna(val):
             return default
-          # if isinstance(val, str):
-          #   val = tools.get_digits(val, 'float')
-          # if column in self.unit_conversion_dict.keys():
-          val = convert_unit(val, desired_unit=self.unit_conversion_dict.get(column), dimensionless_value_unit=dimensionless_value_units.get(column))
+          if isinstance(val, str):
+            val = tools.get_digits(val, 'float')
+          if column in self.unit_conversion_dict.keys():
+            val = convert_unit(val, desired_unit=self.unit_conversion_dict.get(column), dimensionless_value_unit=dimensionless_value_units.get(column))
           return val
         return get_float
       
@@ -408,6 +408,8 @@ class WorksheetImporter(DataImporter):
     else:
       unit_conversion_dict = None
       dimensionless_value_units = None
+
+
 
     # Currently not dealing with grades. It's a bit of a mess in the CMTI data.
 
