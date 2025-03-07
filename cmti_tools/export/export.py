@@ -81,6 +81,12 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
       new_row['Dev_Stage'] = r.development_stage
       new_row['Site_Access'] = r.site_access
       new_row['Construction_Year'] = r.construction_year
+      new_row['Orebody_Type'] = r.ore_type
+      new_row['Orebody_Class'] = r.ore_class
+      new_row['Orebody_Minerals'] = r.ore_minerals
+      new_row['Ore_Processed'] = r.ore_processed
+      new_row['Year_Opened'] = r.year_opened
+      new_row['Year_Closed'] = r.year_closed
 
       # Values of children of mine object
       # Commodities

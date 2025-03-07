@@ -32,6 +32,10 @@ class Mine(Base):
   mine_type: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
   mine_status: Mapped[Optional[str]] = mapped_column(server_default = "Unknown")
   mining_method: Mapped[Optional[str]] = mapped_column(server_default = "Unknown")
+  orebody_type: Mapped[str] = mapped_column(nullable=True)
+  orebody_class: Mapped[str] = mapped_column(nullable=True)
+  orebody_minerals: Mapped[str] = mapped_column(nullable=True)
+  ore_processed: Mapped[float] = mapped_column(nullable=True)
   development_stage: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
   site_access: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
   construction_year: Mapped[Optional[int]]

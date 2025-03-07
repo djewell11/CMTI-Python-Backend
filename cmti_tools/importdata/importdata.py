@@ -89,12 +89,12 @@ class converter_factory:
         def get_int(val):
           if pd.isna(val):
             return default
+          if column in self.unit_conversion_dict.keys():
+            val = convert_unit(val, desired_unit=self.unit_conversion_dict.get(column), dimensionless_value_unit=dimensionless_value_units.get(column))
           if isinstance(val, str):
             val = tools.get_digits(val, 'int')
           elif isinstance(val, float):
             val = round(val)
-          if column in self.unit_conversion_dict.keys():
-            val = convert_unit(val, desired_unit=self.unit_conversion_dict.get(column), dimensionless_value_unit=dimensionless_value_units.get(column))
           return val
         return get_int
       
@@ -102,10 +102,10 @@ class converter_factory:
         def get_float(val):
           if pd.isna(val):
             return default
-          if isinstance(val, str):
-            val = tools.get_digits(val, 'float')
           if column in self.unit_conversion_dict.keys():
             val = convert_unit(val, desired_unit=self.unit_conversion_dict.get(column), dimensionless_value_unit=dimensionless_value_units.get(column))
+          if isinstance(val, str):
+            val = tools.get_digits(val, 'float')
           return val
         return get_float
       
@@ -352,7 +352,7 @@ class WorksheetImporter(DataImporter):
       'Rehab_Plan':'U', 'EWS':'U', 'EWS_Rating':'U', 'Raise_Type':'U', 'History_Stability_Concerns':'U',
       'Rating_Index':'U', 'Acid_Generating':'U',  'Treatment':'U', 'Current_Max_Height': 'f', 'Tailings_Storage_Method': 'U',
       'Tailings_Volume': 'f', 'Tailings_Capacity':'f', 'Tailings_Area':'f', 'Tailings_Area_From_Images':'f',
-      'Tailings_Area_Notes': 'U'}
+      'Tailings_Area_Notes': 'U', 'Orebody_Type':'U', 'Orebody_Class':'U', 'Orebody_Minerals':'U', 'Ore_Processed':'f'}
     grades = ['Au_Grade', 'Au_Contained', 'Au_Produced', 'Ag_Grade', 'Ag_Contained', 'Ag_Produced', 'Barite_Grade',
       'Barite_Contained', 'Barite_Produced', 'Bi_Grade', 'Bi_Contained', 'Bi_Produced', 'Cd_Grade', 'Cd_Contained',
       'Cd_Produced', 'Coal_Type', 'Coal_Rank', 'Coal_Production', 'Coal_Produced', 'Co_Grade', 'Co_Contained',
@@ -391,7 +391,8 @@ class WorksheetImporter(DataImporter):
         'Tailings_Area': 'km2',
         'Tailings_Volume': 'm3',
         'Tailings_Capacity': 'm3',
-        'Current_Max_Height': 'm'}
+        'Current_Max_Height': 'm',
+        'Ore_Processed': 't'}
         unit_conversion_dict.update(dict.fromkeys([col for col in input_table.columns if 'Produced' in col], 'kg'))
         unit_conversion_dict.update(dict.fromkeys([col for col in input_table.columns if 'Contained' in col], 'kg')) # Maybe redundant/inefficient to have each in their own loop, but makes it easier to change later.
         # Also inefficient, but overwrite gold and silver values
@@ -408,8 +409,6 @@ class WorksheetImporter(DataImporter):
     else:
       unit_conversion_dict = None
       dimensionless_value_units = None
-
-
 
     # Currently not dealing with grades. It's a bit of a mess in the CMTI data.
 
@@ -529,7 +528,11 @@ class WorksheetImporter(DataImporter):
       mining_method = row.Mining_Method,
       development_stage = row.Dev_Stage,
       site_access = row.Site_Access,
-      construction_year = row.Construction_Year
+      construction_year = row.Construction_Year,
+      orebody_type = row.Orebody_Type,
+      orebody_class = row.Orebody_Class,
+      orebody_minerals = row.Ore_Minerals,
+      ore_processed = row.Ore_Processed,
     )
     
     # Commodities

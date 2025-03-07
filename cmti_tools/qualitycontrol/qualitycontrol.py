@@ -68,6 +68,7 @@ def convert_unit(value, desired_unit:str, dimensionless_value_unit:str = None, u
     ureg.define('m2 = meter ** 2')
     ureg.define('Ha = hectare = 10000 m2')
     ureg.define('m3 = meter ** 3')
+    ureg.define('t = tonne = 1000 kg')
 
   Q = ureg.Quantity
 
