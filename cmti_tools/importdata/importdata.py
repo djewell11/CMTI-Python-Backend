@@ -64,24 +64,6 @@ class converter_factory:
 
     dimensionless_value_units = self.kwargs.get('dimensionless_value_unit', {})
     
-    # Create a converter function based on dtype
-
-    # # If unit_conversion dict is in use, create these first.
-    # if self.unit_conversion_dict is not None:
-    #   # Check if column in unit_conversion_dict
-    #   if self.unit_conversion_dict.get(column) is not None:
-    #     desired_unit = self.unit_conversion_dict[column]
-    #     def convert_val(val):
-    #       if pd.notna(val):
-    #         try:
-    #           dimless_unit = dimensionless_value_units.get(column, None)
-    #           return convert_unit(val, desired_unit=desired_unit, dimensionless_value_unit=dimless_unit)
-    #         except TypeError:
-    #           return val
-    #       else:
-    #         return default
-    #     return convert_val
-    
     match col_dtype:
 
       # Create a function for each dtype. If the value is NA, return the default value. If column has a unit_conversion, convert the value.
@@ -128,43 +110,6 @@ class converter_factory:
       case _:
         raise ValueError(f"Invalid dtype for column/value: {column} / {col_dtype}")
 
-    # if dtype.startswith('u') or dtype.startswith('i') or dtype.startswith('I'):
-    #   def get_int(val):
-    #     if pd.isna(val):
-    #       return default
-    #     if isinstance(val, str):
-    #       return tools.get_digits(val, 'int')
-    #     if isinstance(val, float):
-    #       return round(val)
-    #     return val
-    #   return get_int
-    
-    # elif dtype.startswith('f'):
-    #   def get_float(val):
-    #     if pd.isna(val):
-    #       return default
-    #     if isinstance(val, str):
-    #       return tools.get_digits(val, 'float') # This was interfering with convert_unit in the worksheet importer. TODO: Implement convert_unit here in converter_factory
-    #     else:
-    #       return val
-    #   return get_float
-    
-    # elif dtype == 'U':
-    #   def get_str(val):
-    #     if pd.isna(val):
-    #       return default
-    #     if isinstance(val, str):
-    #       return val.strip()
-    #     return val
-    #   return get_str
-    
-    # elif dtype == 'datetime64[ns]':
-    #   def get_datetime(val):
-    #     if pd.isnull(val):
-    #       return datetime.now()
-    #     return val
-    #   return get_datetime
-
   def create_converter_dict(self):
     """
     Runs create_converter for all columns in types_table.Column.
@@ -177,37 +122,53 @@ class converter_factory:
       converters[row.Column] = self.create_converter(row.Column)
     return converters
 
-# Deprecated (?)
-# This function was replaced by abstract methods within the DataImporter classes.
+# The Mapper and MapperManager store information about the data types and default values for each column in the input table.
+class Mapper:
+  def __init__(self, destination_column_name, source_column_name, dtype=None, default=None, converter=None):
+    self.destination_column_name = destination_column_name
+    self.source_column_name = source_column_name
+    self.dtype = dtype
+    self.default = default
+    self.converter = converter
+      
+class MapperManager:
+  
+  def __init__(self):
+    self._mappers = {}
 
-# def clean_table_data(in_table:pd.DataFrame, types_table:pd.DataFrame, drop_NA_columns:list=None) -> pd.DataFrame:
-#   """
-#   Enforces dtypes for in_table columns and inserts default values.
+  # Allow access to mappers by column name using the dot operator
+  def __getattr__(self, destination_column_name):
+    if destination_column_name in self._mappers.keys():
+      return self._mappers[destination_column_name]
+    else:
+      raise AttributeError(f"{self.__class__.__name__} has no attribute {destination_column_name}")
 
-#   :param in_table: The table being cleaned.
-#   :type in_table: Pandas DataFrame.
+  def add_mapper(self, destination_column_name, source_column_name, dtype, default=None, converter=None):
+    self._mappers[destination_column_name] = Mapper(destination_column_name, source_column_name,  dtype, default, converter)
 
-#   :param types_table: A DataFrame with columns "Column", "Type", and "Default".
-#   :type types_table: Pandas DataFrame.
+  def __repr__(self):
+    return f"MapperManager with {len(self._mappers)} mappers."
+  
+  def get_mapper_df(self):
+    """
+    Returns a DataFrame with the column name, dtype, and default value for each mapper.
+    
+    :return: pd.DataFrame
+    """
+    
+    df = pd.DataFrame(columns=['DB_Column', 'Input_Column', 'Type', 'Default'])
+    for mapper in self._mappers.values():
+      data = pd.DataFrame(data={'DB_Column': mapper.destination_column_name, 'Input_Column': mapper.source_column_name, 'Type': mapper.dtype, 'Default': mapper.default}, index=[0])
+      df = pd.concat([df, data], ignore_index=True)
+    return df
+    
+  def get_converters(self):
+    """
+    Returns a dictionary of column names and their associated converters.
 
-#   :param drop_NA_columns: Columns where row should be dropped if value is missing. Provides a way of removing rows that lack required values before committing to database. Default: None.
-#   :type drop_NA_columns: list.
-#   """
-
-#   pd.set_option('future.no_silent_downcasting', True)
-
-#   # Drop rows with NA values in critical columns
-#   if drop_NA_columns is not None:
-#     in_table.dropna(subset=drop_NA_columns, how='any', inplace=True)
-#   # Fill NAs with defaults
-#   na_dict = dict(zip(types_table.Column, types_table.Default))
-#   # dtype_dict = dict(zip(types_table.Column, types_table.Type))
-#   out_table = in_table.fillna(na_dict)
-#   # Enforce type
-#   # Numeric columns use to_numeric instead of astype.
-#   out_table.select_dtypes(include='number').apply(func=lambda col: pd.to_numeric(col, errors='coerce', dtype_backend='numpy_nullable'), axis=0)
-
-#   return out_table
+    :return: dict
+    """
+    return {mapper.destination_column_name: mapper.converter for mapper in self._mappers.items()}
 
 # Abstract Classes implementation
 
