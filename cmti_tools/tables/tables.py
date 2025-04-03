@@ -62,16 +62,10 @@ class Mine(Base):
   ews: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
   ews_rating: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
 
-
-
-
   # Relationships
   commodities = relationship("CommodityRecord", back_populates="mine", cascade="all, delete-orphan")
   aliases: Mapped[List["Alias"]] = relationship("Alias", back_populates="mine", cascade="all, delete-orphan")
-  owners: Mapped[List["Owner"]] = relationship(
-      secondary = "owner_associations",
-      back_populates = "mines"
-  )
+  owners: Mapped[List["OwnerAssociation"]] = relationship(back_populates = "mines")
   tailings_facilities: Mapped[List["TailingsFacility"]] = relationship(
       secondary = "tsf_mine_associations",
       back_populates = "mines"
@@ -124,10 +118,7 @@ class Owner(Base):
   id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
   name: Mapped[str] = mapped_column(nullable=False)
 
-  mines: Mapped[List["Mine"]] = relationship(
-        secondary = "owner_associations",
-        back_populates = "owners"
-  )
+  mines: Mapped[List["OwnerAssociation"]] = relationship(back_populates = "owners")
 
   def __repr__(self) -> str:
     return f"Owner: {self.name!r}, ID: {self.id!r}, Mines: {self.mines}"
@@ -227,6 +218,9 @@ class OwnerAssociation(Base):
   is_current_owner: Mapped[bool] = mapped_column(nullable=False, default=False)
   start_year: Mapped[Optional[int]]
   end_year: Mapped[Optional[int]]
+
+  owner: Mapped["Owner"] = relationship("Owner", back_populates="mines")
+  mine: Mapped["Mine"] = relationship("Mine", back_populates="owners")
 
   def __repr__(self) -> str:
     return f"Owner ID: {self.owner_id}, mine_id: {self.mine_id}"
