@@ -492,7 +492,7 @@ class WorksheetImporter(DataImporter):
       owner_association = OwnerAssociation(is_current_owner=True)
       owner_association.owner = Owner(name=row.Owner_Operator)
       mine.owners.append(owner_association)
-      records.append(owner)
+      records.append(owner_association)
     
     # Add past owners. Usually a comma-separated list of names
     past_owners = row.Past_Owners
@@ -503,7 +503,7 @@ class WorksheetImporter(DataImporter):
         past_owner_association = OwnerAssociation(is_current_owner=False)
         past_owner_association.owner = owner
         mine.owners.append(past_owner_association)
-        records.append(owner)
+        records.append(past_owner_association)
 
     # References
     source_columns = [f"Source_{i}" for i in range(1, source_col_count+1)]
