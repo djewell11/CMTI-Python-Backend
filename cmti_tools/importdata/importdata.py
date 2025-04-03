@@ -463,7 +463,7 @@ class WorksheetImporter(DataImporter):
       hazard_class = row.Hazard_Class,
       hazard_system = row.Hazard_System,
       prp_rating = row.PRP_Rating,
-      rehab_plan = row.Rehab_Plan if row.Rehab_Plan == 'Yes' else False,
+      rehab_plan = True if row.Rehab_Plan == 'Yes' else False,
       ews = row.EWS,
       ews_rating = row.EWS_Rating
     )
