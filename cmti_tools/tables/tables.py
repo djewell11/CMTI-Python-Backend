@@ -65,7 +65,7 @@ class Mine(Base):
   # Relationships
   commodities = relationship("CommodityRecord", back_populates="mine", cascade="all, delete-orphan")
   aliases: Mapped[List["Alias"]] = relationship("Alias", back_populates="mine", cascade="all, delete-orphan")
-  owners: Mapped[List["OwnerAssociation"]] = relationship(back_populates = "mines")
+  owners: Mapped[List["OwnerAssociation"]] = relationship(back_populates = "mine")
   tailings_facilities: Mapped[List["TailingsFacility"]] = relationship(
       secondary = "tsf_mine_associations",
       back_populates = "mines"
@@ -118,7 +118,7 @@ class Owner(Base):
   id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
   name: Mapped[str] = mapped_column(nullable=False)
 
-  mines: Mapped[List["OwnerAssociation"]] = relationship(back_populates = "owners")
+  mines: Mapped[List["OwnerAssociation"]] = relationship(back_populates = "owner")
 
   def __repr__(self) -> str:
     return f"Owner: {self.name!r}, ID: {self.id!r}, Mines: {self.mines}"
