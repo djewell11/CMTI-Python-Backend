@@ -883,10 +883,11 @@ class OAMImporter(DataImporter):
       impoundment = Impoundment(parentTsf = tsf, is_default = True, name = f"{tsf.name}_impoundment")
       row_records.append(impoundment)
 
-      owner_association = OwnerAssociation(is_current_owner=False)
-      owner_association.owner = Owner(name = row["Last_Operator"])
-      mine.owners.append(mine)
-      row_records.append(owner_association)
+      if pd.notna(row['Last_Operator']):
+        owner_association = OwnerAssociation(is_current_owner=False)
+        owner_association.owner = Owner(name = row["Last_Operator"])
+        mine.owners.append(owner_association)
+        row_records.append(owner_association)
 
       oam_reference = Reference(mine = mine, source = "OAM", source_id = row["OID"], link = row["URL"])
       row_records.append(oam_reference)
