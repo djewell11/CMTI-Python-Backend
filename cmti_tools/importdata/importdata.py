@@ -501,7 +501,7 @@ class WorksheetImporter(DataImporter):
         owner = Owner(name=past_owner)
         past_owner_association = OwnerAssociation(is_current_owner=False)
         past_owner_association.owner = owner
-        owner.mines.append(past_owner_association)
+        mine.owners.append(past_owner_association)
         records.append(owner)
 
     # References
@@ -883,9 +883,10 @@ class OAMImporter(DataImporter):
       impoundment = Impoundment(parentTsf = tsf, is_default = True, name = f"{tsf.name}_impoundment")
       row_records.append(impoundment)
 
-      owner = Owner(name = row["Last_Operator"])
-      owner.mines.append(mine)
-      row_records.append(owner)
+      owner_association = OwnerAssociation(is_current_owner=False)
+      owner_association.owner = Owner(name = row["Last_Operator"])
+      mine.owners.append(mine)
+      row_records.append(owner_association)
 
       oam_reference = Reference(mine = mine, source = "OAM", source_id = row["OID"], link = row["URL"])
       row_records.append(oam_reference)
