@@ -488,10 +488,11 @@ class WorksheetImporter(DataImporter):
 
     # Owners
     # This pattern is from the Basic Reltionship Patterns guide in the SQLAlchemy documentation
-    owner_association = OwnerAssociation(is_current_owner=True)
-    owner_association.owner = Owner(name=row.Owner_Operator)
-    mine.owners.append(owner_association)
-    records.append(owner)
+    if pd.notna(row.Owner_Operator):
+      owner_association = OwnerAssociation(is_current_owner=True)
+      owner_association.owner = Owner(name=row.Owner_Operator)
+      mine.owners.append(owner_association)
+      records.append(owner)
     
     # Add past owners. Usually a comma-separated list of names
     past_owners = row.Past_Owners
