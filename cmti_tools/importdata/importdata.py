@@ -122,54 +122,6 @@ class converter_factory:
       converters[row.Column] = self.create_converter(row.Column)
     return converters
 
-# The Mapper and MapperManager store information about the data types and default values for each column in the input table.
-class Mapper:
-  def __init__(self, destination_column_name, source_column_name, dtype=None, default=None, converter=None):
-    self.destination_column_name = destination_column_name
-    self.source_column_name = source_column_name
-    self.dtype = dtype
-    self.default = default
-    self.converter = converter
-      
-class MapperManager:
-  
-  def __init__(self):
-    self._mappers = {}
-
-  # Allow access to mappers by column name using the dot operator
-  def __getattr__(self, destination_column_name):
-    if destination_column_name in self._mappers.keys():
-      return self._mappers[destination_column_name]
-    else:
-      raise AttributeError(f"{self.__class__.__name__} has no attribute {destination_column_name}")
-
-  def add_mapper(self, destination_column_name, source_column_name, dtype, default=None, converter=None):
-    self._mappers[destination_column_name] = Mapper(destination_column_name, source_column_name,  dtype, default, converter)
-
-  def __repr__(self):
-    return f"MapperManager with {len(self._mappers)} mappers."
-  
-  def get_mapper_df(self):
-    """
-    Returns a DataFrame with the column name, dtype, and default value for each mapper.
-    
-    :return: pd.DataFrame
-    """
-    
-    df = pd.DataFrame(columns=['DB_Column', 'Input_Column', 'Type', 'Default'])
-    for mapper in self._mappers.values():
-      data = pd.DataFrame(data={'DB_Column': mapper.destination_column_name, 'Input_Column': mapper.source_column_name, 'Type': mapper.dtype, 'Default': mapper.default}, index=[0])
-      df = pd.concat([df, data], ignore_index=True)
-    return df
-    
-  def get_converters(self):
-    """
-    Returns a dictionary of column names and their associated converters.
-
-    :return: dict
-    """
-    return {mapper.destination_column_name: mapper.converter for mapper in self._mappers.items()}
-
 # Abstract Classes implementation
 
 class DataImporter(ABC):
@@ -339,6 +291,7 @@ class WorksheetImporter(DataImporter):
         cmti_defaults[key] = pd.NaT   
         
     cmti_types_table = pd.DataFrame(data={'Column': list(cmti_dtypes.keys()), 'Type': list(cmti_dtypes.values()), 'Default': list(cmti_defaults.values())})
+    
     if convert_units:
 
       if 'dimensionless_value_units' not in kwargs:
@@ -621,7 +574,7 @@ class OMIImporter(DataImporter):
     """
     super().__init__(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_convert_dict)
   
-  def clean_input_table(self, input_table, drop_NA_columns=['MDI_IDENT', 'NAME', 'LONGITUDE', 'LATITUDE'], force_dtypes=True, clean_input_table=False):
+  def clean_input_table(self, input_table, drop_NA_columns=['MDI_IDENT', 'NAME', 'LONGITUDE', 'LATITUDE'], force_dtypes=True):
     omi_dtypes = {
       'MDI_IDENT': 'U',
       'NAME': 'U',
@@ -642,7 +595,6 @@ class OMIImporter(DataImporter):
     omi_types_table = pd.DataFrame(data={'Column': omi_dtypes.keys(), 'Type': omi_dtypes.values(), 'Default': omi_defaults})
 
     converters = converter_factory(omi_types_table).create_converter_dict()
-    converters
 
     if isinstance(input_table, str):
       try:
