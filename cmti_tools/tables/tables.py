@@ -35,12 +35,35 @@ class Mine(Base):
   orebody_type: Mapped[str] = mapped_column(nullable=True)
   orebody_class: Mapped[str] = mapped_column(nullable=True)
   orebody_minerals: Mapped[str] = mapped_column(nullable=True)
+  processing_method: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
   ore_processed: Mapped[float] = mapped_column(nullable=True)
+  ore_processed_unit: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
   development_stage: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
   site_access: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
   construction_year: Mapped[Optional[int]]
   year_opened: Mapped[Optional[int]]
   year_closed: Mapped[Optional[int]]
+  # Likely to be removed:
+  ds_comments: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
+  sa_comments: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
+  shaft_depth: Mapped[Optional[float]]
+  reserves_resources: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
+  sedar: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
+  notes: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
+  other_mineralization: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
+  forcing_features: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
+  feature_references: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
+  noami_status: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
+  noami_site_class: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
+  hazard_class: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
+  hazard_system: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
+  prp_rating: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
+  rehab_plan: Mapped[Optional[bool]] = mapped_column(server_default="False")
+  ews: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
+  ews_rating: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
+
+
+
 
   # Relationships
   commodities = relationship("CommodityRecord", back_populates="mine", cascade="all, delete-orphan")
@@ -139,6 +162,9 @@ class Impoundment(Base):
   parent_tsf_id: Mapped["TailingsFacility"] = mapped_column(ForeignKey("tailings_facilities.id"))
   name: Mapped[str] = mapped_column(nullable=False)
   area: Mapped[float] = mapped_column(nullable=True)
+  area_from_images: Mapped[float] = mapped_column(nullable=True)
+  area_notes: Mapped[str] = mapped_column(nullable=True)
+  raise_type: Mapped[str] = mapped_column(nullable=True)
   capacity: Mapped[float] = mapped_column(nullable=True)
   volume: Mapped[float] = mapped_column(nullable=True)
   acid_generating: Mapped[str] = mapped_column(nullable=True) # TODO: Make this a bool
@@ -160,7 +186,7 @@ class Orebody(Base):
   mine_id: Mapped["Mine"] = mapped_column(ForeignKey("mines.id"), primary_key=True)
   ore_type: Mapped[str] = mapped_column(nullable=True)
   ore_class: Mapped[str] = mapped_column(nullable=True)
-  mineral: Mapped[str] = mapped_column(nullable=True)
+  minerals: Mapped[str] = mapped_column(nullable=True)
   ore_processed: Mapped[float] = mapped_column(nullable=True)
 
   mine = relationship("Mine", back_populates="orebody")
@@ -198,6 +224,7 @@ class OwnerAssociation(Base):
 
   owner_id: Mapped["Owner"] = mapped_column(ForeignKey("owners.id"), primary_key=True)
   mine_id: Mapped["Mine"] = mapped_column(ForeignKey("mines.id"), primary_key=True)
+  is_current_owner: Mapped[bool] = mapped_column(nullable=False, default=False)
   start_year: Mapped[Optional[int]]
   end_year: Mapped[Optional[int]]
 

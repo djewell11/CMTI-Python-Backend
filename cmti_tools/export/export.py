@@ -67,6 +67,7 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
       new_row['Site_Name'] = r.name
       new_row['Site_Type'] = 'Mine'
       new_row['CMIM_ID'] = r.cmdb_id
+      new_row['Last_Revised'] = r.last_revised
       new_row['NAD'] = 83
       new_row['UTM_Zone'] = r.utm_zone
       new_row['Easting'] = r.easting
@@ -75,6 +76,8 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
       new_row['Longitude'] = r.longitude
       new_row['Country'] = "Canada"
       new_row['Province_Territory'] = r.prov_terr
+      new_row['NTS_Area'] = r.nts_area
+      new_row['Mining_District'] = r.mining_district
       new_row['Mine_Type'] = r.mine_type
       new_row['Mining_Method'] = r.mining_method
       new_row['Mine_Status'] = r.mine_status
@@ -87,6 +90,21 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
       new_row['Ore_Processed'] = r.ore_processed
       new_row['Year_Opened'] = r.year_opened
       new_row['Year_Closed'] = r.year_closed
+      # Likely to be removed:
+      new_row['DS_Comments'] = r.ds_comments
+      new_row['SA_Comments'] = r.sa_comments
+      new_row['Shaft_Depth'] = r.shaft_depth
+      new_row['Reserves_Resources'] = r.reserves_resources
+      new_row['Forcing_Features'] = r.forcing_features
+      new_row['Feature_References'] = r.feature_references
+      new_row['NOAMI_Status'] = r.noami_status
+      new_row['NOAMI_Site_Class'] = r.noami_site_class
+      new_row['Hazard_Class'] = r.hazard_class
+      new_row['Hazard_System'] = r.hazard_system
+      new_row['PRP_Rating'] = r.prp_rating
+      new_row['Rehab_Plan'] = r.rehab_plan
+      new_row['EWS'] = r.ews
+      new_row['EWS_Rating'] = r.ews_rating
 
       # Values of children of mine object
       # Commodities
@@ -114,8 +132,11 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
       new_row = new_row | comms
 
       # Owner
-      if len(r.owners) == 1:
-        new_row['Owner'] = r.owners[0].name
+      for owner in r.owners:
+        if owner.is_current_owner:
+          new_row['Owner_Operator'] = owner.name
+        else:
+          new_row['Past_Owner'] = owner.name
 
       # Alias
       alias_list = []
@@ -174,6 +195,8 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
           impoundment_common_values = {}
 
           impoundment_common_values['Tailings_Area'] = impoundment.area
+          impoundment_common_values['Tailings_Area_From_Images'] = impoundment.area_from_images
+          impoundment_common_values['Tailings_Area_Notes'] = impoundment.area_notes
           impoundment_common_values['Tailings_Capacity'] = impoundment.capacity
           impoundment_common_values['Tailings_Volume'] = impoundment.volume
           impoundment_common_values['Acid_Generating'] = impoundment.acid_generating
@@ -182,6 +205,7 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
           impoundment_common_values['Treatment'] = impoundment.treatment
           impoundment_common_values['Rating_Index'] = impoundment.rating_index
           impoundment_common_values['History_Stability_Concerns'] = impoundment.stability_concerns
+          impoundment_common_values['Raise_Type'] = impoundment.raise_type
 
           if not impoundment.is_default:
             impoundment_row = {}
