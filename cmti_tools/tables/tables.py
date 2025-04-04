@@ -48,6 +48,7 @@ class Mine(Base):
   sa_comments: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
   shaft_depth: Mapped[Optional[float]]
   reserves_resources: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
+  other_mineralization: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
   sedar: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
   notes: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
   other_mineralization: Mapped[Optional[str]] = mapped_column(server_default="Unknown")

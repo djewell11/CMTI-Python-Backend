@@ -95,6 +95,7 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
       new_row['SA_Comments'] = r.sa_comments
       new_row['Shaft_Depth'] = r.shaft_depth
       new_row['Reserves_Resources'] = r.reserves_resources
+      new_row['Other_Mineralization'] = r.other_mineralization
       new_row['Forcing_Features'] = r.forcing_features
       new_row['Feature_References'] = r.feature_references
       new_row['NOAMI_Status'] = r.noami_status
