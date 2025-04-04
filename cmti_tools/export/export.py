@@ -134,7 +134,7 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
       # # Owner
       for owner_association in r.owners:
         owner = owner_association.owner
-        if owner.is_current_owner:
+        if owner_association.is_current_owner:
           new_row['Owner_Operator'] = owner.name
         else:
           new_row['Past_Owner'] = owner.name
