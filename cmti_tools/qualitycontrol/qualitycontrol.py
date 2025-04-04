@@ -59,6 +59,8 @@ def convert_unit(value, desired_unit:str, dimensionless_value_unit:str = None, u
   :rtype: int, float
   """
 
+  # TODO: This function is extremely slow and needs optimizing. It currently tries to convert every value entered.
+
   from pint import DimensionalityError
   from pint import UndefinedUnitError
 
