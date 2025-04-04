@@ -132,12 +132,15 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
       new_row = new_row | comms
 
       # # Owner
+      past_owners = []
       for owner_association in r.owners:
         owner = owner_association.owner
         if owner_association.is_current_owner:
           new_row['Owner_Operator'] = owner.name
         else:
-          new_row['Past_Owner'] = owner.name
+          past_owners.append(owner.name)
+      if len(past_owners) > 0:
+        new_row['Past_Owners'] = ', '.join(past_owners)
 
       # Alias
       alias_list = []
