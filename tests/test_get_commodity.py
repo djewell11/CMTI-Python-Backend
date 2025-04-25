@@ -4,7 +4,7 @@ from cmti_tools.tables import Mine
 from pandas import Series
 
 def test_get_commodity():
-    parent_mine = Mine(name='Big Mine', cmdb_id='ON00001', prov_terr='ON')
+    parent_mine = Mine(name='Big Mine', cmdb_id='ON00001', prov_terr='ON', latitude=65., longitude=-65.37,)
     row = Series({'Commodity': 'Copper', 'Cu_Grade': 2.5, 'Cu_Produced':100, 'Cu_Contained': 10_000})
     critical_mineral_list=['Copper']
     name_convert_dict = {'Cu': 'Copper'}

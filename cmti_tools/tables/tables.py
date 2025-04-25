@@ -1,227 +1,286 @@
 from typing import List
 from typing import Optional
 from datetime import datetime
+from pandas import NA, NaT
+
 from sqlalchemy import ForeignKey
-from sqlalchemy import String
+from sqlalchemy import Integer, String, Float, Boolean, DateTime
 from sqlalchemy import text
-from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import registry
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
+from dataclasses import dataclass, field
 
-class Base(DeclarativeBase):
-  pass
+reg = registry() 
 
-class Mine(Base):
+Base = reg.generate_base()
+# class Base(DeclarativeBase):
+#   pass
+
+@reg.mapped
+@dataclass(kw_only=True)
+class Mine:
   __tablename__ = "mines"
+  __allow_unmapped__ = True # dataclasses process fields before SQLAlchemy, so we need to set this to True to allow the dataclass to be mapped
+  __sa_dataclass_metadata_key__ = "sa" # This is used by the dataclass fields to identify the SQLAlchemy mapped fields
 
-  id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-  cmdb_id: Mapped[str] = mapped_column(nullable=False)
-  name: Mapped[str]
-  prov_terr: Mapped[str] = mapped_column(String(2), nullable=False)
-  last_revised: Mapped[datetime] = mapped_column(nullable=True)
-  nad: Mapped[int] = mapped_column(server_default=text("83"))
-  utm_zone: Mapped[Optional[int]]
-  easting: Mapped[Optional[float]]
-  northing: Mapped[Optional[float]]
-  latitude: Mapped[Optional[float]]
-  longitude: Mapped[Optional[float]]
-  nts_area: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
-  mining_district: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
-  mine_type: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
-  mine_status: Mapped[Optional[str]] = mapped_column(server_default = "Unknown")
-  mining_method: Mapped[Optional[str]] = mapped_column(server_default = "Unknown")
-  orebody_type: Mapped[str] = mapped_column(nullable=True)
-  orebody_class: Mapped[str] = mapped_column(nullable=True)
-  orebody_minerals: Mapped[str] = mapped_column(nullable=True)
-  processing_method: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
-  ore_processed: Mapped[float] = mapped_column(nullable=True)
-  ore_processed_unit: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
-  development_stage: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
-  site_access: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
-  construction_year: Mapped[Optional[int]]
-  year_opened: Mapped[Optional[int]]
-  year_closed: Mapped[Optional[int]]
+  # Non-nullable (required values)
+  id: int = field(init=False, metadata={"sa": mapped_column(Integer, primary_key=True, autoincrement=True)})
+  cmdb_id: str = field(default="NULL", metadata={"sa": mapped_column(String, nullable=False)})
+  name: str = field(metadata={"sa": mapped_column(String, nullable=False)})
+  prov_terr: str = field(metadata = {"sa": mapped_column(String(2), nullable=False)})
+  latitude: float = field(metadata={"sa": mapped_column(Float, nullable=False)})
+  longitude: float = field(metadata={"sa": mapped_column(Float, nullable=False)})
+  # Nullable (optional values)
+  last_revised: datetime=field(default=NaT, metadata={"sa": mapped_column(DateTime, nullable=True)})
+  nad: int = field(default=83, metadata={"sa": mapped_column(Integer, nullable=True)})
+  utm_zone: int = field(default=NA, metadata={"sa": mapped_column(Integer, nullable=True)})
+  easting: float = field(default=NA, metadata={"sa": mapped_column(Float, nullable=True)})
+  northing: float = field(default=NA, metadata={"sa": mapped_column(Float, nullable=True)})
+  nts_area: str = field(default="Unknown", metadata={"sa": mapped_column(String, nullable=True)})
+  mining_district: str = field(default="Unknown", metadata={"sa": mapped_column(String, nullable=True)})
+  mine_type: str = field(default="Unknown", metadata={"sa": mapped_column(String, nullable=True)})
+  mine_status: str = field(default="Unknown", metadata={"sa": mapped_column(String, nullable=True)})
+  mining_method: str = field(default="Unknown", metadata={"sa": mapped_column(String, nullable=True)})
+  orebody_type: str = field(default="Unknown", metadata={"sa": mapped_column(String, nullable=True)})
+  orebody_class: str = field(default="Unknown", metadata={"sa": mapped_column(String, nullable=True)})
+  orebody_minerals: str = field(default="Unknown", metadata={"sa": mapped_column(String, nullable=True)})
+  processing_method: str = field(default="Unknown", metadata={"sa": mapped_column(String, nullable=True)})
+  ore_processed: float = field(default=NA, metadata={"sa": mapped_column(Float, nullable=True)})
+  ore_processed_unit: str = field(default="Unknown", metadata={"sa": mapped_column(String, nullable=True)})
+  development_stage: str = field(default="Unknown", metadata={"sa": mapped_column(String, nullable=True)})
+  site_access: str = field(default="Unknown", metadata={"sa": mapped_column(String, nullable=True)})
+  construction_year: int = field(default=NA, metadata={"sa": mapped_column(Integer, nullable=True)})
+  year_opened: int  = field(default=NA, metadata={"sa": mapped_column(Integer, nullable=True)})
+  year_closed: int = field(default=NA, metadata={"sa": mapped_column(Integer, nullable=True)})
   # Likely to be removed:
-  ds_comments: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
-  sa_comments: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
-  shaft_depth: Mapped[Optional[float]]
-  reserves_resources: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
-  other_mineralization: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
-  sedar: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
-  notes: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
-  other_mineralization: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
-  forcing_features: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
-  feature_references: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
-  noami_status: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
-  noami_site_class: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
-  hazard_class: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
-  hazard_system: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
-  prp_rating: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
-  rehab_plan: Mapped[Optional[bool]] = mapped_column(server_default="False")
-  ews: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
-  ews_rating: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
+  ds_comments: Optional[str] = field(default=None, metadata={"sa": mapped_column(String, nullable=True)})
+  sa_comments: Optional[str] = field(default=None, metadata={"sa": mapped_column(String, nullable=True)})
+  shaft_depth: Optional[float] = field(default=NA, metadata={"sa": mapped_column(nullable=True)})
+  reserves_resources: Optional[str] = field(default="Unknown", metadata={"sa": mapped_column(String, nullable=True)})
+  other_mineralization: Optional[str] = field(default="Unknown", metadata={"sa": mapped_column(String, nullable=True)})
+  sedar: Optional[str] = field(default="Unknown", metadata={"sa": mapped_column(String, nullable=True)})
+  notes: Optional[str] = field(default="Unknown", metadata={"sa": mapped_column(String, nullable=True)})
+  other_mineralization: Optional[str] = field(default="Unknown", metadata={"sa": mapped_column(String, nullable=True)})
+  forcing_features: Optional[str] = field(default="Unknown", metadata={"sa": mapped_column(String, nullable=True)})
+  feature_references: Optional[str] = field(default="Unknown", metadata={"sa": mapped_column(String, nullable=True)})
+  noami_status: Optional[str] = field(default="Unknown", metadata={"sa": mapped_column(String, nullable=True)})
+  noami_site_class: Optional[str] = field(default="Unknown", metadata={"sa": mapped_column(String, nullable=True)})
+  hazard_class: Optional[str] = field(default="Unknown", metadata={"sa": mapped_column(String, nullable=True)})
+  hazard_system: Optional[str] = field(default="Unknown", metadata={"sa": mapped_column(String, nullable=True)})
+  prp_rating: Optional[str] = field(default="Unknown", metadata={"sa": mapped_column(String, nullable=True)})
+  rehab_plan: Optional[bool] = field(default=None, metadata={"sa": mapped_column(server_default="False")})
+  ews: Optional[str] = field(default="Unknown", metadata={"sa": mapped_column(String, nullable=True)})
+  ews_rating: Optional[str] = field(default="Unknown", metadata={"sa": mapped_column(String, nullable=True)})
 
   # Relationships
-  commodities = relationship("CommodityRecord", back_populates="mine", cascade="all, delete-orphan")
-  aliases: Mapped[List["Alias"]] = relationship("Alias", back_populates="mine", cascade="all, delete-orphan")
-  owners: Mapped[List["OwnerAssociation"]] = relationship(back_populates = "mine")
-  tailings_facilities: Mapped[List["TailingsFacility"]] = relationship(
-      secondary = "tsf_mine_associations",
-      back_populates = "mines"
-    )
-  orebody = relationship("Orebody", back_populates="mine")
-  references: Mapped[List["Reference"]] = relationship("Reference", back_populates="mine")
+  commodities: "CommodityRecord" = field(default=None, metadata={"sa": relationship("CommodityRecord", back_populates="mine", cascade="all, delete-orphan")})
+  aliases: List["Alias"] = field(default_factory=list, metadata={"sa":relationship("Alias", back_populates="mine", cascade="all, delete-orphan")})
+  owners: List["OwnerAssociation"] = field(default_factory=list, metadata={"sa": relationship(back_populates = "mine")})
+  tailings_facilities: List["TailingsFacility"] = field(
+    default_factory=list, 
+    metadata={
+      "sa": relationship(
+        secondary = "tsf_mine_associations",
+        back_populates = "mines"
+      )
+    }
+  )
+  orebody: "Orebody" = field(default=None, metadata={"sa": relationship("Orebody", back_populates="mine")})
+  references: List["Reference"] = field(default_factory=list, metadata={"sa": relationship("Reference", back_populates="mine")})
 
   def __repr__(self) -> str:
     return f"Mine: {self.name!r}, ID: {self.id!r}, cmdb_id: {self.cmdb_id}"
 
-class CommodityRecord(Base):
+@reg.mapped
+@dataclass(kw_only=True)
+class CommodityRecord:
   __tablename__ = "commodities"
+  __allow_unmapped__ = True # dataclasses process fields before SQLAlchemy, so we need to set this to True to allow the dataclass to be mapped
+  __sa_dataclass_metadata_key__ = "sa" # This is used by the dataclass fields to identify the SQLAlchemy mapped fields
 
-  id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-  commodity: Mapped[str] = mapped_column(primary_key=True)
-  mine_id: Mapped["Mine"] = mapped_column(ForeignKey("mines.id"), primary_key=True)
-  grade: Mapped[str] = mapped_column(nullable=True)
-  grade_unit: Mapped[str] = mapped_column(nullable=True)
-  produced: Mapped[str] = mapped_column(nullable=True)
-  produced_unit: Mapped[str] = mapped_column(nullable=True)
-  contained: Mapped[str] = mapped_column(nullable=True)
-  contained_unit: Mapped[str] = mapped_column(nullable=True)
-  metal_type: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
-  is_critical: Mapped[Optional[bool]]
-  source: Mapped [Optional[str]] = mapped_column(server_default="Unknown")
-  source_id: Mapped [Optional[str]] = mapped_column(server_default="Unknown")
-  source_year_start: Mapped [Optional[int]]
-  source_year_end: Mapped [Optional[int]]
+  id: int = field(init=False, metadata={"sa": mapped_column(Integer, primary_key=True, autoincrement=True)})
+  commodity: str = field(metadata={"sa": mapped_column(String, primary_key=True)})
+  mine_id: "Mine" = field(init=False, metadata={"sa": mapped_column(ForeignKey("mines.id"), primary_key=True)})
+  grade: str = field(default=None, metadata={"sa": mapped_column(String, nullable=True)})
+  grade_unit: str = field(default=None, metadata={"sa": mapped_column(String, nullable=True)})
+  produced: str = field(default=None, metadata={"sa": mapped_column(String, nullable=True)})
+  produced_unit: str = field(default=None, metadata={"sa": mapped_column(String, nullable=True)})
+  contained: str = field(default=None, metadata={"sa": mapped_column(String, nullable=True)})
+  contained_unit: str = field(default=None, metadata={"sa": mapped_column(String, nullable=True)})
+  metal_type: str = field(default=None, metadata={"sa": mapped_column(String, nullable=True, server_default="Unknown")})
+  is_critical: bool = field(default=None, metadata={"sa": mapped_column(Boolean, server_default="False")})
+  source: str = field(default="Unknown", metadata={"sa": mapped_column(String, server_default="Unknown")})
+  source_id: str = field(default="Unknown", metadata={"sa": mapped_column(String, server_default="Unknown")})
+  source_year_start: int = field(default=None, metadata={"sa": mapped_column(Integer, nullable=True)})
+  source_year_end: int = field(default=None, metadata={"sa": mapped_column(Integer, nullable=True)})
 
-  mine = relationship("Mine", back_populates="commodities")
+  mine: "Mine" = field(default=None, metadata={"sa": relationship("Mine", back_populates="commodities")})
 
   def __repr__(self) -> str:
     return f"CommodityRecord: {self.commodity!r}, ID: {self.id!r}, Mine Name: {self.mine.name!r}, mine_id: {self.mine_id}, Produced: {self.produced}"
 
-class Alias(Base):
+@reg.mapped
+@dataclass(kw_only=True)
+class Alias:
   __tablename__ = "aliases"
+  __allow_unmapped__ = True # dataclasses process fields before SQLAlchemy, so we need to set this to True to allow the dataclass to be mapped
+  __sa_dataclass_metadata_key__ = "sa" # This is used by the dataclass fields to identify the SQLAlchemy mapped fields
 
-  alias_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-  mine_id: Mapped["Mine"] = mapped_column(ForeignKey("mines.id"), primary_key=True)
-  alias: Mapped[str] = mapped_column(nullable=False, primary_key=True)
+  alias_id: int = field(default=None, metadata={"sa": mapped_column(Integer, primary_key=True, autoincrement=True)})
+  mine_id: "Mine" = field(default=None, metadata={"sa": mapped_column(ForeignKey("mines.id"), primary_key=True)})
+  alias: str = field(default=None, metadata={"sa": mapped_column(String, nullable=False, primary_key=True)})
 
-  mine = relationship("Mine", back_populates="aliases")
+  # mine = relationship("Mine", back_populates="aliases")
+  mine: "Mine" = field(default=None, metadata={"sa": relationship("Mine", back_populates="aliases")})
 
   def __repr__(self) -> str:
     return f"Alias: {self.alias!r}, Mine Name: {self.mine.name!r}, mine_id: {self.mine_id}"
 
-class Owner(Base):
+@reg.mapped
+@dataclass(kw_only=True)
+class Owner:
   __tablename__ = "owners"
+  __allow_unmapped__ = True # dataclasses process fields before SQLAlchemy, so we need to set this to True to allow the dataclass to be mapped
+  __sa_dataclass_metadata_key__ = "sa" # This is used by the dataclass fields to identify the SQLAlchemy mapped fields
 
-  id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-  name: Mapped[str] = mapped_column(nullable=False)
+  id: int = field(default=None, metadata={"sa": mapped_column(Integer, primary_key=True, autoincrement=True)})
+  name: str = field(default=None, metadata={"sa": mapped_column(String, nullable=False)})
 
-  mines: Mapped[List["OwnerAssociation"]] = relationship(back_populates = "owner")
+  mines: List["OwnerAssociation"] = field(default_factory=list, metadata={"sa": relationship(back_populates = "owner")})
 
   def __repr__(self) -> str:
     return f"Owner: {self.name!r}, ID: {self.id!r}, Mines: {self.mines}"
 
-class TailingsFacility(Base):
+@reg.mapped
+@dataclass(kw_only=True)
+class TailingsFacility:
   __tablename__ = "tailings_facilities"
+  __allow_unmapped__ = True # dataclasses process fields before SQLAlchemy, so we need to set this to True to allow the dataclass to be mapped
+  __sa_dataclass_metadata_key__ = "sa" # This is used by the dataclass fields to identify the SQLAlchemy mapped fields
 
-  id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-  is_default: Mapped[bool] = mapped_column(nullable=False, default=False)
-  cmdb_id: Mapped[Optional[str]] 
-  name: Mapped[Optional[str]]
-  status: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
-  hazard_class: Mapped[Optional[str]] = mapped_column(server_default="Unknown")
+  id: int = field(default=None, metadata={"sa": mapped_column(Integer, primary_key=True, autoincrement=True)})
+  is_default: bool = field(default=None, metadata={"sa": mapped_column(Boolean, nullable=False, default=False)})
+  cmdb_id: str = field(default="NULL", metadata={"sa": mapped_column(String, nullable=False)})
+  name: str = field(default="Unknown", metadata={"sa": mapped_column(String, nullable=False)})
+  status: str = field(default=None, metadata={"sa": mapped_column(String, server_default="Unknown", nullable=True)})
+  hazard_class: str = field(default=None, metadata={"sa": mapped_column(String, server_default="Unknown", nullable=True)})
   # Coordinates are optional for TSFs, will likely be listed as the same as their parent mine
-  latitude: Mapped[Optional[float]]
-  longitude: Mapped[Optional[float]]
-  mines: Mapped[List["Mine"]] = relationship(
-    secondary = "tsf_mine_associations",
-    back_populates = "tailings_facilities")
-  impoundments: Mapped[List["Impoundment"]] = relationship("Impoundment", back_populates = "parentTsf",
-                                                           cascade = "all, delete-orphan")
+  latitude: float = field(default=None, metadata={"sa": mapped_column(Float, nullable=True)})
+  longitude: float = field(default=None, metadata={"sa": mapped_column(Float, nullable=True)})
+  mines: List["Mine"] = field(default_factory=list, metadata={
+    "sa": relationship(
+      secondary = "tsf_mine_associations",
+      back_populates = "tailings_facilities")
+    }
+  )
+  impoundments: List["Impoundment"] = field(default_factory=list, metadata={
+    "sa": relationship("Impoundment", back_populates = "parentTsf", cascade = "all, delete-orphan")
+    }
+  )
   
   def __repr__(self) -> str:
     return f"TailingsFacility: {self.name!r}, ID: {self.id!r}, cmdb_id: {self.cmdb_id}, isDefault: {self.is_default}"
 
-class Impoundment(Base):
+@reg.mapped
+@dataclass(kw_only=True)
+class Impoundment:
   __tablename__ = "impoundments"
+  __allow_unmapped__ = True # dataclasses process fields before SQLAlchemy, so we need to set this to True to allow the dataclass to be mapped
+  __sa_dataclass_metadata_key__ = "sa" # This is used by the dataclass fields to identify the SQLAlchemy mapped fields
 
-  id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-  is_default: Mapped[bool] = mapped_column(nullable=False, default=False)
-  cmdb_id: Mapped[Optional[str]]
-  parent_tsf_id: Mapped["TailingsFacility"] = mapped_column(ForeignKey("tailings_facilities.id"))
-  name: Mapped[str] = mapped_column(nullable=False)
-  area: Mapped[float] = mapped_column(nullable=True)
-  area_from_images: Mapped[float] = mapped_column(nullable=True)
-  area_notes: Mapped[str] = mapped_column(nullable=True)
-  raise_type: Mapped[str] = mapped_column(nullable=True)
-  capacity: Mapped[float] = mapped_column(nullable=True)
-  volume: Mapped[float] = mapped_column(nullable=True)
-  acid_generating: Mapped[str] = mapped_column(nullable=True) # TODO: Make this a bool
-  storage_method: Mapped[str] = mapped_column(nullable=True)
-  max_height: Mapped[float] = mapped_column(nullable=True)
-  treatment: Mapped[str] = mapped_column(nullable=True)
-  rating_index: Mapped[str] = mapped_column(nullable=True)
-  stability_concerns: Mapped[str] = mapped_column(nullable=True)
+  id: int = field(init=False, metadata={"sa": mapped_column(Integer, primary_key=True, autoincrement=True)})
+  is_default: bool = field(default=None, metadata={"sa": mapped_column(Boolean, nullable=False, default=False)})
+  cmdb_id: str = field(default="NULL", metadata={"sa": mapped_column(String, nullable=False)})
+  parent_tsf_id: "TailingsFacility" = field(metadata={"sa":  mapped_column(ForeignKey("tailings_facilities.id"))})
+  name: str = field(default=None, metadata={"sa": mapped_column(String, nullable=False)})
+  area: float = field(default=None, metadata={"sa": mapped_column(Float, nullable=True)})
+  area_from_images: float = field(default=None, metadata={"sa": mapped_column(Float, nullable=True)})
+  area_notes: str = field(default=None, metadata={"sa": mapped_column(String, nullable=True)})
+  raise_type: str = field(default=None, metadata={"sa": mapped_column(String, nullable=True)})
+  capacity: float = field(default=None, metadata={"sa": mapped_column(Float, nullable=True)})
+  volume: float = field(default=None, metadata={"sa": mapped_column(Float, nullable=True)})
+  acid_generating: bool = field(default=None, metadata={"sa": mapped_column(Boolean, nullable=True)}) # TODO: Make this a bool - DONE but not tested
+  storage_method: str = field(default=None, metadata={"sa": mapped_column(String, nullable=True)})
+  max_height: float = field(default=None, metadata={"sa": mapped_column(Float, nullable=True)})
+  treatment: str = field(default=None, metadata={"sa": mapped_column(String, nullable=True)})
+  rating_index: str = field(default=None, metadata={"sa": mapped_column(String, nullable=True)})
+  stability_concerns: str = field(default=None, metadata={"sa": mapped_column(String, nullable=True)})
 
-  parentTsf = relationship("TailingsFacility", back_populates="impoundments")
+  parentTsf: "TailingsFacility" = field(metadata={"sa": relationship("TailingsFacility", back_populates="impoundments")})
 
   def __repr__(self) -> str:
     return f"Impoundment: {self.name!r}, ID: {self.id!r}, cmdb_id: {self.cmdb_id}"
 
-class Orebody(Base):
+
+@reg.mapped
+@dataclass(kw_only=True)
+class Orebody:
   __tablename__ = "orebodies"
+  __allow_unmapped__ = True # dataclasses process fields before SQLAlchemy, so we need to set this to True to allow the dataclass to be mapped
+  __sa_dataclass_metadata_key__ = "sa" # This is used by the dataclass fields to identify the SQLAlchemy mapped fields
 
-  id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-  mine_id: Mapped["Mine"] = mapped_column(ForeignKey("mines.id"), primary_key=True)
-  ore_type: Mapped[str] = mapped_column(nullable=True)
-  ore_class: Mapped[str] = mapped_column(nullable=True)
-  minerals: Mapped[str] = mapped_column(nullable=True)
-  ore_processed: Mapped[float] = mapped_column(nullable=True)
+  id: int = field(init=False, metadata={"sa": mapped_column(Integer, primary_key=True, autoincrement=True)})
+  mine_id: "Mine" = field(default=None, metadata={"sa": mapped_column(ForeignKey("mines.id"), primary_key=True)})
+  ore_type: str = field(default=None, metadata={"sa": mapped_column(String, nullable=True)})
+  ore_class: str = field(default=None, metadata={"sa": mapped_column(String, nullable=True)})
+  minerals: str = field(default=None, metadata={"sa": mapped_column(String, nullable=True)})
+  ore_processed: float = field(default=None, metadata={"sa": mapped_column(nullable=True)})
 
-  mine = relationship("Mine", back_populates="orebody")
+  mine: "Mine" = field(metadata={"sa": relationship("Mine", back_populates="orebody")})
 
   def __repr__(self) -> str:
     return f"Orebody: {self.ore_type!r}, ID: {self.id!r}, mineral: {self.mineral}, Mine Name: {self.mine.name}, mine_id: {self.mine_id}"
 
-class Reference(Base):
+@reg.mapped
+@dataclass(kw_only=True)
+class Reference:
   __tablename__ = "references"
+  __allow_unmapped__ = True # dataclasses process fields before SQLAlchemy, so we need to set this to True to allow the dataclass to be mapped
+  __sa_dataclass_metadata_key__ = "sa" # This is used by the dataclass fields to identify the SQLAlchemy mapped fields
 
-  id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-  mine_id: Mapped["Mine"] = mapped_column(ForeignKey("mines.id"), primary_key=True)
-  source_id: Mapped[str] = mapped_column(nullable=False, primary_key=True)
-  source: Mapped[str] = mapped_column(nullable=False)
-  link: Mapped[str] = mapped_column(nullable=True, server_default="Unknown")
+  id: int = field(init=False, metadata={"sa": mapped_column(primary_key=True, autoincrement=True)})
+  mine_id: "Mine" = field(default=None, metadata={"sa": mapped_column(ForeignKey("mines.id"), primary_key=True)})
+  source_id: str = field(default=None, metadata={"sa": mapped_column(String, nullable=False, primary_key=True)})
+  source: str = field(default=None, metadata={"sa": mapped_column(String, nullable=False)})
+  link: str = field(default=None, metadata={"sa": mapped_column(String, nullable=True, server_default="Unknown")})
 
-  mine = relationship("Mine", back_populates="references")
+  mine: "Mine" = field(metadata={"sa": relationship("Mine", back_populates="references")})
 
   def __repr__(self):
     return f"Reference: {self.source}, Source_ID: {self.source_id}, Mine Name: {self.mine.name}, mine_id: {self.mine_id}"
 
-class TailingsAssociation(Base):
+@reg.mapped
+@dataclass(kw_only=True)
+class TailingsAssociation:
   __tablename__ = "tsf_mine_associations"
+  __allow_unmapped__ = True # dataclasses process fields before SQLAlchemy, so we need to set this to True to allow the dataclass to be mapped
+  __sa_dataclass_metadata_key__ = "sa" # This is used by the dataclass fields to identify the SQLAlchemy mapped fields
 
-  mine_id: Mapped["Mine"] = mapped_column(ForeignKey("mines.id"), primary_key=True)
-  tsf_id: Mapped["TailingsFacility"] = mapped_column(ForeignKey("tailings_facilities.id"), primary_key=True)
-  start_year: Mapped[Optional[int]]
-  end_year: Mapped[Optional[int]]
+  mine_id: "Mine" = field(metadata={"sa": mapped_column(ForeignKey("mines.id"), primary_key=True)})
+  tsf_id: "TailingsFacility" = field(metadata={"sa": mapped_column(ForeignKey("tailings_facilities.id"), primary_key=True)})
+  start_year: int = field(default=None, metadata={"sa": mapped_column(Integer, nullable=True)})
+  end_year: int = field(default=None, metadata={"sa": mapped_column(Integer, nullable=True)})
 
   def __repr__(self) -> str:
     return f"tsf_id: {self.tsf_id!r}, mine_id: {self.mine_id}"
 
-class OwnerAssociation(Base):
+@reg.mapped
+@dataclass(kw_only=True)
+class OwnerAssociation:
   __tablename__ = "owner_associations"
+  __allow_unmapped__ = True # dataclasses process fields before SQLAlchemy, so we need to set this to True to allow the dataclass to be mapped
+  __sa_dataclass_metadata_key__ = "sa" # This is used by the dataclass fields to identify the SQLAlchemy mapped fields
 
-  owner_id: Mapped["Owner"] = mapped_column(ForeignKey("owners.id"), primary_key=True)
-  mine_id: Mapped["Mine"] = mapped_column(ForeignKey("mines.id"), primary_key=True)
-  is_current_owner: Mapped[bool] = mapped_column(nullable=False, default=False)
-  start_year: Mapped[Optional[int]]
-  end_year: Mapped[Optional[int]]
+  owner_id: "Owner" = field(init=False, metadata={"sa": mapped_column(ForeignKey("owners.id"), primary_key=True)})
+  mine_id: "Mine" = field(init= False, default=None, metadata={"sa": mapped_column(ForeignKey("mines.id"), primary_key=True)})
+  is_current_owner: bool = field(default=None, metadata={"sa": mapped_column(Boolean, nullable=False, default=False)})
+  start_year: int = field(default=None, metadata={"sa": mapped_column(Integer, nullable=True)})
+  end_year: int = field(default=None, metadata={"sa": mapped_column(Integer, nullable=True)})
 
-  owner: Mapped["Owner"] = relationship("Owner", back_populates="mines")
-  mine: Mapped["Mine"] = relationship("Mine", back_populates="owners")
+  owner: "Owner" = field(metadata={"sa": relationship("Owner", back_populates="mines")})
+  mine: "Mine" = field(metadata={"sa": relationship("Mine", back_populates="owners")})
 
   def __repr__(self) -> str:
     return f"Owner ID: {self.owner_id}, mine_id: {self.mine_id}"

@@ -1,7 +1,7 @@
-from cmti_tools.importdata import WorksheetImporter, OMIImporter, OAMImporter, BCAHMImporter, NSMTDImporter
-from cmti_tools import create_module_variables
 import pandas as pd
 from pytest import approx
+from cmti_tools.importdata.source_importers import *
+from cmti_tools import create_module_variables
 
 module_variables = create_module_variables()
 name_dict = module_variables.get('name_convert_dict')

@@ -1,6 +1,6 @@
-from cmti_tools.importdata import WorksheetImporter, OMIImporter, OAMImporter, BCAHMImporter
-from cmti_tools import create_module_variables
 from pandas import Series, read_csv
+from cmti_tools.importdata.source_importers import *
+from cmti_tools import create_module_variables
 
 module_variables = create_module_variables()
 name_dict = module_variables.get('name_convert_dict')
@@ -53,10 +53,13 @@ def test_create_row_records_worksheet():
         'Orebody_Class': 'Suplhide',
         'Ore_Minerals': 'Pyrite, Gold',
         'Ore_Processed': 1000,
+        'Ore_Processed_Unit': 'tonnes',
         'Construction_Year': 1901,
         'Year_Opened': 1902,
         'Year_Closed': 2002,
         'Tailings_Area': 500,
+        'Tailings_Area_From_Images': 550,
+        'Tailings_Area_Notes': 'None',
         'Tailings_Volume': 2500,
         'Tailings_Capacity': 4000,
         'Tailings_Storage_Method': 'Dry Stack',
@@ -64,11 +67,28 @@ def test_create_row_records_worksheet():
         'Acid_Generating': 'True',
         'Treatment': 'None',
         'Rating_Index': 'A',
-        'History_Stability_Concerns': 'None'
+        'History_Stability_Concerns': 'None',
+        # Likely to be removed:
+        'Raise_Type': 'Upstream',
+        'DS_Comments': 'None',
+        'SA_Comments': 'None',
+        'Shaft_Depth': 100,
+        'Reserves_Resources': 1000,
+        'SEDAR': None,
+        'Notes': 'None',
+        'Other_Mineralization': 'None',
+        'Forcing_Features': 'None',
+        'Feature_References': 'None',
+        'NOAMI_Status': 'Active',
+        'NOAMI_Site_Class': 'Class 1',
+        'Hazard_Class': 'Low',
+        'Hazard_System': 'CWS',
+        'PRP_Rating': 'A',
+        'Rehab_Plan':True ,
+        'EWS': 'PLNF',
+        'EWS_Rating': 'A',
     })
     row_records = worksheet_importer.create_row_records(row, comm_col_count=1, source_col_count=1)
-    for record in row_records:
-        print(record)
     assert len(row_records) == 10
 
 # Test the Ontario Mineral Inventory (OMI)
@@ -144,3 +164,24 @@ def test_create_row_records_BCAHM():
         })
     row_records = bcahm_importer.create_row_records(row)
     assert len(row_records) == 11
+
+def test_create_row_records_NSMTD():
+    nsmtd_importer = NSMTDImporter(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_dict)
+    row = Series(
+        {
+            'OBJECTID': 1,
+            'Name': 'Gold Mine',
+            'Latitude': '45.123',
+            'Longitude': '-63.456',
+            'Tonnes': 1000,
+            'Commodity': 'Au',
+            'Crusher1': 450,
+            'Crusher2': 600,
+            'Dates': '1876-1918',
+            'InfoSource': 'www dot some website dot com',
+            'AreaHa': 27,
+            'Shape_Area': 27000
+        }
+    )
+    row_records = nsmtd_importer.create_row_records(row)
+    assert len(row_records) == 6
