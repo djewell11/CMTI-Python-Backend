@@ -269,7 +269,7 @@ class WorksheetImporter(DataImporter):
     # References
     source_columns = [f"Source_{i}" for i in range(1, source_col_count+1)]
     for col in source_columns:
-      source = str(row[col])
+      source = row[col]
       if pd.notna(source) and source != "Unknown":
         source_id = str(row[f"{col}_ID"])
         link = str(row[f"{col}_Link"])
