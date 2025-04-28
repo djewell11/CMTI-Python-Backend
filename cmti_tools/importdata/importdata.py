@@ -1,22 +1,13 @@
 import os
 import pandas as pd
-# from dataclasses import fields
 from configparser import ConfigParser
 from datetime import datetime
-# from configparser import Error as ConfigError
-# from sqlalchemy.orm import Session
 from sqlalchemy.orm import DeclarativeBase # Imported for typehints
-# from sqlalchemy.exc import IntegrityError
 from abc import ABC, abstractmethod
-# from warnings import warn
 
 import cmti_tools.tools as tools
-# from cmti_tools.tables import *
-
-# from cmti_tools.idmanager import ProvID
 from cmti_tools.idmanager import ID_Manager
 from cmti_tools.qualitycontrol import convert_unit
-# from cmti_tools.datamappers import mappings
 
 pd.options.mode.chained_assignment = None
 
@@ -139,7 +130,6 @@ class DataImporter(ABC):
     Initializes the DataImporter class with optional configurations for 
     name conversion, critical minerals, and metals classification.
     """
-    # self.records = []
 
     self.id_manager = ID_Manager()
 
@@ -193,7 +183,6 @@ class DataImporter(ABC):
     table_values = {k: series[v] for k, v in datamapping.items() if v in series}
     return table(**table_values)
 
-
   def coerce_dtypes(self, input_types_table, input_table:pd.DataFrame) -> pd.DataFrame:
     """
     Coerces the data types of the input table based on the types_table.
@@ -214,3 +203,28 @@ class DataImporter(ABC):
         print(f"Error coercing column {column}: {e}")
         raise
     return input_table
+  
+  def map_to_worksheet(self, worksheet:pd.DataFrame, source:pd.DataFrame, mapping:dict) -> pd.DataFrame:
+    """
+    Maps source DataFrame to worksheet DataFrame using the provided mapping dictionary.
+    Creates a new DataFrame with the same columns as the worksheet and populates it with values from the source DataFrame.
+
+    :param worksheet: The DataFrame to be populated.
+    :type worksheet: pandas.DataFrame.
+
+    :param source: The DataFrame to be mapped.
+    :type source: pandas.DataFrame.
+
+    :param mapping: A dictionary mapping source columns to worksheet columns.
+    :type mapping: dict.
+
+    :return: The populated worksheet DataFrame.
+    """
+    source_df = pd.DataFrame(columns=worksheet.columns)
+
+    for source_col, worksheet_col in mapping.items():
+      if source_col in source.columns:
+        source_df[worksheet_col] = source[source_col]
+      # else:
+      #   raise KeyError(f"Column '{source_col}' not found in source DataFrame.")
+    return source_df

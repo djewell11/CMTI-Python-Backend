@@ -1,6 +1,8 @@
 import pandas as pd
 from pytest import approx
-from cmti_tools.importdata.source_importers import *
+
+import cmti_tools.importdata.source_importers as importers
+import cmti_tools.datamappers as datamappers
 from cmti_tools import create_module_variables
 
 module_variables = create_module_variables()
@@ -59,7 +61,7 @@ def test_clean_table_data_worksheet():
     },
     index=[0]
     )
-    worksheet_importer = WorksheetImporter(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_dict)
+    worksheet_importer = importers.WorksheetImporter(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_dict)
     cleaned_data = worksheet_importer.clean_input_table(cmti_df)
 
     assert cleaned_data.dtypes['NAD'] == 'Int64'
@@ -67,30 +69,57 @@ def test_clean_table_data_worksheet():
     assert cleaned_data.loc[0, 'Tailings_Area'] == approx(0.025, 0.1)
     assert cleaned_data.loc[0, 'UTM_Zone'] == 20
 
-def test_clean_table_omi():
-    omi_df = pd.DataFrame(data={
-        'MDI_IDENT': 'MDI130M', 
-        'NAME': 'Skelin Quarry', 
-        'STATUS': 'Inactive', 
-        'TWP_AREA': 'TWP 1',
-        'P_COMMOD': 'COPPER',
-        'S_COMMOD': 'ZINC',
-        'ALL_NAMES': 'Speyside Quarry, S-Skelin Quarry',
-        'LONGITUDE': -79.961,
-        'LATITUDE': 43.590,
-        'RGP_DIST': 'Southern Ontario',
-        'DEP_CLASS': 'Quarry',
-        'LL_DATUM': 'NAD83',
-        'DETAIL': 'some website dot com'
-    },
-    index = [0]
-    )
+_omi_df = pd.DataFrame(data={
+    'MDI_IDENT': 'MDI130M', 
+    'NAME': 'Skelin Quarry', 
+    'STATUS': 'Inactive', 
+    'TWP_AREA': 'TWP 1',
+    'P_COMMOD': 'COPPER',
+    'S_COMMOD': 'ZINC',
+    'ALL_NAMES': 'Speyside Quarry, S-Skelin Quarry',
+    'LONGITUDE': -79.961,
+    'LATITUDE': 43.590,
+    'RGP_DIST': 'Southern Ontario',
+    'DEP_CLASS': 'Quarry',
+    'LL_DATUM': 'NAD83',
+    'DETAIL': 'some website dot com'
+},
+index = [0]
+)
 
-    omi_importer = OMIImporter(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_dict)
-    cleaned_data = omi_importer.clean_input_table(omi_df)
+_omi_importer = importers.OMIImporter(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_dict)
+
+def test_clean_table_omi():
+    # omi_df = pd.DataFrame(data={
+    #     'MDI_IDENT': 'MDI130M', 
+    #     'NAME': 'Skelin Quarry', 
+    #     'STATUS': 'Inactive', 
+    #     'TWP_AREA': 'TWP 1',
+    #     'P_COMMOD': 'COPPER',
+    #     'S_COMMOD': 'ZINC',
+    #     'ALL_NAMES': 'Speyside Quarry, S-Skelin Quarry',
+    #     'LONGITUDE': -79.961,
+    #     'LATITUDE': 43.590,
+    #     'RGP_DIST': 'Southern Ontario',
+    #     'DEP_CLASS': 'Quarry',
+    #     'LL_DATUM': 'NAD83',
+    #     'DETAIL': 'some website dot com'
+    # },
+    # index = [0]
+    # )
+
+    # omi_importer = importers.OMIImporter(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_dict)
+    cleaned_data = _omi_importer.clean_input_table(_omi_df)
 
     assert cleaned_data.dtypes['STATUS'] == 'object'
     assert cleaned_data.dtypes['LONGITUDE'] == 'float64'
+
+def test_omi_to_worksheet():
+    
+    worksheet_df = pd.DataFrame(columns=datamappers.worksheet_table_mapping.values())
+    omi_sheet = _omi_importer.map_to_worksheet(worksheet=worksheet_df, source=_omi_df, mapping=datamappers.omi_mapping)
+
+    assert omi_sheet['Source_1_ID'][0] == 'MDI130M'
 
 def test_clean_table_oam():
 
@@ -117,7 +146,7 @@ def test_clean_table_oam():
         }
     , index=[0])
 
-    oam_importer = OAMImporter(oam_comm_names=oam_comm_names, cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_dict)
+    oam_importer = importers.OAMImporter(oam_comm_names=oam_comm_names, cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_dict)
     clean_data = oam_importer.clean_input_table(oam_df)
 
     assert clean_data['Lat_DD'][0] == 54.766
@@ -168,7 +197,7 @@ def test_clean_table_bcahm():
         "Last_Year": "2001"
     }, index=[0])
     
-    bcahm_importer = BCAHMImporter(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_dict)
+    bcahm_importer = importers.BCAHMImporter(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_dict)
     clean_data = bcahm_importer.clean_input_table(bcahm_df)
     assert clean_data.dtypes['First_Year'] == 'Int64'
     assert clean_data.dtypes['UTM_NORT'] == 'Int64'
@@ -185,7 +214,7 @@ def test_clean_table_nsmtd():
         'AreaHa': 0.996788
     }, index=[0])
 
-    nsmtd_importer = NSMTDImporter(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_dict)
+    nsmtd_importer = importers.NSMTDImporter(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_dict)
     clean_data = nsmtd_importer.clean_input_table(nsmtd_df)
 
     assert clean_data.dtypes['Tonnes'] == 'Int64'
