@@ -232,7 +232,7 @@ class WorksheetImporter(DataImporter):
     # Commodities
     comm_columns = [f"Commodity{i}" for i in range(1, comm_col_count+1)]
     for col in comm_columns:
-      if pd.notna(row[col]):
+      if pd.notna(row[col]) and row[col] != "Unknown":
         commodity_record = tools.get_commodity(row, col, self.cm_list, self.name_convert_dict, self.metals_dict, mine)
         records.append(commodity_record)
   
@@ -248,7 +248,7 @@ class WorksheetImporter(DataImporter):
         records.append(alias)
 
     # Owners
-    # This pattern is from the Basic Reltionship Patterns guide in the SQLAlchemy documentation
+    # This pattern is from the Basic Relationship Patterns guide in the SQLAlchemy documentation
     if pd.notna(row.Owner_Operator):
       owner = Owner(name=row.Owner_Operator)
       owner_association = OwnerAssociation(owner=owner, mine= mine, is_current_owner=True)
@@ -346,7 +346,7 @@ class WorksheetImporter(DataImporter):
       stability_concerns = row.History_Stability_Concerns
     )
     impoundment.parentTsf = parent_TSF
-    return impoundment  
+    return impoundment
 
 class OMIImporter(DataImporter):
   def __init__(self, cm_list:list='config', metals_dict:dict='config', name_convert_dict:dict='config', force_dtypes:bool=True):
