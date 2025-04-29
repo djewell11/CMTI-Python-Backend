@@ -118,7 +118,7 @@ nsmtd_mapping = {
     'Longitude': 'Longitude',
     'Tonnes': 'Ore_Processed',
     'Commodity': 'Commodity1',
-    'Dates': 'Start_Date',
+    'Dates': 'Year_Opened',
     'InfoSource': 'Source_2',
     # 'AreaHa': 'Tailings_Area',
     'Shape_Area': 'Tailings_Area',
