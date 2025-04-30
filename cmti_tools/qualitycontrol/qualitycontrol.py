@@ -101,47 +101,6 @@ def convert_unit(value, desired_unit:str, dimensionless_value_unit:str = None, u
     raise
     
 # Data Grading
-# TODO: Tidy this up and move it into a class
-
-points_assignment = {
-    'Mine_Type': 3,
-    'Mine_Status': 4,
-    'Owner_Operator': 5,
-    'Dev_Stage': 3,
-    'Site_Access': 2,
-    'Orebody_Type': 1,
-    'Orebody_Class': 1,
-    'Ore_Minerals': 2,
-    'Ore_Processed': 4,
-    'Forcing_Features': 1,
-    'Raise_Type': 2,
-    'History_Stability_Concerns': 2,
-    'Acid_Generating': 2,
-    'Current_Max_Height': 4,
-    'Tailings_Storage_Method': 4,
-    'Tailings_Volume': 5,
-    'Tailings_Capacity': 5,
-    'Tailings_Area': 5
-  }
-
-comm_dict = {
-    'Commodity': 4,
-    'Commodity_Grade': 5,
-    'Commodity_Contained': 3,
-    'Commodity_Produced': 2
-  }
-
-year_dict = {
-    # Values for all keys should be the same
-    'Construction_Year': 3,
-    'Year_Opened': 3
-  }
-
-source_dict = {
-    'Source': 2,
-    'Source_Link': 3,
-    'Source_ID': 5
-  }
 
 class DataGrader:
 
@@ -198,13 +157,13 @@ class DataGrader:
       comm_points = 0
       if pd.notna(comm):
         comm = comm.strip()
-        comm_points += comm_dict['Commodity']
+        comm_points += self.comms['Commodity']
         if f"{comm}_Produced" in row.index.to_list() and pd.notna(row[f"{comm}_Produced"]):
-          comm_points += comm_dict['Commodity_Produced']
+          comm_points += self.comms['Commodity_Produced']
         if f"{comm}_Contained" in row.index.to_list() and pd.notna(row[f"{comm}_Contained"]):
-          comm_points += comm_dict['Commodity_Contained']
+          comm_points += self.comms['Commodity_Contained']
         if f"{comm}_Grade" in row.index.to_list() and pd.notna(row[f"{comm}_Grade"]):
-          comm_points += comm_dict['Commodity_Grade']
+          comm_points += self.comms['Commodity_Grade']
       comm_points_list.append(comm_points)
 
     return max(comm_points_list)
@@ -223,11 +182,11 @@ class DataGrader:
     for i in range(1, self.source_col_count+1):
       source_points = 0
       if pd.notna(row[f'Source_{i}']):
-        source_points += source_dict['Source']
+        source_points += self.source['Source']
         if pd.notna(row[f'Source_{i}_ID']):
-          source_points += source_dict['Source_ID']
+          source_points += self.source['Source_ID']
         elif pd.notna(row[f'Source_{i}_Link']) and pd.isna(row[f'Source_{i}_ID']):
-          source_points += source_dict['Source_Link']
+          source_points += self.source['Source_Link']
 
       points_list.append(source_points)
     return max(points_list)

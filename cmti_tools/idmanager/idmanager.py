@@ -1,5 +1,5 @@
-from sqlalchemy import select
 from cmti_tools.tables import Mine
+from pandas import Series # For type hinting
 
 class ProvID:
   """
@@ -40,7 +40,28 @@ class ProvID:
     except ValueError:
       raise ValueError("formatted_id must be a string. Please use the format_id method to generate a new formatted_id.")
 
+  def get_max_id(self, mine_ids: list | Series) -> int:
+    """
+    Query the list of IDs to get the highest ID for a given provID.
+
+    :param mine_ids: list or Series of mine IDs. Entries must be in the format of 'XX000001' where XX is the province/territory code.
+    :type mine_ids: list | Pandas.Series
+
+    :return: int
+    """
+    if isinstance(mine_ids, Series):
+      mine_ids = mine_ids.tolist()
+    
+    ids = []
+    
+    for mine_id in mine_ids:
+      if mine_id.startswith(self.code):
+        id_num = int(mine_id[2:])
+        ids.append(id_num)
+    return max(ids) if len(ids) > 0 else 0
+  
   def query_session_id(self, session):
+    # Probably deperacted now, leaving it to not break anything
     """
     Query the session to get the highest ID for a given provID.
 
@@ -52,6 +73,7 @@ class ProvID:
       id_num = int(mine_id[2:]) # The integer portion of the ID
       ids.append(id_num)
     return max(ids) if len(ids) > 0 else 0
+    
 
   def format_id(self, id_val:int) -> str:
     """
@@ -87,37 +109,45 @@ class ID_Manager:
 
   def __init__(self):
     # Create a list to hold all ProvID objects
-    self.all = []
+    self.prov_ids = {}
+    for code in ['AB', 'BC', 'MB', 'NB', 'NL', 'NS', 'ON', 'PE', 'QC', 'SK', 'NT', 'NU', 'YT']:
+      self._add_code(code)
 
-    # Initialize highest ID for each prov_terr
-    self.AB = ProvID('AB')
-    self.all.append(self.AB)
-    self.BC = ProvID('BC')
-    self.all.append(self.BC)
-    self.MB = ProvID('MB')
-    self.all.append(self.MB)
-    self.NB = ProvID('NB')
-    self.all.append(self.NB)
-    self.NL = ProvID('NL')
-    self.all.append(self.NL)
-    self.NS = ProvID('NS')
-    self.all.append(self.NS)
-    self.ON = ProvID('ON')
-    self.all.append(self.ON)
-    self.PE = ProvID('PE')
-    self.all.append(self.PE)
-    self.QC = ProvID('QC')
-    self.all.append(self.QC)
-    self.SK = ProvID('SK')
-    self.all.append(self.SK)
-    self.NT = ProvID('NT')
-    self.all.append(self.NT)
-    self.NU = ProvID('NU')
-    self.all.append(self.NU)
-    self.YT = ProvID('YT')
-    self.all.append(self.YT)
+  def __getattr__(self, code):
+    # Allows dot access to prov_ids via code (e.g., id_manager.ON)
+    if code in self.prov_ids:
+      return self.prov_ids[code]
+    else:
+      raise AttributeError(f"'{self.__class__.__name__}' object has no ProvID '{code}'")
 
-  def update_all(self, session):
+  def _add_code(self, code:str):
+    """
+    Adds a ProvID via code to the ID_Manager.
+
+    :param code: str
+    """
+    if code not in self.prov_ids:
+      prov_id = ProvID(code)
+      self.prov_ids[code] = prov_id
+    else:
+      raise ValueError(f"Code '{code}' already exists in ID_Manager.")
+    
+  def update_prov_ids(self, mine_ids: list | Series):
+    """
+    Updates the max_id for each provID object based on the provided list of mine IDs.
+
+    :param mine_ids: list or Series of mine IDs. Entries must be in the format of 'XX000001' where XX is the province/territory code.
+    :type mine_ids: list | Pandas.Series
+
+    :param mine_ids: list or Series of mine IDs
+    """
+    for prov in self.prov_ids.values():
+      max_id = prov.get_max_id(mine_ids)
+      if max_id > prov.max_id:
+        prov.update_id(max_id)
+
+  def update_all_session(self, session):
+    # Probably deprecated now, leaving it to not break anything
     for prov in self.all:
       session_max = prov.query_session_id(session)
       if session_max > prov.max_id:
