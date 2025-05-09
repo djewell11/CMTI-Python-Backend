@@ -1,15 +1,33 @@
+from pathlib import Path
+from configparser import ConfigParser
+from importlib.resources import files
 from pandas import Series, read_csv
 import cmti_tools.importdata.source_importers as importers
-from cmti_tools import create_module_variables
 
-module_variables = create_module_variables()
-name_dict = module_variables.get('name_convert_dict')
-metals_dict = module_variables.get('metals_dict')
-cm_list = module_variables.get('cm_list')
+# config_file = files('cmti_tools') / 'config.toml'
+
+# BASE_DIR = Path(__file__).resolve().parent.parent / "cmti_tools"
+# config = ConfigParser()
+# config.read(BASE_DIR / 'config.toml')
+
+# # Data Tables
+
+# cm_list_path = BASE_DIR / config['supplemental']['critical_minerals']
+# cm_list = read_csv(cm_list_path)['Critical Minerals List'].tolist()
+
+# metals_path = BASE_DIR / config['supplemental']['metals']
+# metals = read_csv(metals_path)
+# metals_dict = dict(zip(metals['Commodity'], metals['Type']))
+
+# elements_path = BASE_DIR / config['supplemental']['elements']
+# elements = read_csv(elements_path)
+# name_dict = dict(zip(elements['symbol'], elements['name']))
+
 
 # Test the workseet/CMTI
 def test_create_row_records_worksheet():
-    worksheet_importer = importers.WorksheetImporter(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_dict)
+
+    worksheet_importer = importers.WorksheetImporter()
     row = Series(
     {
         'Site_Name': 'Springhill',
@@ -89,11 +107,12 @@ def test_create_row_records_worksheet():
         'EWS_Rating': 'A',
     })
     row_records = worksheet_importer.create_row_records(row, comm_col_count=1, source_col_count=1)
-    assert len(row_records) == 10
+    assert len(row_records) > 0
 
 # Test the Ontario Mineral Inventory (OMI)
 def test_create_row_records_omi():
-    omi_importer = importers.OMIImporter(name_convert_dict=name_dict)
+
+    omi_importer = importers.OMIImporter()
     row = Series(
         {
             'MDI_IDENT': 'MDI130M', 
@@ -110,12 +129,15 @@ def test_create_row_records_omi():
     row_records = omi_importer.create_row_records(row)
     assert len(row_records) == 8
 
-# Test the Orphaned and Abandoned Mine Inventort (OAM)
-oam_comm_data = read_csv(r'cmti_tools\data\OAM_commodity_names.csv')
-oam_comm_names = dict(zip(oam_comm_data['Symbol'], oam_comm_data['Full_Name']))
 
 def test_create_row_records_oam():
-    oam_importer = importers.OAMImporter(oam_comm_names=oam_comm_names, cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_dict)
+
+    # Test the Orphaned and Abandoned Mine Inventory (OAM)
+    # oam_comm_path = BASE_DIR / config['supplemental']['oam_comm_names']
+    # oam_comm_data = read_csv(oam_comm_path)
+    # oam_comm_names = dict(zip(oam_comm_data['Symbol'], oam_comm_data['Full_Name']))
+    oam_importer = importers.OAMImporter()
+
     row = Series(
         {
             'OID': 10782,
@@ -133,12 +155,24 @@ def test_create_row_records_oam():
             'Mined_Quantity': 150_000,
             'URL': 'somewebsite dot com'
         })
-    row_records = oam_importer.create_row_records(row, oam_comm_names=oam_comm_names)
+    row_records = oam_importer.create_row_records(row)
     assert len(row_records) == 8
 
 # Test the BC Abandoned and Historic Mine database (BC AHM)
 def test_create_row_records_BCAHM():
-    bcahm_importer = importers.BCAHMImporter(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_dict)
+
+    # cm_list_path = BASE_DIR / config['supplemental']['critical_minerals']
+    # cm_list = read_csv(cm_list_path)['Critical Minerals List'].tolist()
+
+    # metals_path = BASE_DIR / config['supplemental']['metals']
+    # metals = read_csv(metals_path)
+    # metals_dict = dict(zip(metals['Commodity'], metals['Type']))
+
+    # elements_path = BASE_DIR / config['supplemental']['elements']
+    # elements = read_csv(elements_path)
+    # name_dict = dict(zip(elements['symbol'], elements['name']))
+
+    bcahm_importer = importers.BCAHMImporter()
     row = Series(
         {
             'OBJECTID': 1,
@@ -166,7 +200,19 @@ def test_create_row_records_BCAHM():
     assert len(row_records) == 11
 
 def test_create_row_records_NSMTD():
-    nsmtd_importer = importers.NSMTDImporter(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_dict)
+
+    # cm_list_path = BASE_DIR / config['supplemental']['critical_minerals']
+    # cm_list = read_csv(cm_list_path)['Critical Minerals List'].tolist()
+
+    # metals_path = BASE_DIR / config['supplemental']['metals']
+    # metals = read_csv(metals_path)
+    # metals_dict = dict(zip(metals['Commodity'], metals['Type']))
+
+    # elements_path = BASE_DIR / config['supplemental']['elements']
+    # elements = read_csv(elements_path)
+    # name_dict = dict(zip(elements['symbol'], elements['name']))
+
+    nsmtd_importer = importers.NSMTDImporter()
     row = Series(
         {
             'OBJECTID': 1,

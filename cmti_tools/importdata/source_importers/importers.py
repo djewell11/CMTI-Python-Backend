@@ -1,3 +1,4 @@
+from pathlib import Path
 import pandas as pd
 from sqlalchemy.orm import DeclarativeBase # Imported for typehints
 from datetime import datetime
@@ -7,6 +8,8 @@ import cmti_tools.tools as tools
 from cmti_tools.tables import Mine, TailingsFacility, Impoundment, Owner, OwnerAssociation, Alias, Reference, CommodityRecord, Orebody
 from cmti_tools.importdata import DataImporter, converter_factory
 from cmti_tools.datamappers import mappings
+
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 class WorksheetImporter(DataImporter):
   """
@@ -472,7 +475,7 @@ class OMIImporter(DataImporter):
       raise e
 
 class OAMImporter(DataImporter):
-  def __init__(self, oam_comm_names:dict, cm_list='config', metals_dict='config', name_convert_dict='config'):
+  def __init__(self, oam_comm_names:dict='config', cm_list='config', metals_dict='config', name_convert_dict='config'):
     """
     Initializes the OAMImporter class with configuration data and commodity names.
 
@@ -489,7 +492,15 @@ class OAMImporter(DataImporter):
     :type name_convert_dict: dict
 
     """
-    super().__init__(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_convert_dict)
+
+    super(OAMImporter, self).__init__(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_convert_dict)
+    
+    if oam_comm_names == 'config':
+      # Load OAM commodity names from a CSV file
+      oam_comm_path = BASE_DIR / self.config['supplemental']['oam_comm_names']
+      oam_comm_data = pd.read_csv(oam_comm_path)
+      oam_comm_names = dict(zip(oam_comm_data['Symbol'], oam_comm_data['Full_Name']))
+      
     self.oam_comm_names = oam_comm_names
 
   def check_year(self, val):
@@ -872,7 +883,7 @@ class BCAHMImporter(DataImporter):
     
 class NSMTDImporter(DataImporter):
   
-  def __init__(self, name_convert_dict = None, cm_list = None, metals_dict = None):
+  def __init__(self, name_convert_dict = 'config', cm_list = 'config', metals_dict = 'config'):
     super().__init__(name_convert_dict, cm_list, metals_dict)
 
   def clean_input_table(self, input_table, force_dtypes = True, convert_units=True):
@@ -913,7 +924,7 @@ class NSMTDImporter(DataImporter):
     
     return nsmtd_df
   
-  def create_row_records(self,  row: pd.Series, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None):
+  def create_row_records(self, row: pd.Series, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None):
     """
     Processes a row of data from the BCAHM dataset and creates associated database records.
     

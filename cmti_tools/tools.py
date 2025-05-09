@@ -1,46 +1,40 @@
-import csv
-import pathlib
 import re
+import os
+from pathlib import Path
 from configparser import ConfigParser
-from configparser import Error as ConfigError
 import pandas as pd
 from pandas import DataFrame
 from warnings import warn
 from math import ceil
-from sqlalchemy import select
-from sqlalchemy import create_engine
-from sqlalchemy.orm import Session
-from sqlalchemy.exc import IntegrityError
 from cmti_tools.tables import *
 from cmti_tools.idmanager import *
 
+# Data files and config
+
+#TODO: Incorporate these into config workflow
 def create_name_dict(elements_csv: DataFrame) -> dict:
   name_convert_dict = dict(zip(elements_csv['symbol'], elements_csv['name']))
   return name_convert_dict
 
-# Load data files from config parser
-def create_module_variables() -> dict:
-  """
-  Generate variables used in various places across the package. Configure file locations in config.toml.
-
-  :return: dict
-
-  """
-
+def load_config(user_config_path=None):
   config = ConfigParser()
-  config_path = pathlib.Path(__file__).parent.absolute() / "config.toml"
-  config.read(config_path)
 
-  with open(config.get('sources', 'critical_minerals'), mode='r') as critical_minerals_file:
-    critical_minerals = pd.read_csv(critical_minerals_file, encoding='utf-8')['Critical Minerals List'].tolist()
-  with open(config.get('sources', 'metals'), mode='r') as metals_file:
-    metals = pd.read_csv(metals_file, encoding='utf-8')
-    metals_dict = dict(zip(metals['Commodity'], metals['Type']))
-  with open(config.get('sources', 'elements'), mode='r') as elements_file:
-    elements = pd.read_csv(elements_file, encoding='utf-8')
-    name_convert_dict = create_name_dict(elements)
+  # Load default config from package
+  default_config_path = Path(__file__).parent.absolute() / "config.toml"
+  config.read(default_config_path)
 
-  return {"cm_list": critical_minerals, "metals_dict": metals_dict, "name_convert_dict": name_convert_dict}
+  # If user supplied a config file, load it next (it overrides defaults)
+  if user_config_path and os.path.exists(user_config_path):
+      config.read(user_config_path)
+
+  return config
+
+def override_config_value(config, section, key, value):
+    if not config.has_section(section):
+        config.add_section(section)
+    config.set(section, key, value)
+
+# Utility functions
 
 def get_digits(value: str, output: str = 'float'):
   """
@@ -70,7 +64,6 @@ def get_digits(value: str, output: str = 'float'):
       raise ValueError("'output' must be 'float' or 'int'")
   except ValueError as e:
     raise
-
 
 def convert_commodity_name(name:str, name_convert_dict:dict, output_type:str="full", show_warning=False):
   """
@@ -189,7 +182,6 @@ def get_commodity(row:pd.Series, commodity_column:str, critical_mineral_list:lis
     pass
   return commodity
       
-
 def get_table_values(row:pd.Series, columnDict:dict, default_null:object=None):
   """
   Takes column values, set out in columnDict, and produces a new dictionary where key = database column and
@@ -289,28 +281,3 @@ def assign_totals(mine_site:Mine, column_name:str, session):
   print(column_sum)
   categorized = value_to_range(column_sum)
   print(categorized)
-
-
-def merge_to_session(session, row:pd.Series, orm_class:object, column_dict:dict):
-  """
-  Generate a table entry (ORM object) and add to an existing session. For adding data to the CMTI that doesn't come
-  from the data-entry spreadsheet.
-
-  :param session: An existing sqlalchemy session.
-  :type session: sqlalchemy.orm.Session.
-
-  :param row: A row of a pandas dataframe to be converted to an ORM object
-  :type row: pandas.Series.
-
-  :param orm_class: The ORM class being created and merged
-  :type orm_class: sqlalchemy.orm.DeclarativeBase
-
-  :param column_dict: Dictionary fed into get_table_values to convert pandas DataFrame to table values.
-  Keys are DF columns and values are table values.
-  :type column_dict: dict
-
-  :return: None.
-  """
-  newValues = get_table_values(row, column_dict)
-  newEntry = orm_class(**newValues)
-  session.merge(newEntry)

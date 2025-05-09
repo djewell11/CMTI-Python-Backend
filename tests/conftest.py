@@ -1,21 +1,12 @@
 import pytest
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from cmti_tools.tables import Base
-
-@pytest.fixture(scope="session")
-def engine():
-    return create_engine('sqlite:///:memory:', echo = True)
-
-@pytest.fixture(scope="session")
-def tables(engine):
-    Base.metadata.create_all(engine)
-    yield
-    Base.metadata.drop_all(engine)
+from pathlib import Path
+from configparser import ConfigParser
 
 @pytest.fixture
-def session(engine, tables):
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    yield session
-    session.close()
+def config():
+    config_path = Path(__file__).resolve().parent.parent / 'cmti_tools' / 'config.toml'
+    assert config_path.exists(), f"Config found at {config_path}"
+    
+    cfg = ConfigParser()
+    cfg.read(config_path)
+    return cfg

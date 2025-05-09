@@ -1,0 +1,221 @@
+fid,OBJECTID,Name,Tonnes,Commodity,Dates,InfoSource,AreaHa,Latitude,Longitude
+"1","1",Forest Hill (McConnell),6038,Gold,1896-1916,"Assessment Report (21-G-13 (17)); Aerial Photography and Lidar Imagery; likely tailings downstream",0.996788,45.3090557997611,-61.7473349273429
+"2","2",Forest Hill (MacDonald),402,Gold,"1896","Assessment Report (21-G-13 (17)); Aerial Photography and Lidar Imagery (crushed tonnes uncertain)",0.407653,45.3075693883232,-61.7563529732644
+"3","3",Goldboro (Richardson),7966,Gold,1892-1894,"See Faribault Gold District Map; Assessment Report 21-G-54 (07) and Mercator reports",0.63361,45.2018397210744,-61.6417952595538
+"4","4",Goldboro,0,Gold,,"No detail available, indicated in Mercator report",1.42373,45.200596376943,-61.6386201702
+"5","5",Smithfield,1000,"Zinc, Lead","1884-88, 1926, 1951-1952","Estimated tonnage, high sulphide content",0.172456,45.269455265525,-63.074716382767
+"6","6",Stirling Main,955100,"Zinc, Lead, Copper","1935-1938, 1952-1956","See Jacques Whitford reports; Aerial Photography, Llidar imagery; likely tailings to East",15.0759,45.7268125367563,-60.4305547028236
+"7","7","Sydney Mines, Ocean Street (Princess, Selminco, Coastal)",20000,Coal,"1875-1975, 1980-89",Tonnage estimated. Wash Plants operated from 1950 to 1989. Aerial Photography and Lidar Imagery,2.41636,46.2577907283548,-60.2346061228811
+"8","8","Sydney Mines (Princess, Selminco, Coastal)",15000,Coal,"1875-1975, 1980-89",Tonnage estimated. Reclaimed between 2007 and 2010. Wash Plants operated from 1950 to 1989,1.89064,46.2576335933443,-60.2240406610241
+"9","9","Sydney Mines, Edwards Pond (Princess, Selminco, Coastal)",175750,Coal,"1875-1975, 1980-89",See Stantec report and OFR 1995-010. Wash Plants operated from 1950 to 1989,13.0313,46.2514084505445,-60.2150680082224
+"10","10",Scotchtown (Summit Dump),0,Coal,"1907-1987, 2009-2011","Aerial Photography; no tonnage estimate available, GCL cover over most tailings and waste",5.12529,46.2384603564996,-60.1132410788209
+"11","11",Scotchtown (Summit Southeast),0,Coal,"1907-1987, 2009-2011","Aerial Photography; no tonnage estimate available, GCL cover over most tailings and waste",0.695745,46.2319817759921,-60.1080105279185
+"12","12",Lingan Road (Victoria Junction),900000,Coal,1984-1993,Tonnage estimate from CBDC Closure reports. Tailings were flooded. Dates of deposition are uncertain,62.5838,46.1971688863258,-60.1454630920055
+"13","13",Port Morien (Crystal),20000,Coal,1956-1962,"Aerial Photography; tonnage uncertain, 14,000 tonnes of coal recovered; outflow from Gowrie",0.760708,46.1110629329654,-59.8978524242468
+"14","14",Port Morien (Gowrie Dump),160600,Coal,"1893-1897, 2008-2010","CBDC closure reports; Aerial Photography and Lidar Imagery",20.9453,46.1096293707768,-59.9138015065524
+"15","15",Victoria Junction,8000000,Coal,"1976-1998, 2005-2009",Aerial Photography and Public Works & Government Services Canada Property Reports,33.5693,46.1763617820807,-60.1128535508767
+"16","16","Goldboro Main (Boston-Richardson, East Gold Brook)",400516,Gold,"1894-1942, 1988-89","NRCan Report, Open File Reports, Aerial Photography and Lidar Imagery (ARD notable)",38.8694,45.1912581953216,-61.632786402202
+"17","17","Goldenville (Bluenose, Springfield)",76769,Gold,1894-1904,"Assessment Report (21-G-17 (15)), Aerial Photography and Lidar Imagery (ARD notable)",4.18384,45.1265741760728,-61.9935843947542
+"18","18",Goldenville (Royal Oak),18955,Gold,1900-1906,"Assessment Report (21-G-17 (15)), Aerial Photography and Lidar Imagery",2.25093,45.1264402097165,-62.0245937379387
+"19","19",Goldenville (Sutherland),2041,Gold,1888-1901,Aerial Photography and Lidar Imagery,0.783242,45.1256676313197,-62.0206629390118
+"20","20","Goldenville (Wellington, Palmerston, New Glasgow, Guysboro)",428128,Gold,"1862-1930, 1935-1942","NRCan Report, Assessment Reports (21-G-17 (11 &15)), Aerial Photography and Lidar Imagery",41.7309,45.1175170562052,-62.0236937722327
+"21","21",Walton,444000,Barite,1940-1978,Site Closure reports and Aerial Photography,6.4742,45.2101271683289,-64.0437917537306
+"22","22",Walton (Sulphides),410000,"Lead, Copper, Silver",1961-1978,Site Closure reports and Aerial Photography,3.15771,45.2040455299044,-64.0414002179615
+"23","23",Lake Enon,350000,Lead,1979-1982,"See Assessment Report 11F/16B, 27-C-83 (27) (Jacques Whitford) and 2002-056 (Barrett)",5.80544,45.8040731932827,-60.5435926962068
+"24","24",Dufferin Mines (Dufferin Gold Mining Co.),64127,Gold,1881-1888,"NRCan Report, Seabright, Aerial Photography and Lidar",9.37442,44.9496189460133,-62.399207410455
+"25","25",Dufferin Mines (South Lake Eagle),0,Gold,1882-1904,"No detail available; see Seabright mapping and Aerial photography",5.03378,44.9570317448586,-62.3909075178437
+"26","26",Dufferin Mines (Lake Eagle),36,Gold,"1882, 1897-1900","Location approximate; No detail available",0.440026,44.9632493434227,-62.3853214012479
+"27","27","South Uniacke (Withrow, Victoria)",8571,Gold,1888-1905,"See Jacques Whitford 1985-031; Faribault Gold District Map; Lidar Imagery; tailings downstream",1.55966,44.8664869308021,-63.7796089418851
+"28","28",Renfrew (Horne),991,Gold,"1935-39, 1954-58, 1992-95","See Jacques Whitford 1985-031; intermittent production reported in the 1970's and 80's",0.173315,45.0062741055906,-63.6370570470941
+"29","29","Renfrew (Free Claim, Hartford, Colonial, Pictou Development)",860,Gold,1862-1907,See Jacques Whitford 1985-031: Aerial imagery (likely tailings up and downstream),0.469528,45.0042638415434,-63.6059855103821
+"30","30",Stirling (Strachan Brook),0,"Zinc, Lead, Copper",1935-1956,"See Jacques Whitford reports; Aerial Photography, Lidar imagery; no tonnage estimate (very fine)",3.45346,45.7253705303304,-60.4115323746195
+"31","31","Isaac's Harbour (Sweet, Stormont, Victory)",3304,Gold,1900-1915. 1940-1941,"See Assessment Report 21-G-54 (07), crushing figure approximate, most tailings went into the Harbour",0.130227,45.1699740156862,-61.6413536560306
+"32","32",Montague Mines (Rose),2942,Gold,1879-1882,"See Jacques Whitford report; Lidar imagery, Aerial Photography",0.393101,44.7244632269505,-63.5018624676683
+"33","33",Montague Mines (Salisbury),5898,Gold,1883-1899,"See Jacques Whitford report; Lidar imagery; tonnage estimate calculated seems high",0.189212,44.7191320352767,-63.5080772171287
+"34","34",Carleton,477,Gold,1886-1911,"Aerial Photography (questionable location; mill may have been on the stream near the main road)",0.163453,44.0042835885096,-65.932990363748
+"35","35","Kemptville (Nickerson, Argonaut, Imperial)",2533,Gold,"1888-1910, 1925-1926",Lidar imagery. Site was active in the early 1960's but no crushing is notable,0.51452,44.0544041960419,-65.8427392711105
+"36","36","Cranberry Point, Yarmouth",337,Gold,1869-1899,"Aerial Photography; most tailings likely went into the ocean",0.303034,43.8993718102132,-66.1680622788147
+"37","37","Mill Village (Thompson, K-V Mines, Vacheresse)",135,Gold,1946-1951,"Location approximate, see Assessment Report 21A/02D 21-N-09 (07)",0.132189,44.1584657143465,-64.7032965586955
+"38","38",Mill Village (Gold Eagle),1026,Gold,1900-1902,"Location approximate; Aerial Photography and Lidar Imagery",0.302837,44.1600916521656,-64.6982686693929
+"39","39",Fifteen-Mile Brook (Pleasantfield),1908,Gold,1910-1914,Assessment Reports and Aerial Photography,0.248475,44.2345868854424,-64.90150989692
+"40","40",Whiteburn Mines (Parker-Douglas),5368,Gold,"1886-1899, 1935-1941","Assessment Report (21-N-26 (04)), NRCan Report and Aerial Photography",2.16845,44.3111343507486,-65.0727049659007
+"41","41",Whiteburn Mines (Brown),0,Gold,,"Location approximate; no detail available on crushing dates",0.268867,44.3112809682372,-65.0752378590273
+"42","42","Whiteburn Mines (Crocker, McGuire, Graves)",3397,Gold,1884-1907,"Assessment Report (21-N-26 (04)), NRCan Report and Aerial Photography",3.44968,44.3077093144733,-65.0727383589797
+"43","43",Whiteburn Mines (Rossignol),0,Gold,1886-1893,Aerial Photography and site visit,0.336374,44.3039450752772,-65.0851013334365
+"44","44",Whiteburn Mines (Rossignol),270,Gold,1886-1893,"Location approximate, tonnage may be triple the reported figure",0.262048,44.3018040903415,-65.085752003865
+"45","45","Molega (Parker-Douglas, MacKay, Stewart, Queens Mines)",45745,Gold,"1889-1925, 1938-1950",Aerial Photography and Lidar Imagery,3.80744,44.3383142937642,-64.8959829567906
+"46","46","Molega (Minneapolis and Molega, Drake)",200,Gold,"1888, 1903","Location approximate; tonnage estimated; Lidar Imagery",0.178378,44.3401932012206,-64.8811444938094
+"47","47",Molega (Caledonia),306,Gold,"1890","Location approximate; Lidar Imagery",0.236974,44.3428403957776,-64.8910936874742
+"48","48",North Brookfield (Arthur King),1091,Gold,"1908-10, 1916, 1922, 1930","Aerial Photography and Lidar Imagery; site visit (ARD notable)",0.225942,44.4056317744664,-64.9180308335776
+"49","49",North Brookfield (United Goldfields),2875,Gold,"1934-1936, 1991-1994","Aerial Photography and Lidar Imagery; site viist; treatment by Gold Bank (re-processed 647 tonnes)",0.880138,44.4043838809286,-64.9168892013021
+"50","50",Pleasant River Barrens (Brignell),256,Gold,"1897-1899, 1912, 1928","Location approximate; tonnage uncertain; Lidar Imagery",0.737246,44.4443017596885,-64.7891597094111
+"51","51",Pleasant River Barrens (Thompson),275,Gold,"1890-1891, 1897-1899","Location approximate; tonnage uncertain; Lidar Imagery; see Assessment Report 1986-030",0.164707,44.4501599779953,-64.7968410529671
+"52","52",Blockhouse,4993,Gold,"1899-1901, 1936-1938",Aerial Photography and site visit (ARD notable),0.237929,44.4372339602573,-64.4221369892705
+"53","53",Stanburne,94,Gold,"1897, 1932-1936","Location approximate; site visit, possible tailings noted running off to the Southwest",0.0311702,44.6180904504761,-64.7457503515635
+"54","54","Gold River (North Star, Cameron)",727,Gold,"1895-1904, 1915, 1933","Lidar Imagery, approximate location",0.123776,44.57581772789,-64.3405274445691
+"55","55","Gold River (Lincoln, Lacey)",21719,Gold,"1889-1903, 1931-1939","Aerial Photography and Lidar Imagery (ARD notable); likely tailings further downstream",2.59891,44.5746613423701,-64.3309146421015
+"56","56",Gold River (Jumbo),240,Gold,"1885-1887, 1893","Site visit; Location approximate; details on crushing and dates are questionable",0.132606,44.5685609760364,-64.3365942602905
+"57","57",East Rawdon,11978,Gold,1884-1891,"NRCan Report, Aerial Photography and site visit (ARD notable)",1.91985,45.0440618617263,-63.748804560553
+"58","58",West Gore,8928,"Antimony, Gold","1883-1917, 1990-1994","Assessment Reports (03-I-55 (03) & Gold Bank (1996-012)), Aerial Photography and Lidar imagery",1.08525,45.0831698300309,-63.7906845533053
+"59","59",East Rawdon,0,Gold,1884-1891,"NRCan Report, Aerial Photography (no detail available on crushing)",0.370778,45.0457121752325,-63.7512816467583
+"60","60","Leipsigate Lake (Cashon & Hines, Micmac)",31933,Gold,1896-1908,"NRCan Report, Lidar Imagery, Aerial Photography",3.14439,44.3291256424768,-64.5891089870927
+"61","61","Montague Mines (Kaye, Boyd, Smith, Montague Gold Mines Ltd.)",105147,Gold,"1865-1924, 1931-1939","See Jacques Whitford report, NRCan Report, OFR 1986-038; Lidar Imagery and site visit (ARD notable)",15.4657,44.7156053855546,-63.5230709146901
+"62","62","Montague Mines (St. Patrick, Taylor  & Weir)",300,Gold,1869-1872,"NRCan Report, Aerial Photography, Lidar Imagery; tonnage estimated",0.808575,44.7129344438847,-63.5180267979614
+"63","63","Mineville (Lawrencetown (Crooks, Mahon))",521,Gold,"1875-1880, 1902-1906","See Assessment Report 11D/11C 21-H-39 (10), Aerial Photography, most tailings are in the lake",0.776461,44.6910275232135,-63.3779776002463
+"64","64",Waverley (DeWolfe),7881,Gold,1863-1875,"Faribault Gold District Map; Aerial Photgraphy and Lidar Imagery (details on crushing are vague)",0.511001,44.7833311388422,-63.6064627222589
+"65","65","Mount Uniacke (Foster, Madill, Queen, Kenyon)",11745,Gold,1867-1911,"NRCan Report, Assessment Report 11D/13C 21-I-27 (02), Lidar Imagery",2.39534,44.9287656038858,-63.8085720645748
+"66","66","Mount Uniacke (Queens Mines, Crease (Montreal Development))",1962,Gold,1935-1937,"NRCan Report, Aerial Photography, Lidar Imagery; uncertain if Crease crushed here or at Foster",0.202093,44.9259868019543,-63.8093454390213
+"67","67",Mount Uniacke (Phoenix),4315,Gold,1889-1893,"NRCan Report, Aerial Photography",0.184614,44.9254785787649,-63.8010082177001
+"68","68","Mount Uniacke (PCF, Prince)",11324,Gold,1887-1910,"NRCan Report, Assessment Report 11D/13C 21-I-27 (02), Lidar Imagery",2.32721,44.9301130998182,-63.8025589639415
+"69","69",Oldham (Old English),2732,Gold,,"See Jacques Whitford report; no detail available on dates of crushing",0.176973,44.9132994767779,-63.510175203251
+"70","70",Oldham (Baker),4000,Gold,1877-1883,"Tonnage estmated; Aerial Photography, site visit",0.367838,44.9224096882226,-63.4843710140707
+"71","71",Lake Catcha (Hanright),2290,Gold,1900-1908,Aerial Photography and Lidar Imagery,0.678467,44.7317323758896,-63.20368384422
+"72","72",Lake Catcha (Cogswell),268,Gold,1894-1897,"Location approximate; Lidar Imagery",0.134823,44.7357131496205,-63.2039342327292
+"73","73",Lake Catcha (Neily),764,Gold,"1899-1901, 1914","Location approximate, may be more than 100 metres to the East on the brook",0.0648375,44.7412555482164,-63.2051594840232
+"74","74","Lake Catcha (Anderson, Cambridge)",6822,Gold,"1889-1908, 1940-1941","NRCan Report, Faribault Gold District Map, Aerial Photography, Lidar Imagery",1.77189,44.7358629415004,-63.1973231163512
+"75","75","Lake Catcha (Oxford, Partington, Petpeswick)",16719,Gold,"1882-1900, 1910-1915","NRCan Report, Faribault Gold District Map, Aerial Photography, Lidar Imagery",4.42961,44.7387229109587,-63.1922856838677
+"76","76","Tangier (Leary, New York & Nova Scotia, Burlington)",4410,Gold,1862-1872,"Faribault Plan; Aerial Photography; There may have been a Chilean Mill on the site (see Church Map)",1.01676,44.8052012625962,-62.6922400090783
+"77","77","Tangier (Strawberry Hill (Forrest), Brunswick)",10950,Gold,1862-1891,"Faribault Gold District Map; Aerial Photography",3.53473,44.8101705438622,-62.6760971924373
+"78","78",Dufferin Mines (Dufferin Resources),86002,Gold,"1995-2004, 2014, 2017-18",Aerial Photography and Lidar Imagery,2.74658,44.9725848863502,-62.3921966246477
+"79","79",Dufferin Mines (Montreal-London),39541,Gold,1889-1904,"NRCan Report, Seabright, Lidar (Arsenic Concentrate noted near mill site)",1.57119,44.9601194101524,-62.3950587531915
+"80","80",Moosehead,3043,Gold,1899-1915,"OFM 1913-002; Aerial Photography",0.36395,44.9431366768531,-62.2621527939241
+"81","81",Ecum Secum,2541,Gold,1889-1907,Aerial Photography,0.104709,44.9695487700324,-62.1848092888455
+"82","82",Fifteen-Mile Stream,39304,Gold,1880-1941,Aerial Photography (ARD notable),3.26423,45.1407230091573,-62.5231229857265
+"83","83","Killag Main (McKay, Old Provincial)",3267,Gold,"1891-1910, 1933-1940",Aerial Photography and Lidar Imagery,0.646202,45.0193372916172,-62.621956950845
+"84","84",Killag (Sweet),46,Gold,"1949","Location approximate; plan was to direct tailings into Black Duck Lake",0.0454185,45.0202664122956,-62.6193303540908
+"85","85","Killag West (Suart, Richards, Reynolds)",104,Gold,"1897-1898, 1932-1933","Location approximate; Lidar Imagery",0.0649573,45.0181113306983,-62.6281340138518
+"86","86","Beaver Dam (Austen Area, (Gladwin))",3204,Gold,"1871-1940, 1949","Aerial Photography and site visit (ARD notable); likely a portion was excavated during 1980's work",0.914413,45.0657270556485,-62.7163233453421
+"87","87",Mooseland (Stemshorn),3616,Gold,1889-1896,"NRCan Report; Aerial Photography, Lidar Imagery",1.57778,44.9358608594699,-62.7720891042929
+"88","88",Moose River Mines (G & K and Colonial),38285,Gold,1898-1909,See Stantec Report,1.34225,44.9803690835446,-62.9438221213471
+"89","89",Caribou Mines (H. Dixon),4090,Gold,"1889-1895, 1914-1915",Aerial Photography,0.244355,45.0529302361533,-62.9487514909859
+"90","90",Caribou MInes (Dixon East),1117,Gold,1895-1896,Aerial Photography,0.0678252,45.0543878582208,-62.9469887121072
+"91","91",Caribou Mines (Consolidated Mining & Smelting Co.),35883,Gold,"1914-1920,1932-1947","Aerial Photography (includes Hilchey & Ross Crushings); possible arsenic concentrate",1.1508,45.0587608126741,-62.9358800578512
+"92","92",Caribou Mines (Lake Mine (W.A. Saunders)),43252,Gold,1884-1911,"Aerial Photography and site visit; likely a large volume of tailings in the lake",1.15252,45.062415860569,-62.9208093422394
+"93","93",Miller Lake (Dickson),486,Gold,"1901-1902, 1937-1941","Aerial Photography and Lidar Imagery, site visit (ARD notable)",0.212244,45.0411266636399,-62.1372706692656
+"94","94","Miller Lake (Naugler, Gold Syndicate, Zenith)",662,Gold,"1901-1907, 1947-1949","Location approximate; Aerial Photography and Lidar Imagery",0.108272,45.0422036189735,-62.163274530147
+"95","95","Wine Harbour (Plough Lead, El Dorado)",34773,Gold,"1862-1904, 1937-1939",Aerial Photography (almost all tailings in the harbour),1.55152,45.073445832095,-61.8465547515464
+"96","96",Wine Harbour (Old Provincial),30740,Gold,1862-1907,Aerial Photography (almost all tailings in the harbour),1.29411,45.0730650272433,-61.8421604612114
+"97","97",Wine Harbour (Napier),3384,Gold,1876-1889,Aerial Photography (location is approximate),0.733011,45.0734205921363,-61.8376607981125
+"98","98","Wine Harbour (Barasois, Orient)",2000,Gold,1862-1898,Aerial Photography (tonnage is an estimate),0.667494,45.0784865782457,-61.8269645110782
+"99","99",Country Harbour Mines (Robertson),5534,Gold,1892-1897,Aerial Photography and site visit (production varies within reports),0.669683,45.2523057451583,-61.8133612213719
+"100","100",Country Harbour Mines (Stuart & Antigonish),14225,Gold,"1892-98, 1906-08, 1934-41","Assessment Reports, OFM 1938-004 (production varies within reports)",0.124568,45.2566758847679,-61.811525396682
+"101","101","Forest Hill, Mile Lake (Louisbourg)",1687,Gold,1981-1982,Aerial Photography and site visit,0.149505,45.3044636550246,-61.7834498734562
+"102","102","Lower Seal Harbour (Beaver Hat, Sydney, Seal Harbour)",389860,Gold,"1905-1920, 1934-1941","NRCan Report, Assessment Report 21-G-54 (07); Aerial Photography, Lidar Imagery",17.3821,45.165039373337,-61.5923947652894
+"103","103",Isaac's Harbour (North Star),1388,Gold,"1861-1863, 1892-1896",Lidar imagery and site visit (ARD notable),0.0705297,45.1684873053855,-61.6541643278456
+"104","104","Isaac's Harbour (Rockland, Skunk Den, Giffin, Eureka)",6669,Gold,"1889-1909, 1934-1936","See Assessment Report 21-G-54 (07) and Jacques Whitford 1985-031; Lidar Imagery (ARD notable)",0.361284,45.1681891119415,-61.6323181836677
+"105","105",Goldboro (Dolliver Mountain),12938,Gold,"1896, 1901-1905","Assessment Report (21-G-54 (07)), Aerial Photography and Lidar Imagery (ARD notable)",1.03649,45.2053039968835,-61.6656876712142
+"106","106",MacMillan Brook Road (Barrett),600,Gold,2010-2012,"No report on ore crushing; tailings were buried and the site was revegetated",0.529861,46.5084581325562,-60.739711414178
+"107","107",Leipsigate Lake (Aulenback),7,Gold,"1941",See Assessment Reports on Aulenback,0.0157226,44.3187375803073,-64.6200084485315
+"108","108",Indian Path,317,Gold,"1868-1876, 1896","Lidar imagery, little detail available",0.0241798,44.3231719284406,-64.3509193853538
+"109","109",Moose River Stillwater (Shea Lake),2098,Tungsten,"1911-12, 1914-19, 1942-43",Site visit & Assessment Report 53-H-49 (06),0.0511341,44.9721893594618,-62.9822345321436
+"110","110","Mill Village (Oak Hill, Beacon)",64,Gold,"1930, 1934","See Assessment Report 2009-009;  Aerial Photography and Lidar Imagery; Operators are uncertain",0.161327,44.1620468638837,-64.6964868840185
+"111","111","Molega (Malaga, Markland, Ponhook, Richland)",10019,Gold,"1888-1909, 1922-27, 1936","Faribault Gold District Map; most of the tailings are in lake; small crusher erected in 1959",2.30305,44.3308216802539,-64.9028602192189
+"112","112","Molega (Boston, Ballou, Markland)",4603,Gold,1890-1911,"Faribault; Aerial Photography, Lidar Imagery; Prospect work indicates possible tailings to the West",3.05496,44.3300120406232,-64.8875581284532
+"113","113",Molega (Fancy),44,Gold,"1934",See Assessment Report 21-A-07B 21-N-11(09),0.053648,44.3333317403275,-64.8889898972929
+"114","114","Kemptville (Cowan, Bower)",403,Gold,"1885-1901, 1914-1917",Lidar Imagery,1.14995,44.0503599093024,-65.8496686806446
+"115","115",Kemptville (Brown),150,Gold,,"No detail available; tonnage estimated. Lidar Imagery",0.143806,44.0534749059561,-65.8478159881484
+"116","116",Gold Lake,0,Gold,"1867, 1890-1899, 1975","Little infromation available; see OFR 432",0.142908,44.9175286810275,-62.9447751698826
+"117","117",Gold Lake,0,Gold,"1867, 1890-1899","Little infromation available; see OFR 432",0.023641,44.9163617144783,-62.9449902273459
+"118","118",Florence (Franklin Dump),80000,Coal,"1938-1967, 2009-2011","Estimated tonnage, large area of coal fines reclaimed and consolidated in stockpile",15.2551,46.2611160334957,-60.2741589562087
+"119","119",Scotchtown (Irish Brook),0,Coal,"1907-1987, 2009-2011","Aerial Photography; no tonnage estimate as the majority of material are fines from Summit",22.1482,46.2452987884826,-60.1104070087554
+"120","120","Harrigan Cove (St. Anthony, McMann, Archibald)",12302,Gold,"1888-90, 1897-1915","Aerial Photography and Lidar Imagery; likely tailings further downstream",3.12358,44.9363033841345,-62.2929722493347
+"121","121","Wine Harbour (Eureka, Guysborough)",2300,Gold,1862-1900,"Aerial Photography (location is approximate, estimated tonnage)",1.20731,45.0789621983889,-61.8350085460762
+"122","122",Caribou Mines (Elk (Bell) Mine),1656,Gold,1876-1899,"Aerial Photography and Lidar Imagery, but location is questionable",0.298658,45.0621679608231,-62.9462124633195
+"123","123","Caribou Mines (Caffrey, Truro, Touquoy, Frazer, Belmore)",78249,Gold,"1869-1947, 1954-1968","NRCan Report, AR 1986-069 and Aerial Photography; very small tonnages crushed 1954 to 1968",10.1916,45.0559295093196,-62.9389095409025
+"124","124","Montague Mines (Annand, New Albion, Golden Group, Bluenose)",26908,Gold,1872-1913,"See Jacques Whitford report; Lidar imagery, Aerial Photography",7.4747,44.7240378757525,-63.5060263826413
+"125","125",Montague Mines West,0,Gold,1865-1939,"Aerial Photography and Lidar Imagery; no tonnage estimate; may not be tailings",0.598035,44.713017847161,-63.5288179161822
+"126","126",Lower Seal Harbour (McNaughton),22,Gold,"1894","Location approximate; little detail available",0.280869,45.1764996728568,-61.6096627947795
+"127","127",Country Harbour Mines,0,Gold,"1868","Fletcher-Faribault Sheet 30; location approximate (no detail available on crushing)",0.241335,45.2491613437065,-61.8121310300957
+"128","128",Goldenville (Snow's Palmerston Mill),328,Gold,"1871","Fletcher-Faribault Sheet 29 (tonnage estimate), known that a road was built to the site for crushing",0.289743,45.14278494751,-62.0161074323383
+"129","129",Goldenville (Miner's),2238,Gold,1888-1894,"Fletcher-Faribault Sheet 29; all tailings went into the brook to the Northwest Arm",0.285821,45.1407805963755,-62.0039190280688
+"130","130",Goldenville (Goldenville Company),972,Gold,1888-1895,"Fletcher-Faribault Sheet 29; all tailings went into the brook to the Northwest Arm",0.279552,45.1406220009366,-62.0025636018811
+"131","131","Wine Harbour (McIntosh Gold Mining, Wethersole & Russel)",0,Gold,"1899","Fletcher-Faribault Sheet 29 (no detail details on crushing) cyanide utilized; NRCan measured high Hg",0.214457,45.0736316156029,-61.8722028329351
+"132","132","Wine Harbour (Eames, Washington)",1500,Gold,,"Location approximate; no detail available on crushing dates",0.249668,45.0757991840289,-61.8563472940676
+"133","133",Fifteen-Mile Stream (Stanley),4675,Gold,1890-1898,"Location approximate; No detail available",0.286433,45.142136187406,-62.5455144810433
+"134","134",Lochaber Mines,40,Gold,1882-1889,Location approximate,0.328538,45.0639009810135,-62.4784241350187
+"135","135",Dufferin Mines (Maple Leaf & Crown Reserve),211,Gold,"1923, 1935-1936","Location approximate; No detail available",0.261001,44.9720422872061,-62.3836063764885
+"136","136","Tangier (Atlantic, Ross & Miller, Pittsburgh, Kent Gold Co.)",600,Gold,1863-1882,Location approximate and tonnage estimated,0.213122,44.8038901525397,-62.7072588781822
+"137","137","Tangier (Coxheath, Tangier Ltd. Partnership)",22328,Gold,"1986-1989, 1998-1999",Aerial Photography,2.34672,44.8087976866142,-62.69616934219
+"138","138",Clam Harbour,51,Gold,"1903","Location approximate; see Geological Survey of Canada Gold District Map",0.177492,44.7356684193332,-62.9123485725346
+"139","139",Lake Charlotte,45,Gold,1963-1964,See Assessment Report 1986-122 (note on tailings being dumped in woods behind mill),0.28652,44.8513585705569,-63.0031545742305
+"140","140",Moose River Mines (Andrew McGregor),12086,Gold,1887-1908,"Location approximate; all tailings went into the brook and downstream",0.238822,44.9875906933477,-62.9461471382216
+"141","141",Beaver Dam West (Redding),88,Gold,"1911, 1939","Location approximate; Faribault Gold District Map",0.306719,45.0673699541523,-62.7322823044274
+"142","142",Beaver Dam Crusher Lake,0,Gold,,"Location approximate; Faribault Gold District Map (no detail available on crushing)",0.291893,45.0649044100938,-62.7261838634758
+"143","143",Cow Bay,1304,Gold,1896-1905,"Faribault Sheet 53; location approximate (some ore processed in Montague)",0.184985,44.6229209045248,-63.4499938160695
+"144","144",Head of Chezzetcook,71,Gold,"1889","Faribault Sheet 54, location approximate; no good plans of old workings",0.154667,44.7400288839032,-63.2501952395023
+"145","145",Gays River,980000,"Zinc, Lead, Gold","1979-82, 1989-91, 2007-09","Aerial Photography (Mill processed approximately 80,000 tonnes of gold ore in the mid 1980's)",55.8799,45.0181707715245,-63.3442935194673
+"146","146","Gays River, Coldstream",13469,Gold,"1866-81, 1890-1900, 1949","Fletcher-Faribault Sheet 56; location approximate (crushing is known to have been done in 1964-65)",0.283285,45.0767436332058,-63.3143600973277
+"147","147",Millen Mountain (South Branch Stewiacke (Crowe)),179,Gold,1884. 1906-1907,"Location approximate; Aerial Photography, Lidar Imagery; likely went directly dowstream along brook",0.267385,45.1176188140316,-63.1214506373847
+"148","148",Center Rawdon (Northup-Dimock),3817,Gold,"1888-1897, 1904","Fletcher-Faribault Sheet 73; location approximate",0.382341,45.04682275114,-63.8458418405964
+"149","149",Center Rawdon (East (Church)),1482,Gold,"1890-1894, 1924","Fletcher-Faribault Sheet 73; location approximate",0.209155,45.0538526483719,-63.8415637019506
+"150","150",Center Rawdon (Withrow),56,Gold,1894-1896,"Fletcher-Faribault Sheet 73; location approximate",0.220875,45.046907353504,-63.817257810391
+"151","151",Ardoise (F.H. Mason),57,Gold,1868-1904,"Fletcher-Faribault Sheet 73; location approximate",0.341388,44.9638348133995,-63.9183443382729
+"152","152",Vogler's Cove (Reinhardt),0,Gold,,"Faribault Sheet 90; location approximate; no detail available on crushing",0.177237,44.2022952517664,-64.5222203586224
+"153","153","The Ovens (Hood, Acadia Gold)",279,Gold,"1862-1869, 1897","Location approximate; tailings may have been directed to the pond or the coastline",0.283608,44.3179665619724,-64.2563077668265
+"154","154",The Ovens (Chilean),0,Gold,,"See Faribault Gold District Map 1934-005; no detail available on crushing",0.178052,44.317428099441,-64.2616501649517
+"155","155",East Kemptville,18822600,Tin,1985-1992,Mine Closure report and Aerial Photography,164.527,44.1065005228199,-65.6979889238019
+"156","156","Montague Mines, Barry's Run (Montague Gold Mines Ltd.)",0,Gold,1865-1939,"See OFR 1986-038; most likely very fine material washed downstream; no tonnage estimate",15.4407,44.7176277831285,-63.5391643553062
+"157","157",Oldham (Corwin),338,Gold,"1934-1935, 1945",Location approximate (ARD notable in area),0.309786,44.9072109881005,-63.522025416491
+"158","158",Moose River Mines (Scraggy Lake),0,Gold,1882-1938,"Aerial Photography; appears to be an accumulation well downstream of the mines",7.33211,44.9672923623868,-62.9371641119244
+"159","159",Moose River Mines (Touquoy),31240,Gold,1887-1916,"Location approximate; all tailings went into the brook and downstream",0.331178,44.9804158863385,-62.9451665393978
+"160","160",Isaac's Harbour (Griffin),2416,Gold,"1870-1876, 1896-97, 1902","Location approximate; likely all tailings went into Dung Cove and Harbour",0.300061,45.1627054596212,-61.6375644622092
+"161","161","Isaac's Harbour (Buckley, Hattie)",1700,Gold,1870-1876,"Location approximate; tonnage estimated, likely all tailings went into Betty's Cove and Harbour",0.312303,45.1545844459103,-61.6248973564789
+"162","162",Gold River (Verge Brothers),7,Gold,"1896","No detail available; likely all tailings washed downstream",0.121454,44.5657405872855,-64.3478389799741
+"163","163",Gold River (Victor),461,Gold,"1873, 1909-1912","No detail available; likely all tailings washed downstream (latter dates are questionable)",0.258706,44.5688468893054,-64.3351521253485
+"164","164",Gold River (Croft Hill),89,Gold,"1901","No detail available; likely all tailings washed downstream",0.182044,44.5667154617845,-64.3331196789936
+"165","165","Gold River (Hiseler, Chester Basin)",2797,Gold,"1867, 1898-1912","No detail available; likely all tailings washed downstream",0.160061,44.5662554638969,-64.3333807440891
+"166","166","North Brookfield (Philadelphia, North Brookfield)",6384,Gold,1887-1905,"NRCan Report; Aerial Photography, Faribault Gold District Map",4.00429,44.4134780324036,-64.9143695614484
+"167","167","North Brookfield (Libbey, Brookfield)",70878,Gold,"1889-1892, 1903-1906","Faribault Gold District Map; Aerial Photography; likely tailings further downstream",7.18762,44.4113498752212,-64.9210928912563
+"168","168",Cheggogin,0,Silica,"1890","Location approximate; Faribault Gold District Map 1815; no detail available on crushing",0.256806,43.8597590010724,-66.1698360006736
+"169","169",Ecum Secum (Treasure Island),84,Gold,"1902","Location approximate; No detail available",0.143426,44.9729955379291,-62.1597430117778
+"170","170","Country Harbour Mines, West Side",8,Gold,1950-1951,"Location approximate; No detail available",0.11032,45.239261512793,-61.7875025409272
+"171","171",Moose River Mines (Moose River Gold Mining Co.),27447,Gold,1880-1907,See Stantec Report (likely includes W.S. Reynolds production),1.68532,44.9821592722268,-62.9394091206188
+"172","172",Moose River (Touquoy West (Higgins & Lawlor)),1940,Gold,"1911, 1914, 1933-1939",Assessment Reports & Lidar Imagery,0.252599,44.9757850496229,-62.9638453815727
+"173","173","Caribou Mines (Hyde Crusher, Fraser Brook)",470,Gold,1869-1870,"Location approximate, see Malcolm Gold Fields of Nova Scotia",0.1105,45.0904568651767,-62.9637278072917
+"174","174",Center Rawdon (Andrew Deal),173,Gold,1932-1939,"Assessment Reports; location approximate",0.132381,45.0452574703031,-63.8122351614655
+"175","175","Melrose (Cumminger Brook, Cochrane Hill)",0,Gold,1868-1869,"Location approximate; Faribault-Robert Sheet 36 (no detail available on crushing)",0.085774,45.26546342743,-62.0477564035653
+"176","176",Cochrane Hill (Crow's Nest),7807,Gold,"1878, 1886, 1894-1900","Assessment Report (1991-035); tonnes reported in Goldenville production (see Block 5, Lease 590)",0.389665,45.2435156648264,-62.0546563120173
+"177","177",Cochrane Hill (Northumberland),12974,Gold,1981-1988,Assessment Reports and Aerial Photography,1.21533,45.2500166219386,-62.0158150812064
+"178","178",Cochrane Hill,11822,Gold,"1877-1907, 1927-1928","NRCan Report, Aerial Photography; some tonnes reported in Goldenville production",1.71282,45.2498094437787,-62.0176038838722
+"179","179","Forest Hill, Mile Lake (Cameron)",67,Gold,1936-1937,"Location approximate; No detail available",0.0681435,45.3083877426803,-61.7860996311549
+"180","180","Forest Hill (Modstock, McNaughton, McDonald & Copeland)",46679,Gold,"1895-1916, 1933-48, 1956","Assessment Report (21-G-13 (17)); Aerial Photography and Lidar Imagery; 500 tonnes milled 1956-57
+",4.33399,45.3113457477212,-61.7547217009918
+"181","181","Waverley (Powder Mill Lake (Willis, Stanford, Burkner))",1000,Gold,1866-1870,"Details on operation are vague (may have operated in late 1880's); see OFR 1986-038",0.612673,44.7781363130844,-63.6161699891669
+"182","182","Waverley (Muddy Pond (Burkner, Tudor, West Waverley))",42589,Gold,"1863-1899, 1933-1939","See OFR 1986-038; crushing numbers are approximate",12.5723,44.7880149159857,-63.6105735110253
+"183","183","Waverley (Lakeview, NS Gold, Clarke, DeWolfe))",15645,Gold,1862-1893,"Little information available; see AR 21-H-73 (00) and OFR 1986-038",1.18348,44.7868672282244,-63.6039860692816
+"184","184",Waverley (Chebucto),133,Gold,1861-1862,"Little information available, see Church and Hind",0.301902,44.7840861113464,-63.5980151333152
+"185","185","Waverley (Waverley Gold Mining, Rockland, Boston & NS))",31405,Gold,1863-1903,"See OFR 1986-038, also see Church and Hind; almost all tailings in the lake",1.3612,44.7861166063588,-63.5994763779853
+"186","186","Waverley (Laidlaw, James Skerry)",20536,Gold,1862-1903,"See Lockhart report 21-H-73 (12) and Church; portable crushing units also employed",1.19875,44.7859531841805,-63.5968980575661
+"187","187",Voglers Cove (Mahon),179,Gold,1895-1905,"Assessment Report (1987-119); Tailings were likely excavated as part of 2011-12 quarrying operation",0.0555513,44.1853341900317,-64.5256760868812
+"188","188",Indian Path,106,Tungsten,1941-1942,"Assessment Report (1991-008); Location is questionable",0.0409614,44.3251036031678,-64.3450194570768
+"189","189",Goldenville (Union),0,Gold,pre-1870,"See Hind Sherbrooke publication; Location approximate; no detail on crushing",0.0968284,45.1248310012862,-62.0272359999744
+"190","190","Goldenville (Wentworth (Hamilton), Canada)",2270,Gold,1868-1872,"See Hind Sherbrooke publication; crushing numbers available for one year; all tailings went into Bay",0.408154,45.1297986223807,-61.9907626755616
+"191","191",Isaac's Harbour (Hurricane Island),10952,Gold,1886-1900,"Assessment Report (1999-092); most tailings went into the Harbour",0.044848,45.1665509813959,-61.6463852127863
+"192","192",Isaac's Harbour (Butler),8096,Gold,1862-1868,"Assessment Report (21-G-22 (01)), all tailings likely went into the Harbour",0.0651767,45.199029557257,-61.6684087623626
+"193","193",Isaac's Harbour (Goldfinch),3974,Gold,"1902, 1912","Location approximate; site visit indicates a mill foundation",0.0549489,45.1742033320629,-61.6377804607723
+"194","194","Isaac's Harbour (Mulgrave, Gallagher)",10729,Gold,1869-1885,"Location approximate; most tailings likely went down Crusher Brook into the Harbour",0.124672,45.1713387408839,-61.6418980119885
+"195","195","Sydney Mines (Princess, Selminco, Coastal)",5000,Coal,"1875-1975, 1980-89",Tonnage estimated. Wash Plants operated from 1950 to 1989. See OFR 1995-010,0.608887,46.2558947499784,-60.2256583841075
+"196","196","Oldham Main (Sterling, Hardman, Blackie, Frankfort, Avon)",236088,Gold,1862-1943,"See Jacques Whitford report; tonnage is 3X greater than recorded in Annual Reports (ARD notable)",18.7888,44.9278245533989,-63.4990869317263
+"197","197","Lake Charlotte (Presac, Guysborough Mines)",33,"Gold, Tungsten",1935-1939,Site visit (ARD notable),0.0730638,44.8541619145606,-62.9924966262591
+"198","198",Lake Enon,35000,"Strontium, Barite",1971-1976,"See Assessment Report 11F/16B, 27-C-83 (27) (Jacques Whitford) and 2002-056 (Barrett)",0.156788,45.80474898222,-60.5412999757902
+"199","199","Mineville (Lawrencetown (Townsend, Shanghai))",737,Gold,1862-1900,"All tailings went into the river; approximate location; volume may be higher (see Westminster)",0.337194,44.6955548071565,-63.3878020774488
+"200","200",Mineville (Lawrencetown (Westminster)),341,Gold,1866-1879,"Location approximate; volume is likely high and possibly attributable to Townsend",0.180199,44.695450893053,-63.3836301856081
+"201","201","Leipsigate Lake (Queens Mines, Duluth)",750,Gold,"1885, 1947-1949","NRCan Report, Lidar Imagery, Aerial Photography; tonnage estimated",0.795452,44.3180045958256,-64.6046042330463
+"202","202","Leipsigate Lake (Owen, Jackpot)",1830,Gold,1898-1906,"NRCan Report, Lidar imagery, Aerial Photography; approximate location in lake",1.63866,44.3322137046361,-64.5891554756513
+"203","203",Leipsigate Lake (Black Hawk),900,Gold,1896-1901,"Estimated tonnage, likely all tailings went into the lake",0.326299,44.3230824208609,-64.6213810217202
+"204","204","Little Liscomb Lake (Walton, Powers)",78,Gold,1893-1895,See Assessment Reports 1987-028 and 1988-037,0.121068,45.2471906880768,-62.4541523177135
+"205","205",Miller Lake (Liscomb Falls),52,Gold,1901-1902,Location approximate,0.111616,45.0357327548696,-62.1534939334481
+"206","206","Mooseland (Beneficiary, Humber, Musgrave, Yeadon, Fraser)",4195,Gold,1862-1911,"NRCan Report; Aerial Photography, Lidar Imagery",1.83152,44.9340832889323,-62.7707068227493
+"207","207",Middle River (Second Gold Brook (Wagamatkook)),5965,Gold,1906-1915,"All tailings went into the brook, downstream to Middle River",0.0602438,46.2471502958254,-60.895256123779
+"208","208","South Uniacke (Eastville, Golden Lode)",1763,Gold,1889-1899,"Location approximate; Aerial Photography, Lidar Imagery, site visit",1.25141,44.8729214047281,-63.7748861990876
+"209","209",South Uniacke (McDonnell),12,Gold,"1934","Location approximate, crushing is stated as having taken place next to the shaft",0.0193358,44.8698085114277,-63.780263267177
+"210","210","Mount Uniacke (Hogan, Inglis, Robert Johnson)",937,Gold,"1919-1921, 1932-1937","See Assessment Report 11D/13C 21-I-27 (00); Lidar imagery",0.0972417,44.9235782009807,-63.7942696811784
+"211","211",Mount Uniacke (Great Belt),3158,Gold,"1901-1903, 1908-1909","See Assessment Report 11D/13C 21-I-27 (02); location uncertain",0.118117,44.926948884946,-63.8005868713141
+"212","212","Mount Uniacke (Alpha, McDonald)",675,Gold,"1866-1868, 1893-1896","Location and tonnage crushed are uncertain; Aerial Photography and Lidar Imagery",0.0756274,44.9307162252484,-63.7937234176216
+"213","213","Mount Uniacke (Mount Uniacke Co., Montreal Co., Crease)",21555,Gold,"1867-97, 1918-29, 1939-41","NRCan Report, Assessment Report 11D/13C 21-I-27 (02), Lidar Imagery",1.91511,44.9294677814739,-63.7990828615923
+"214","214",Renfrew (Empress),18521,Gold,"1883-1913, 1929-1933","Location approximate; Aerial Photography",7.16211,45.0083967998411,-63.6232601098161
+"215","215","Renfrew (Ophir, Pictou Development, Eagle, Hartford)",37191,Gold,1862-1907,"See Jacques Whitford 1985-031; all tailings went into Renfrew Brook and downstream",2.1817,45.0019146006503,-63.6202421653053
+"216","216","Tangier (Barton, Essex, Arlington, Boston, Dominion Mining)",33744,Gold,1862-1917,"Faribault Gold District Map; Aerial Photography; Church Map (Barton's Mill)",3.82195,44.8095898126726,-62.6796968173493
+"217","217","Tangier (Leary, New York & Nova Scotia, Burlington)",0,Gold,1862-1872,"Location approximate (see Church Map) as is the final date of operation; unknown tonnage",0.21078,44.8011406848346,-62.6919440111905
+"218","218",Debert,125000,Barite,1980-2007,"See Assessment Report 2011-040; Aerial Photography; Area is reportedly reclaimed",1.10592,45.4251551114863,-63.4296276898927
+"219","219","Isaac's Harbour (Rockland, Skunk Den, Giffin, Eureka)",1570,Gold,"1889-1909, 1934-1936","See Assessment Report 21-G-54 (07) and Jacques Whitford 1985-031; Lidar Imagery",0.201205,45.1668404642959,-61.6310994505866

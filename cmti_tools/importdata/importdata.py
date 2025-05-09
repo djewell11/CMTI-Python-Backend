@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 from configparser import ConfigParser
+from pathlib import Path
 from datetime import datetime
 from sqlalchemy.orm import DeclarativeBase # Imported for typehints
 from abc import ABC, abstractmethod
@@ -132,34 +133,33 @@ class DataImporter(ABC):
     """
 
     self.id_manager = ID_Manager()
-
     # Use ConfigParser to get data files if not provided
-    config = ConfigParser()
-    cfg_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../config.toml"))
-    config.read(cfg_path)
+    self.config = ConfigParser()
 
-    # TODO: Use create_module_variables here
+    BASE_DIR = Path(__file__).resolve().parent.parent
+    cfg_path = BASE_DIR / "config.toml"
+    self.config.read(cfg_path)
+
     if name_convert_dict == 'config':
-      with open(config.get('sources', 'elements'), mode='r') as elements_file:
-        self.name_convert_dict = tools.create_name_dict(elements_file)
-    elif name_convert_dict is not None:
-        self.name_convert_dict = name_convert_dict
-    
+      elements = pd.read_csv(BASE_DIR / self.config['supplemental']['elements'])
+      self.name_convert_dict = dict(zip(elements['symbol'], elements['name']))
+    else:
+      self.name_convert_dict = name_convert_dict
+
     # Load critical minerals list
     if cm_list == 'config':
-      with open(config.get('sources', 'critical_minerals'), mode='r') as critical_minerals_file:
-        critical_minerals = pd.read_csv(critical_minerals_file, header=0)
-        self.cm_list = critical_minerals
-    elif cm_list is not None:
+      critical_minerals = pd.read_csv(BASE_DIR / self.config['supplemental']['critical_minerals'])['Critical Minerals List'].tolist()
+      self.cm_list = critical_minerals
+    else:
       self.cm_list = cm_list
-    
+
     # Load metals dict
     if metals_dict == 'config':
-      with open(config.get('sources', 'metals'), mode='r') as metals_file:
-        metals_csv = pd.read_csv(metals_file, header=0, encoding='utf-8')
-        self.metals_dict = dict(zip(metals_csv['Commodity'], metals_csv['Type']))
-    elif metals_dict is not None:
+      metals = pd.read_csv(BASE_DIR / self.config['supplemental']['metals'])
+      self.metals_dict = dict(zip(metals['Commodity'], metals['Type']))
+    else:
       self.metals_dict = metals_dict
+
 
   @abstractmethod
   def create_row_records(self, row: pd.Series) -> None:
@@ -191,14 +191,17 @@ class DataImporter(ABC):
     # Final type coercion
     for column in input_table.columns:
       try:
+        # For each column in the input table, check the types_table for the column name and get the type.
         dtype_row = input_types_table[input_types_table['Column'] == column]
-        if dtype_row.empty:
-            raise KeyError(f"Column '{column}' not found in input_types_table.")
-        dtype = dtype_row['Type'].iloc[0]
-        if dtype.startswith('u') or dtype.startswith('i') or dtype.startswith('I'):
-          input_table[column] = pd.to_numeric(input_table[column], errors='coerce').astype('Int64')
-        elif dtype.startswith('f'):
-          input_table[column] = pd.to_numeric(input_table[column], errors='coerce').astype('float')
+        if not dtype_row.empty:
+          dtype = dtype_row['Type'].iloc[0][0]
+          match dtype:
+            # case dtype.startswith('u') | dtype.startswith('i') | dtype.startswith('I'):
+            case 'u' | 'i' | 'I' | 'int' | 'int64' | 'i4' | 'i8':
+              input_table[column] = pd.to_numeric(input_table[column], errors='coerce').astype('Int64')
+            # case dtype.startswith('f'):
+            case 'f' | 'float' | 'float64' | 'f4':
+              input_table[column] = pd.to_numeric(input_table[column], errors='coerce').astype('float')
       except Exception as e:
         print(f"Error coercing column {column}: {e}")
         raise
