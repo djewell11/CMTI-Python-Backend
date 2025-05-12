@@ -8,6 +8,7 @@ import pandas as pd
 from cmti_tools.importdata import source_importers
 from cmti_tools.datamappers import *
 from cmti_tools.idmanager import ID_Manager
+from cmti_tools import shift_values
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -185,21 +186,30 @@ def build_cmti():
   # There are currently some extra columns. Remove them
   # output_df = output_df.drop(columns=['Tailings_Mass', 'Tailings_Image_Notes'])
 
-  # Fill in IDs
+  # Perform some row-wise QA
 
+  source_cols = [col for col in output_df.columns.tolist() if col.startswith("Source")]
+
+  # Fill in IDs
   if args.create_ids:
     id_manager = ID_Manager()
     id_vals = output_df['CMIM_ID'].dropna()
     id_manager.update_prov_ids(id_vals)
-
     output_df.reset_index(drop=True, inplace=True)
 
-    for row in output_df.itertuples():
-      if pd.isna(row.CMIM_ID):
-        pt = row.Province_Territory
-        prov_id = getattr(id_manager, pt)
-        prov_id.generate_id()
-        output_df.at[row.Index, 'CMIM_ID'] = prov_id.formatted_id
+  for i, row in output_df.iterrows():
+    
+    # Shift source columns over
+    sources_shifted = shift_values(row, source_cols)
+    for s_col, val in sources_shifted.items():
+      output_df.at[i, s_col] = val
+
+    # Fill in IDs    
+    if args.create_ids and pd.isna(row.CMIM_ID):
+      pt = row.Province_Territory
+      prov_id = getattr(id_manager, pt)
+      prov_id.generate_id()
+      output_df.at[i, 'CMIM_ID'] = prov_id.formatted_id
 
   output_df.to_csv(out, index=False)
   print(f"Output written to {out}")

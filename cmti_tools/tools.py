@@ -161,14 +161,12 @@ def get_commodity(row:pd.Series, commodity_column:str, critical_mineral_list:lis
   commodity.is_critical = True if comm_name in critical_mineral_list else False
   # Now try and attach quantities, if present
   try:
-    # grade = get_comm_value(row, valCol)
     grade = row[f"{comm_short}_Grade"]
     if pd.notna(grade):
       commodity.grade = grade if isinstance(grade, (float, int)) else get_digits(grade)
   except KeyError:
     pass
   try:
-    # produced = row[f"{comm}_Produced"]
     produced = row[f"{comm_short}_Produced"]
     if pd.notna(produced):
       commodity.produced = produced if isinstance(produced, (float, int)) else get_digits(produced)
@@ -180,8 +178,33 @@ def get_commodity(row:pd.Series, commodity_column:str, critical_mineral_list:lis
       commodity.contained = contained if isinstance(contained, (float, int)) else get_digits(contained)
   except KeyError:
     pass
+
   return commodity
-      
+
+def shift_values(row:pd.Series, col_list:list, blank_values:list=["Unknown"]) -> dict:
+  """
+  Shifts values of numbered columns to infill from the left.
+
+  :param row: A dataframe row.
+  :type row: pandas.Series.
+
+  :param col_list: A list of column names to shift.
+  :type col_list: list.
+
+  :param blank_values: A list of values that are considered blank. Default: ["Unknown"].
+  :type blank_values: list.
+  """
+  
+  # Gather valid values from the row
+  values = [val for val in row[col_list].values.tolist() if pd.notna(val) and val not in blank_values]
+  shifted = {}
+  # Assign values to the dictionary in order
+  for col in col_list:
+    if shifted.get(col) is None and len(values) > 0:
+      shifted[col] = values.pop(0)
+
+  return shifted
+
 def get_table_values(row:pd.Series, columnDict:dict, default_null:object=None):
   """
   Takes column values, set out in columnDict, and produces a new dictionary where key = database column and
