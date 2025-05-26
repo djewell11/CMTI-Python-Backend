@@ -3,5 +3,6 @@
         "tests"
     ],
     "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true
+    "python.testing.pytestEnabled": true,
+    "python.testing.pytestPath": "C:\\Users\\Dan\\AppData\\Local\\pypoetry\\Cache\\virtualenvs\\cmtitools-XosJGfdT-py3.13"
 }

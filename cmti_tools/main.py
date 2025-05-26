@@ -29,16 +29,20 @@ def build_cmti():
   config = ConfigParser()
   config.read(args.config)
 
+  def clean_path(path: str | Path) -> Path:
+    normalized = str(path).replace("\\", "/")
+    return Path(normalized).expanduser().resolve()
+
   # Data Table Paths
-  cm_list_path = BASE_DIR / config.get('supplemental', 'critical_minerals')
+  cm_list_path = clean_path(BASE_DIR / config.get('supplemental', 'critical_minerals'))
   cm_list = pd.read_csv(cm_list_path)['Critical Minerals List'].tolist()
-  metals_path = BASE_DIR / config.get('supplemental', 'metals')
+  metals_path = clean_path(BASE_DIR / config.get('supplemental', 'metals'))
   metals = pd.read_csv(metals_path)
   metals_dict = dict(zip(metals['Commodity'], metals['Type']))
-  elements_path = BASE_DIR / config.get('supplemental', 'elements')
+  elements_path = clean_path(BASE_DIR / config.get('supplemental', 'elements'))
   elements = pd.read_csv(elements_path)
   name_convert_dict = dict(zip(elements['symbol'], elements['name']))
-  oam_comm_path = BASE_DIR / config.get('supplemental', 'oam_comm_names')
+  oam_comm_path = clean_path(BASE_DIR / config.get('supplemental', 'oam_comm_names'))
   oam_comm_df = pd.read_csv(oam_comm_path)
   oam_comm_names = dict(zip(oam_comm_df['Symbol'], oam_comm_df['Full_Name']))
 
@@ -46,16 +50,16 @@ def build_cmti():
 
   # Source Paths
 
-  cmti_path = BASE_DIR / (args.cmti_worksheet or config.get('sources', 'worksheet', fallback=None))
+  cmti_path = clean_path(BASE_DIR / (args.cmti_worksheet or config.get('sources', 'worksheet', fallback=None)))
   if cmti_path is None:
-    raise ValueError("Valid CMTI worksheet path is required to provide column names.")
+    raise ValueError("Valid CMTI worksheet path is required to provide column names. Table rows can be empty.")
   else:
     cmti_path = str(cmti_path)
-  omi_path = str(BASE_DIR / (args.omi or config.get('sources', 'omi', fallback=None)))
-  oam_path = str(BASE_DIR / (args.oam or config.get('sources', 'oam', fallback=None)))
-  bcahm_path = str(BASE_DIR / (args.bcahm or config.get('sources', 'bcahm', fallback=None)))
-  nsmtd_path = str(BASE_DIR / (args.nsmtd or config.get('sources', 'nsmtd', fallback=None)))
-  out = str(args.out or config.get('sources', 'output', fallback="cmti_cleaned.csv"))
+  omi_path = str(clean_path(BASE_DIR / (args.omi or config.get('sources', 'omi', fallback=None))))
+  oam_path = str(clean_path(BASE_DIR / (args.oam or config.get('sources', 'oam', fallback=None))))
+  bcahm_path = str(clean_path(BASE_DIR / (args.bcahm or config.get('sources', 'bcahm', fallback=None))))
+  nsmtd_path = str(clean_path(BASE_DIR / (args.nsmtd or config.get('sources', 'nsmtd', fallback=None))))
+  out = str(clean_path(args.out or config.get('sources', 'output', fallback="cmti_cleaned.csv")))
 
   # Check output path
   if not Path(out).parent.exists():
