@@ -59,19 +59,19 @@ def build_cmti():
     if len(files) > 1:
       warnings.warn(f"More than one source table found in {folder_path}. Using the first instance. Delete all but one source table to avoid this warning.", RuntimeWarning)
     
-    source_file_name = files[0]
+    source_file_name = path / files[0]
     return source_file_name
 
   cmti_path = clean_path(BASE_DIR / (args.cmti_worksheet or get_source_path(config.get('sources', 'worksheet', fallback=None))))
   if cmti_path is None:
     raise ValueError("Valid CMTI worksheet path is required to provide column names. Table rows can be empty.")
-  # else:
-  #   cmti_path = str(cmti_path)
-  omi_path = clean_path(BASE_DIR / (args.omi or get_source_path(config.get('sources', 'omi', fallback=None))))
-  oam_path = clean_path(BASE_DIR / (args.oam or get_source_path(config.get('sources', 'oam', fallback=None))))
-  bcahm_path = clean_path(BASE_DIR / (args.bcahm or get_source_path(config.get('sources', 'bcahm', fallback=None))))
-  nsmtd_path = clean_path(BASE_DIR / (args.nsmtd or get_source_path(config.get('sources', 'nsmtd', fallback=None))))
-  out = clean_path(args.out)
+  else:
+    cmti_path = str(cmti_path)
+  omi_path = str(clean_path(BASE_DIR / (args.omi or get_source_path(config.get('sources', 'omi', fallback=None)))))
+  oam_path = str(clean_path(BASE_DIR / (args.oam or get_source_path(config.get('sources', 'oam', fallback=None)))))
+  bcahm_path = str(clean_path(BASE_DIR / (args.bcahm or get_source_path(config.get('sources', 'bcahm', fallback=None)))))
+  nsmtd_path = str(clean_path(BASE_DIR / (args.nsmtd or get_source_path(config.get('sources', 'nsmtd', fallback=None)))))
+  out = str(clean_path(args.out))
 
   # Check output path
   if not Path(out).parent.exists():
