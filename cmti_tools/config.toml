@@ -1,9 +1,9 @@
 [sources]
-worksheet = data\sources\CMTI_Worksheet.xlsx
-oam = data\sources\OAM_2024_EN.xlsx
-omi = data\sources\OMI_filtered.xlsx
-bcahm = data\sources\BCAHM_2024-05-14-filtered.xlsx
-nsmtd = data\sources\NSMTD.csv
+worksheet = data\sources\worksheet
+oam = data\sources\oam
+omi = data\sources\omi
+bcahm = data\sources\bcahm
+nsmtd = data\sources\nsmtd
 
 [supplemental]
 critical_minerals = data\supplemental\cmList.csv
