@@ -25,7 +25,7 @@ class WorksheetImporter(DataImporter):
   def clean_input_table(
       self,
       input_table, 
-      drop_NA_columns=['Site_Name', 'Site_Type', 'CMIM_ID', 'Latitude', 'Longitude'], 
+      drop_NA_columns=['Site_Name', 'Site_Type', 'CMTI_ID', 'Latitude', 'Longitude'], 
       calculate_UTM=True, 
       force_dtypes=True, 
       convert_units:bool=True,
