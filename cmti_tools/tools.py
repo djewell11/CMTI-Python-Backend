@@ -207,7 +207,7 @@ def shift_values(row:pd.Series, col_list:list, blank_values:list=["Unknown"]) ->
 
 def get_table_values(row:pd.Series, columnDict:dict, default_null:object=None):
   """
-  Takes column values, set out in columnDict, and produces a new dictionary where key = database column and
+  Takes column values from columnDict and produces a new dictionary where key = database column and
   value = original (dataframe/excel) value. This dictionary can be used to create an ORM object via dict unpacking.
 
   :param row: A dataframe row.
@@ -277,30 +277,3 @@ def lon_to_utm_zone(lon_deg:float):
   """
   zone = ceil(((float(lon_deg) + 180)/6) % 60)
   return zone
-
-def assign_totals(mine_site:Mine, column_name:str, session):
-  """
-  Queries the DB for all child TSFs and Impoundments and sums a numeric property.
-
-  :param mine_site: A Mine object.
-  :type mine_site: sqlalchemy.orm.DeclarativeBase of type Mine
-
-  :param column_name: The name of the numeric column being summed. This column exists in the impoundment object.
-  :type column_name: str.
-
-  :param session: The database session.
-  :type session: sqlalchemy.sessionmaker.Session
-
-  :return: None
-  """
-
-  tsfs = mine_site.tailings_facilities
-  impoundments = []
-  for tsf in tsfs:
-    tsf_impoundments = tsf.impoundments
-    impoundments.append(tsf_impoundments)
-  print(impoundments)
-  column_sum = sum([impoundment.column_name for impoundment in impoundments])
-  print(column_sum)
-  categorized = value_to_range(column_sum)
-  print(categorized)

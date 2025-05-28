@@ -282,7 +282,7 @@ class WorksheetImporter(DataImporter):
     # Default tailings facility. Every mine gets one
     default_TSF = TailingsFacility(
       name = f"defaultTSF_{mine.name}".strip(),
-      cmdb_id = mine.cmdb_id,
+      cmti_id = mine.cmti_id,
       status = row.Mine_Status,
       hazard_class = row.Hazard_Class,
       latitude = mine.latitude,
@@ -297,7 +297,7 @@ class WorksheetImporter(DataImporter):
     default_impoundment = Impoundment(
       name=impountment_name,
       parentTsf = default_TSF,
-      parent_tsf_id=default_TSF.cmdb_id,
+      parent_tsf_id=default_TSF.cmti_id,
       is_default = True,
       area = row.Tailings_Area,
       area_from_images = row.Tailings_Area_From_Images,
@@ -320,7 +320,7 @@ class WorksheetImporter(DataImporter):
   def process_tsf(self, row:pd.Series, parent_mines:Mine | list[Mine]):
     tsf = TailingsFacility(
       name = row.Site_Name,
-      cmdb_id = row.CMIM_ID,
+      cmti_id = row.CMIM_ID,
       status = row.Mine_Status,
       hazard_class = row.Hazard_Class,
       latitude = row.Latitude,
@@ -337,7 +337,7 @@ class WorksheetImporter(DataImporter):
   def process_impoundment(self, row:pd.Series, parent_TSF:TailingsFacility):
     impoundment = Impoundment(
       name = row.Site_Name,
-      cmdb_id = row.CMIM_ID,
+      cmti_id = row.CMIM_ID,
       is_default = False,
       area = row.Tailings_Area,
       volume = row.Tailings_Volume,
@@ -462,7 +462,7 @@ class OMIImporter(DataImporter):
       # Default Impoundment
       impoundment = Impoundment(
         parentTsf=tsf,
-        parent_tsf_id=tsf.cmdb_id,
+        parent_tsf_id=tsf.cmti_id,
         is_default = True, name = f"{tsf.name}_impoundment"
       )
       row_records.append(impoundment)
@@ -659,7 +659,7 @@ class OAMImporter(DataImporter):
 
       impoundment = Impoundment(
         parentTsf = tsf,
-        parent_tsf_id=tsf.cmdb_id, 
+        parent_tsf_id=tsf.cmti_id, 
         is_default = True, 
         name = f"{tsf.name}_impoundment")
       row_records.append(impoundment)
@@ -856,7 +856,7 @@ class BCAHMImporter(DataImporter):
       # Impoundment
       impoundment = Impoundment(
         parentTsf=tsf,
-        parent_tsf_id=tsf.cmdb_id,
+        parent_tsf_id=tsf.cmti_id,
         is_default=True,
         name=f"{tsf.name}_impoundment"
       )
@@ -1006,7 +1006,7 @@ class NSMTDImporter(DataImporter):
       impoundment_vals = {
         "name": f"{tsf.name}_impoundment",
         "parentTsf": tsf,
-        "parent_tsf_id": tsf.cmdb_id,
+        "parent_tsf_id": tsf.cmti_id,
         "is_default": True,
         "area": row["AreaHa"], # If running clean_input_table, this will be in km2
         "volume": row["Tonnes"]

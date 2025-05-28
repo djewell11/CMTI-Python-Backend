@@ -1,10 +1,10 @@
 # Dict to convert the CMDB worksheet column names to the database table column names
 worksheet_table_mapping = {
-    "cmdb_id": "CMIM_ID",
+    "cmti_id": "CMTI_ID",
     "name": "Site_Name",
     "prov_terr": "Province_Territory",
     "last_revised": "Last_Revised",
-    "nad": "NAD",
+    "datum": "Datum",
     "utm_zone": "UTM_Zone",
     "easting": "Easting",
     "northing": "Northing",

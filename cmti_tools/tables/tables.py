@@ -27,14 +27,14 @@ class Mine:
 
   # Non-nullable (required values)
   id: int = field(init=False, metadata={"sa": mapped_column(Integer, primary_key=True, autoincrement=True)})
-  cmdb_id: str = field(default="NULL", metadata={"sa": mapped_column(String, nullable=False)})
+  cmti_id: str = field(default="NULL", metadata={"sa": mapped_column(String, nullable=False)})
   name: str = field(metadata={"sa": mapped_column(String, nullable=False)})
   prov_terr: str = field(metadata = {"sa": mapped_column(String(2), nullable=False)})
   latitude: float = field(metadata={"sa": mapped_column(Float, nullable=False)})
   longitude: float = field(metadata={"sa": mapped_column(Float, nullable=False)})
   # Nullable (optional values)
   last_revised: datetime=field(default=NaT, metadata={"sa": mapped_column(DateTime, nullable=True)})
-  nad: int = field(default=83, metadata={"sa": mapped_column(Integer, nullable=True)})
+  datum: int = field(default=83, metadata={"sa": mapped_column(Integer, nullable=True)})
   utm_zone: int = field(default=NA, metadata={"sa": mapped_column(Integer, nullable=True)})
   easting: float = field(default=NA, metadata={"sa": mapped_column(Float, nullable=True)})
   northing: float = field(default=NA, metadata={"sa": mapped_column(Float, nullable=True)})
@@ -91,7 +91,7 @@ class Mine:
   references: List["Reference"] = field(default_factory=list, metadata={"sa": relationship("Reference", back_populates="mine")})
 
   def __repr__(self) -> str:
-    return f"Mine: {self.name!r}, ID: {self.id!r}, cmdb_id: {self.cmdb_id}"
+    return f"Mine: {self.name!r}, ID: {self.id!r}, cmti_id: {self.cmti_id}"
 
 @reg.mapped
 @dataclass(kw_only=True)
@@ -162,7 +162,7 @@ class TailingsFacility:
 
   id: int = field(default=None, metadata={"sa": mapped_column(Integer, primary_key=True, autoincrement=True)})
   is_default: bool = field(default=None, metadata={"sa": mapped_column(Boolean, nullable=False, default=False)})
-  cmdb_id: str = field(default="NULL", metadata={"sa": mapped_column(String, nullable=False)})
+  cmti_id: str = field(default="NULL", metadata={"sa": mapped_column(String, nullable=False)})
   name: str = field(default="Unknown", metadata={"sa": mapped_column(String, nullable=False)})
   status: str = field(default=None, metadata={"sa": mapped_column(String, server_default="Unknown", nullable=True)})
   hazard_class: str = field(default=None, metadata={"sa": mapped_column(String, server_default="Unknown", nullable=True)})
@@ -181,7 +181,7 @@ class TailingsFacility:
   )
   
   def __repr__(self) -> str:
-    return f"TailingsFacility: {self.name!r}, ID: {self.id!r}, cmdb_id: {self.cmdb_id}, isDefault: {self.is_default}"
+    return f"TailingsFacility: {self.name!r}, ID: {self.id!r}, cmti_id: {self.cmti_id}, isDefault: {self.is_default}"
 
 @reg.mapped
 @dataclass(kw_only=True)
@@ -192,7 +192,7 @@ class Impoundment:
 
   id: int = field(init=False, metadata={"sa": mapped_column(Integer, primary_key=True, autoincrement=True)})
   is_default: bool = field(default=None, metadata={"sa": mapped_column(Boolean, nullable=False, default=False)})
-  cmdb_id: str = field(default="NULL", metadata={"sa": mapped_column(String, nullable=False)})
+  cmti_id: str = field(default="NULL", metadata={"sa": mapped_column(String, nullable=False)})
   parent_tsf_id: "TailingsFacility" = field(metadata={"sa":  mapped_column(ForeignKey("tailings_facilities.id"))})
   name: str = field(default=None, metadata={"sa": mapped_column(String, nullable=False)})
   area: float = field(default=None, metadata={"sa": mapped_column(Float, nullable=True)})
@@ -211,7 +211,7 @@ class Impoundment:
   parentTsf: "TailingsFacility" = field(metadata={"sa": relationship("TailingsFacility", back_populates="impoundments")})
 
   def __repr__(self) -> str:
-    return f"Impoundment: {self.name!r}, ID: {self.id!r}, cmdb_id: {self.cmdb_id}"
+    return f"Impoundment: {self.name!r}, ID: {self.id!r}, cmti_id: {self.cmti_id}"
 
 
 @reg.mapped
