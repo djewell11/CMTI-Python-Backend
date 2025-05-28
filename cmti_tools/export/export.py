@@ -51,8 +51,8 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
 
   new_rows = []
   if method == 'append':
-    existing_ids = worksheet['CMIM_ID'].tolist()
-    query_stmt = select(Mine).filter(Mine.cmdb_id not in existing_ids)
+    existing_ids = worksheet['CMTI_ID'].tolist()
+    query_stmt = select(Mine).filter(Mine.cmti_id not in existing_ids)
   elif method == 'overwrite':
     query_stmt = select(Mine)
   else:
@@ -66,9 +66,9 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
       # Direct values of mine table
       new_row['Site_Name'] = r.name
       new_row['Site_Type'] = 'Mine'
-      new_row['CMIM_ID'] = r.cmdb_id
+      new_row['CMTI_ID'] = r.cmti_id
       new_row['Last_Revised'] = r.last_revised
-      new_row['NAD'] = 83
+      new_row['Datum'] = 'NAD83'
       new_row['UTM_Zone'] = r.utm_zone
       new_row['Easting'] = r.easting
       new_row['Northing'] = r.northing
@@ -172,10 +172,10 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
           tsf_row['Site_Type'] = 'TSF'
           tsf_row['Latitude'] = tsf.latitude or r.latitude
           tsf_row['Parent'] = r.name
-          tsf_row['Parent_ID'] = r.cmdb_id
+          tsf_row['Parent_ID'] = r.cmti_id
           tsf_row['Longitude'] = tsf.longitude or r.longitude
-          tsf_row['CMIM_ID'] = tsf.cmdb_id
-          tsf_row['NAD'] = r.nad
+          tsf_row['CMTI_ID'] = tsf.cmti_id
+          tsf_row['Datum'] = r.datum
           tsf_row['UTM_Zone'] = r.utm_zone or lon_to_utm_zone(tsf_row['Longitude'])
           tsf_row['Easting'] = r.easting
           tsf_row['Northing'] = r.northing
@@ -217,11 +217,11 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
             impoundment_row['Site_Name'] = impoundment.name
             impoundment_row['Site_Type'] = 'Impoundment'
             impoundment_row['Parent'] = impoundment.parentTsf.name
-            impoundment_row['Parent_ID'] = impoundment.parentTsf.cmdb_id
+            impoundment_row['Parent_ID'] = impoundment.parentTsf.cmti_id
             impoundment_row['Latitude'] = impoundment.parentTsf.latitude or r.latitude
             impoundment_row['Longitude'] = impoundment.parentTsf.longitude or r.longitude
-            impoundment_row['CMIM_ID'] = impoundment.cmdb_id
-            impoundment_row['NAD'] = r.nad
+            impoundment_row['CMTI_ID'] = impoundment.cmti_id
+            impoundment_row['Datum'] = r.datum
             impoundment_row['UTM_Zone'] = r.utm_zone or lon_to_utm_zone(impoundment_row['Longitude'])
             impoundment_row['Easting'] = r.easting
             impoundment_row['Northing'] = r.northing
@@ -265,7 +265,3 @@ def db_to_dataframe(worksheet:pd.DataFrame, session, name_convert_dict, method:L
   elif method == 'overwrite':
     out_df = new_records
   return out_df
-
-# def export_database():
-#   !pg_dump cmdb > cmdb_backup.sql
-#   !pg_dump -C -h localhost -U postgres cmdb | psql -h remotehost -U remoteuser dbname

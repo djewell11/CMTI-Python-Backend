@@ -69,7 +69,7 @@ class ProvID:
     """
     ids = []
     for mine in session.query(Mine).filter(Mine.prov_terr == self.code):
-      mine_id = mine.cmdb_id
+      mine_id = mine.cmti_id
       id_num = int(mine_id[2:]) # The integer portion of the ID
       ids.append(id_num)
     return max(ids) if len(ids) > 0 else 0

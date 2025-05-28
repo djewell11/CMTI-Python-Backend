@@ -1,4 +1,4 @@
-# Dict to convert the CMDB worksheet column names to the database table column names
+# Dict to convert the CMTI worksheet column names to the database table column names
 worksheet_table_mapping = {
     "cmti_id": "CMTI_ID",
     "name": "Site_Name",
@@ -55,7 +55,7 @@ omi_mapping = {
     'DEP_CLASS': 'Orebody_Class',
     'LONGITUDE': 'Longitude',
     'LATITUDE': 'Latitude',
-    'LL_DATUM': 'NAD',
+    'LL_DATUM': 'Datum',
     'DETAIL': 'Source_1_Link'
 }
 

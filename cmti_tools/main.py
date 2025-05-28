@@ -208,7 +208,7 @@ def build_cmti():
   # Fill in IDs
   if args.create_ids:
     id_manager = ID_Manager()
-    id_vals = output_df['CMIM_ID'].dropna()
+    id_vals = output_df['CMTI_ID'].dropna()
     id_manager.update_prov_ids(id_vals)
     output_df.reset_index(drop=True, inplace=True)
 
@@ -220,11 +220,11 @@ def build_cmti():
     #   output_df.at[i, s_col] = val
 
     # Fill in IDs    
-    if args.create_ids and pd.isna(row.CMIM_ID):
+    if args.create_ids and pd.isna(row.CMTI_ID):
       pt = row.Province_Territory
       prov_id = getattr(id_manager, pt)
       prov_id.generate_id()
-      output_df.at[i, 'CMIM_ID'] = prov_id.formatted_id
+      output_df.at[i, 'CMTI_ID'] = prov_id.formatted_id
 
   output_df.to_csv(out, index=False)
   print(f"Output written to {out}")
