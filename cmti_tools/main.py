@@ -77,7 +77,7 @@ def build_cmti():
   if not Path(out).parent.exists():
     raise ValueError(f"Output directory does not exist: {Path(out).parent} or cannot be found.")
   if not out.endswith('.csv'):
-    print("Output file must be a .csv file. Adding .csv to the end of the file name.")
+    print("Output file should be a .csv. Adding '.csv' to the end of the file name.")
     out = out + ".csv"
 
   # CMTI Worksheet
@@ -192,7 +192,6 @@ def build_cmti():
         except ValueError:
           pass
 
-
     nsmtd_mapped['Site_Type'] = 'Mine'
     nsmtd_mapped['Source_1'] = 'NSMTD'
 
@@ -204,7 +203,7 @@ def build_cmti():
 
   # Perform some row-wise QA
 
-  source_cols = [col for col in output_df.columns.tolist() if col.startswith("Source")]
+  # source_cols = [col for col in output_df.columns.tolist() if col.startswith("Source")]
 
   # Fill in IDs
   if args.create_ids:
@@ -215,10 +214,10 @@ def build_cmti():
 
   for i, row in output_df.iterrows():
     
-    # Shift source columns over
-    sources_shifted = shift_values(row, source_cols)
-    for s_col, val in sources_shifted.items():
-      output_df.at[i, s_col] = val
+    # # Shift source columns over
+    # sources_shifted = shift_values(row, source_cols)
+    # for s_col, val in sources_shifted.items():
+    #   output_df.at[i, s_col] = val
 
     # Fill in IDs    
     if args.create_ids and pd.isna(row.CMIM_ID):
