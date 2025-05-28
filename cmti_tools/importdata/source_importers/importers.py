@@ -437,7 +437,7 @@ class OMIImporter(DataImporter):
         name = row['NAME'],
         latitude = row['LATITUDE'],
         longitude = row['LONGITUDE'],
-        prov_terr="ON",
+        prov_terr = "ON",
         mining_district = row['RGP_DIST'],
         status = "Active" if row['STATUS'] == "Producing Mine" else "Inactive"
       )

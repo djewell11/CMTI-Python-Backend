@@ -10,7 +10,7 @@ import pandas as pd
 from cmti_tools.importdata import source_importers
 from cmti_tools.datamappers import *
 from cmti_tools.idmanager import ID_Manager
-from cmti_tools import shift_values
+# from cmti_tools import shift_values
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -115,6 +115,7 @@ def build_cmti():
     omi_df = omi_importer.clean_input_table(omi_path)
 
     omi_mapped = omi_importer.map_to_worksheet(cmti_df, omi_df, omi_mapping)
+    omi_mapped['Province_Territory'] = 'BC'
     omi_mapped['Site_Type'] = 'Mine'
     omi_mapped['Source_1'] = 'OMI'
 
@@ -151,6 +152,7 @@ def build_cmti():
 
     bcahm_df = bcahm_df.fillna({'DEPOSITTYPE_D1': 'Null', 'DEPOSITTYPE_D2': 'Null'})
     bcahm_mapped = bcahm_importer.map_to_worksheet(cmti_df, bcahm_df, bcahm_mapping)
+    bcahm_mapped['Province_Territory'] = "BC"
     bcahm_mapped['Site_Type'] = 'Mine'
     bcahm_mapped['Source_1'] = 'BC AHM'
 
@@ -192,8 +194,10 @@ def build_cmti():
         except ValueError:
           pass
 
+    nsmtd_mapped['Province_Territory'] = "NS"
     nsmtd_mapped['Site_Type'] = 'Mine'
     nsmtd_mapped['Source_1'] = 'NSMTD'
+    nsmtd_mapped['Mine_Status'] = "Inactive"
 
     output_df = pd.concat([output_df, nsmtd_mapped])
     print("NSMTD imported.")
@@ -219,8 +223,8 @@ def build_cmti():
     # for s_col, val in sources_shifted.items():
     #   output_df.at[i, s_col] = val
 
-    # Fill in IDs    
-    if args.create_ids and pd.isna(row.CMTI_ID):
+    # Fill in IDs
+    if args.create_ids and pd.isna(row.CMTI_ID) and pd.notna(row.Province_Territory):
       pt = row.Province_Territory
       prov_id = getattr(id_manager, pt)
       prov_id.generate_id()
