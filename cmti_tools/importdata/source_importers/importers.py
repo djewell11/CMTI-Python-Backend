@@ -37,7 +37,7 @@ class WorksheetImporter(DataImporter):
     :type input_table: pd.DataFrame or str
 
     :param drop_NA_columns: Columns where row should be dropped if value is missing. Provides a way of removing rows that lack required values before committing to database. 
-      Default: ['Site_Name', 'Site_Type', 'CMIM_ID', 'Latitude', 'Longitude']
+      Default: ['Site_Name', 'Site_Type', 'CMTI_ID', 'Latitude', 'Longitude']
     :type drop_NA_columns: list
 
     :param calculate_UTM: If True, calculate UTM Zone based on Longitude. Default: True
@@ -58,8 +58,8 @@ class WorksheetImporter(DataImporter):
       :type dimensionless_value_units: dict
     '''
       
-    cmti_dtypes = {'Site_Name':'U', 'Site_Type':'U', 'CMIM_ID':'U', 'Site_Aliases': 'U', 'Last_Revised': 'datetime64[ns]',
-      'NAD': 'Int64', 'UTM_Zone':'Int64', 'Easting':'Int64', 'Northing':'Int64', 'Latitude': 'f',
+    cmti_dtypes = {'Site_Name':'U', 'Site_Type':'U', 'CMTI_ID':'U', 'Site_Aliases': 'U', 'Last_Revised': 'datetime64[ns]',
+      'Datum': 'U', 'UTM_Zone':'Int64', 'Easting':'Int64', 'Northing':'Int64', 'Latitude': 'f',
       'Longitude': 'f', 'Country':'U','Province_Territory': 'U', 'NTS_Area':'U', 'Mining_District': 'U', 'Parent': 'U', 'Parent_ID': 'U',
       'Commodity1':'U', 'Commodity2':'U', 'Commodity3': 'U', 'Commodity4': 'U', 'Commodity5': 'U', 'Commodity6':'U',
       'Commodity7':'U', 'Commodity8':'U', 'Mine_Type':'U',  'Mining_Method':'U', 'Mine_Status': 'U',
@@ -161,8 +161,8 @@ class WorksheetImporter(DataImporter):
           pass
 
     # Final type coercion and special cases
-    # Assume NAD is 83
-    cmti_df['NAD'] = cmti_df['NAD'].fillna(83)
+    # Assume Datum is 83
+    cmti_df['Datum'] = cmti_df['Datum'].fillna("NAD83")
 
     # Calculate UTM Zone
     if calculate_UTM:
@@ -320,7 +320,7 @@ class WorksheetImporter(DataImporter):
   def process_tsf(self, row:pd.Series, parent_mines:Mine | list[Mine]):
     tsf = TailingsFacility(
       name = row.Site_Name,
-      cmti_id = row.CMIM_ID,
+      cmti_id = row.CMTI_ID,
       status = row.Mine_Status,
       hazard_class = row.Hazard_Class,
       latitude = row.Latitude,
@@ -337,7 +337,7 @@ class WorksheetImporter(DataImporter):
   def process_impoundment(self, row:pd.Series, parent_TSF:TailingsFacility):
     impoundment = Impoundment(
       name = row.Site_Name,
-      cmti_id = row.CMIM_ID,
+      cmti_id = row.CMTI_ID,
       is_default = False,
       area = row.Tailings_Area,
       volume = row.Tailings_Volume,
