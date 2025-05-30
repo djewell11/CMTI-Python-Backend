@@ -32,8 +32,10 @@ def build_cmti():
   config.read(args.config)
 
   def clean_path(path: str | Path) -> Path:
+    if path is None:
+      return
     normalized = str(path).replace("\\", "/")
-    return Path(normalized).expanduser().resolve()
+    return str(Path(normalized).expanduser().resolve())
 
   # Data Table Paths
   cm_list_path = clean_path(BASE_DIR / config.get('supplemental', 'critical_minerals'))
@@ -52,26 +54,16 @@ def build_cmti():
 
   # Source Paths
 
-  def get_source_path(folder_path):
-    path = Path(folder_path)
-    files = os.listdir(path)
-
-    if len(files) > 1:
-      warnings.warn(f"More than one source table found in {folder_path}. Using the first instance. Delete all but one source table to avoid this warning.", RuntimeWarning)
-    
-    source_file_name = path / files[0]
-    return source_file_name
-
   cmti_path = clean_path(BASE_DIR / args.cmti_worksheet)
   if cmti_path is None:
     raise ValueError("Valid CMTI worksheet path is required to provide column names. Table rows can be empty.")
   else:
-    cmti_path = str(cmti_path)
-  omi_path = str(clean_path(BASE_DIR / args.omi))
-  oam_path = str(clean_path(BASE_DIR / args.oam))
-  bcahm_path = str(clean_path(BASE_DIR / args.bcahm))
-  nsmtd_path = str(clean_path(BASE_DIR / args.nsmtd))
-  out = str(clean_path(args.out))
+    cmti_path = cmti_path
+  omi_path = clean_path(BASE_DIR / args.omi)
+  oam_path = clean_path(BASE_DIR / args.oam)
+  bcahm_path = clean_path(BASE_DIR / args.bcahm)
+  nsmtd_path = clean_path(BASE_DIR / args.nsmtd)
+  out = clean_path(args.out)
 
   # Check output path
   if not Path(out).parent.exists():
