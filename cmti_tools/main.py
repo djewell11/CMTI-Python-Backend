@@ -17,7 +17,7 @@ BASE_DIR = Path(__file__).resolve().parent
 def build_cmti():
   
   parser = argparse.ArgumentParser(description="Import sources, map to CMTI metadata and apply quality control. To change supplemental data tables, edit the config.toml file.")
-  parser.add_argument("--cmti_worksheet", help="Path to the CMTI worksheet", type=str)
+  parser.add_argument("--cmti_worksheet", help="Path to the CMTI worksheet", type=str) # cmti_worksheet is 'optional' because it has a default to fall back to. It has to be included either here or in config
   parser.add_argument("--omi", help="Path to the Ontario Mineral Inventory table", type=str)
   parser.add_argument("--oam", help="Path to the Orphaned and Abanoned Mines table", type=str)
   parser.add_argument("--bcahm", help="Path to the British Columbia Abandoned and Historic Mines table", type=str)
@@ -62,15 +62,15 @@ def build_cmti():
     source_file_name = path / files[0]
     return source_file_name
 
-  cmti_path = clean_path(BASE_DIR / (args.cmti_worksheet or get_source_path(config.get('sources', 'worksheet', fallback=None))))
+  cmti_path = clean_path(BASE_DIR / args.cmti_worksheet)
   if cmti_path is None:
     raise ValueError("Valid CMTI worksheet path is required to provide column names. Table rows can be empty.")
   else:
     cmti_path = str(cmti_path)
-  omi_path = str(clean_path(BASE_DIR / (args.omi or get_source_path(config.get('sources', 'omi', fallback=None)))))
-  oam_path = str(clean_path(BASE_DIR / (args.oam or get_source_path(config.get('sources', 'oam', fallback=None)))))
-  bcahm_path = str(clean_path(BASE_DIR / (args.bcahm or get_source_path(config.get('sources', 'bcahm', fallback=None)))))
-  nsmtd_path = str(clean_path(BASE_DIR / (args.nsmtd or get_source_path(config.get('sources', 'nsmtd', fallback=None)))))
+  omi_path = str(clean_path(BASE_DIR / args.omi))
+  oam_path = str(clean_path(BASE_DIR / args.oam))
+  bcahm_path = str(clean_path(BASE_DIR / args.bcahm))
+  nsmtd_path = str(clean_path(BASE_DIR / args.nsmtd))
   out = str(clean_path(args.out))
 
   # Check output path
