@@ -31,23 +31,23 @@ def build_cmti():
   config = ConfigParser()
   config.read(args.config)
 
-  def clean_path(path: str | Path) -> Path:
-    try:
-      normalized = str(path).replace("\\", "/")
-      return str(Path(normalized).expanduser().resolve())
-    except TypeError:
+  def create_path(source_path: str) -> Path:
+    if source_path is None:
       return
+    normalized = source_path.replace("\\", "/")
+    out_path = (BASE_DIR / normalized).expanduser().resolve()
+    return str(out_path)
 
   # Data Table Paths
-  cm_list_path = clean_path(BASE_DIR / config.get('supplemental', 'critical_minerals'))
+  cm_list_path = create_path(config.get('supplemental', 'critical_minerals'))
   cm_list = pd.read_csv(cm_list_path)['Critical Minerals List'].tolist()
-  metals_path = clean_path(BASE_DIR / config.get('supplemental', 'metals'))
+  metals_path = create_path(config.get('supplemental', 'metals'))
   metals = pd.read_csv(metals_path)
   metals_dict = dict(zip(metals['Commodity'], metals['Type']))
-  elements_path = clean_path(BASE_DIR / config.get('supplemental', 'elements'))
+  elements_path = create_path(config.get('supplemental', 'elements'))
   elements = pd.read_csv(elements_path)
   name_convert_dict = dict(zip(elements['symbol'], elements['name']))
-  oam_comm_path = clean_path(BASE_DIR / config.get('supplemental', 'oam_comm_names'))
+  oam_comm_path = create_path(config.get('supplemental', 'oam_comm_names'))
   oam_comm_df = pd.read_csv(oam_comm_path)
   oam_comm_names = dict(zip(oam_comm_df['Symbol'], oam_comm_df['Full_Name']))
 
@@ -55,16 +55,16 @@ def build_cmti():
 
   # Source Paths
 
-  cmti_path = clean_path(BASE_DIR / args.cmti_worksheet)
+  cmti_path = create_path(args.cmti_worksheet)
   if cmti_path is None:
     raise ValueError("Valid CMTI worksheet path is required to provide column names. Table rows can be empty.")
   else:
     cmti_path = cmti_path
-  omi_path = clean_path(BASE_DIR / args.omi)
-  oam_path = clean_path(BASE_DIR / args.oam)
-  bcahm_path = clean_path(BASE_DIR / args.bcahm)
-  nsmtd_path = clean_path(BASE_DIR / args.nsmtd)
-  out = clean_path(args.out)
+  omi_path = create_path(args.omi)
+  oam_path = create_path(args.oam)
+  bcahm_path = create_path(args.bcahm)
+  nsmtd_path = create_path(args.nsmtd)
+  out = create_path(args.out)
 
   # Check output path
   if not Path(out).parent.exists():
