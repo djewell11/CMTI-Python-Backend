@@ -32,10 +32,11 @@ def build_cmti():
   config.read(args.config)
 
   def clean_path(path: str | Path) -> Path:
-    if path is None:
+    try:
+      normalized = str(path).replace("\\", "/")
+      return str(Path(normalized).expanduser().resolve())
+    except TypeError:
       return
-    normalized = str(path).replace("\\", "/")
-    return str(Path(normalized).expanduser().resolve())
 
   # Data Table Paths
   cm_list_path = clean_path(BASE_DIR / config.get('supplemental', 'critical_minerals'))
