@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>cmti_tools.importdata.importdata API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>cmti_tools.importdata.importdata</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="cmti_tools.importdata.importdata.DataImporter"><code class="flex name class">
+<span>class <span class="ident">DataImporter</span></span>
+<span>(</span><span>name_convert_dict: str | dict | None = None,<br>cm_list: str | dict | None = None,<br>metals_dict: str | dict | None = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DataImporter(ABC):
+  &#34;&#34;&#34;
+  An abstract base class for importing data sources.
+  Manages data initialization, record creation, and database ingestion.
+  &#34;&#34;&#34;
+  def __init__(self, name_convert_dict:str|dict|None=None, cm_list:str|dict|None=None, metals_dict:str|dict|None=None):
+    &#34;&#34;&#34;
+    Initializes the DataImporter class with optional configurations for 
+    name conversion, critical minerals, and metals classification.
+    &#34;&#34;&#34;
+
+    self.id_manager = ID_Manager()
+    # Use ConfigParser to get data files if not provided
+    self.config = ConfigParser()
+
+    BASE_DIR = Path(__file__).resolve().parent.parent
+    cfg_path = BASE_DIR / &#34;config.toml&#34;
+    self.config.read(cfg_path)
+
+    if name_convert_dict == &#39;config&#39;:
+      elements = pd.read_csv(BASE_DIR / self.config[&#39;supplemental&#39;][&#39;elements&#39;])
+      self.name_convert_dict = dict(zip(elements[&#39;symbol&#39;], elements[&#39;name&#39;]))
+    else:
+      self.name_convert_dict = name_convert_dict
+
+    # Load critical minerals list
+    if cm_list == &#39;config&#39;:
+      critical_minerals = pd.read_csv(BASE_DIR / self.config[&#39;supplemental&#39;][&#39;critical_minerals&#39;])[&#39;Critical Minerals List&#39;].tolist()
+      self.cm_list = critical_minerals
+    else:
+      self.cm_list = cm_list
+
+    # Load metals dict
+    if metals_dict == &#39;config&#39;:
+      metals = pd.read_csv(BASE_DIR / self.config[&#39;supplemental&#39;][&#39;metals&#39;])
+      self.metals_dict = dict(zip(metals[&#39;Commodity&#39;], metals[&#39;Type&#39;]))
+    else:
+      self.metals_dict = metals_dict
+
+
+  @abstractmethod
+  def create_row_records(self, row: pd.Series) -&gt; None:
+    &#34;&#34;&#34;
+    Process a single row and generates a DeclarativeBase objects based on inputs. 
+    Implemented by child classes.
+    &#34;&#34;&#34;
+    pass
+
+  @abstractmethod
+  def clean_input_table(self, input_table:pd.DataFrame, force_dtypes:bool=True, convert_units:bool=True) -&gt; pd.DataFrame:
+    &#34;&#34;&#34;
+    Clean values in the input table and make column data types consistent.
+    &#34;&#34;&#34;
+    pass
+
+  def series_to_table(self, table:DeclarativeBase, series:pd.Series, datamapping:dict) -&gt; DeclarativeBase:
+    &#34;&#34;&#34;
+    Creates a table object from a pandas Series. Fetches table attributes from the series automatically based on mapping
+    &#34;&#34;&#34;
+    table_values = {k: series[v] for k, v in datamapping.items() if v in series}
+    return table(**table_values)
+
+  def coerce_dtypes(self, input_types_table, input_table:pd.DataFrame) -&gt; pd.DataFrame:
+    &#34;&#34;&#34;
+    Coerces the data types of the input table based on the types_table.
+    &#34;&#34;&#34;
+
+    # Final type coercion
+    for column in input_table.columns:
+      try:
+        # For each column in the input table, check the types_table for the column name and get the type.
+        dtype_row = input_types_table[input_types_table[&#39;Column&#39;] == column]
+        if not dtype_row.empty:
+          dtype = dtype_row[&#39;Type&#39;].iloc[0][0]
+          match dtype:
+            # case dtype.startswith(&#39;u&#39;) | dtype.startswith(&#39;i&#39;) | dtype.startswith(&#39;I&#39;):
+            case &#39;u&#39; | &#39;i&#39; | &#39;I&#39; | &#39;int&#39; | &#39;int64&#39; | &#39;i4&#39; | &#39;i8&#39;:
+              input_table[column] = pd.to_numeric(input_table[column], errors=&#39;coerce&#39;).astype(&#39;Int64&#39;)
+            # case dtype.startswith(&#39;f&#39;):
+            case &#39;f&#39; | &#39;float&#39; | &#39;float64&#39; | &#39;f4&#39;:
+              input_table[column] = pd.to_numeric(input_table[column], errors=&#39;coerce&#39;).astype(&#39;float&#39;)
+      except Exception as e:
+        print(f&#34;Error coercing column {column}: {e}&#34;)
+        raise
+    return input_table
+  
+  def map_to_worksheet(self, worksheet:pd.DataFrame, source:pd.DataFrame, mapping:dict) -&gt; pd.DataFrame:
+    &#34;&#34;&#34;
+    Maps source DataFrame to worksheet DataFrame using the provided mapping dictionary.
+    Creates a new DataFrame with the same columns as the worksheet and populates it with values from the source DataFrame.
+
+    :param worksheet: The DataFrame to be populated.
+    :type worksheet: pandas.DataFrame.
+
+    :param source: The DataFrame to be mapped.
+    :type source: pandas.DataFrame.
+
+    :param mapping: A dictionary mapping source columns to worksheet columns.
+    :type mapping: dict.
+
+    :return: The populated worksheet DataFrame.
+    &#34;&#34;&#34;
+    source_df = pd.DataFrame(columns=worksheet.columns)
+
+    for source_col, worksheet_col in mapping.items():
+      if source_col in source.columns:
+        source_df[worksheet_col] = source[source_col]
+      # else:
+      #   raise KeyError(f&#34;Column &#39;{source_col}&#39; not found in source DataFrame.&#34;)
+    return source_df</code></pre>
+</details>
+<div class="desc"><p>An abstract base class for importing data sources.
+Manages data initialization, record creation, and database ingestion.</p>
+<p>Initializes the DataImporter class with optional configurations for
+name conversion, critical minerals, and metals classification.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>abc.ABC</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="cmti_tools.importdata.source_importers.importers.BCAHMImporter" href="source_importers/importers.html#cmti_tools.importdata.source_importers.importers.BCAHMImporter">BCAHMImporter</a></li>
+<li><a title="cmti_tools.importdata.source_importers.importers.NSMTDImporter" href="source_importers/importers.html#cmti_tools.importdata.source_importers.importers.NSMTDImporter">NSMTDImporter</a></li>
+<li><a title="cmti_tools.importdata.source_importers.importers.OAMImporter" href="source_importers/importers.html#cmti_tools.importdata.source_importers.importers.OAMImporter">OAMImporter</a></li>
+<li><a title="cmti_tools.importdata.source_importers.importers.OMIImporter" href="source_importers/importers.html#cmti_tools.importdata.source_importers.importers.OMIImporter">OMIImporter</a></li>
+<li><a title="cmti_tools.importdata.source_importers.importers.WorksheetImporter" href="source_importers/importers.html#cmti_tools.importdata.source_importers.importers.WorksheetImporter">WorksheetImporter</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="cmti_tools.importdata.importdata.DataImporter.clean_input_table"><code class="name flex">
+<span>def <span class="ident">clean_input_table</span></span>(<span>self,<br>input_table: pandas.core.frame.DataFrame,<br>force_dtypes: bool = True,<br>convert_units: bool = True) ‑> pandas.core.frame.DataFrame</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@abstractmethod
+def clean_input_table(self, input_table:pd.DataFrame, force_dtypes:bool=True, convert_units:bool=True) -&gt; pd.DataFrame:
+  &#34;&#34;&#34;
+  Clean values in the input table and make column data types consistent.
+  &#34;&#34;&#34;
+  pass</code></pre>
+</details>
+<div class="desc"><p>Clean values in the input table and make column data types consistent.</p></div>
+</dd>
+<dt id="cmti_tools.importdata.importdata.DataImporter.coerce_dtypes"><code class="name flex">
+<span>def <span class="ident">coerce_dtypes</span></span>(<span>self, input_types_table, input_table: pandas.core.frame.DataFrame) ‑> pandas.core.frame.DataFrame</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def coerce_dtypes(self, input_types_table, input_table:pd.DataFrame) -&gt; pd.DataFrame:
+  &#34;&#34;&#34;
+  Coerces the data types of the input table based on the types_table.
+  &#34;&#34;&#34;
+
+  # Final type coercion
+  for column in input_table.columns:
+    try:
+      # For each column in the input table, check the types_table for the column name and get the type.
+      dtype_row = input_types_table[input_types_table[&#39;Column&#39;] == column]
+      if not dtype_row.empty:
+        dtype = dtype_row[&#39;Type&#39;].iloc[0][0]
+        match dtype:
+          # case dtype.startswith(&#39;u&#39;) | dtype.startswith(&#39;i&#39;) | dtype.startswith(&#39;I&#39;):
+          case &#39;u&#39; | &#39;i&#39; | &#39;I&#39; | &#39;int&#39; | &#39;int64&#39; | &#39;i4&#39; | &#39;i8&#39;:
+            input_table[column] = pd.to_numeric(input_table[column], errors=&#39;coerce&#39;).astype(&#39;Int64&#39;)
+          # case dtype.startswith(&#39;f&#39;):
+          case &#39;f&#39; | &#39;float&#39; | &#39;float64&#39; | &#39;f4&#39;:
+            input_table[column] = pd.to_numeric(input_table[column], errors=&#39;coerce&#39;).astype(&#39;float&#39;)
+    except Exception as e:
+      print(f&#34;Error coercing column {column}: {e}&#34;)
+      raise
+  return input_table</code></pre>
+</details>
+<div class="desc"><p>Coerces the data types of the input table based on the types_table.</p></div>
+</dd>
+<dt id="cmti_tools.importdata.importdata.DataImporter.create_row_records"><code class="name flex">
+<span>def <span class="ident">create_row_records</span></span>(<span>self, row: pandas.core.series.Series) ‑> None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@abstractmethod
+def create_row_records(self, row: pd.Series) -&gt; None:
+  &#34;&#34;&#34;
+  Process a single row and generates a DeclarativeBase objects based on inputs. 
+  Implemented by child classes.
+  &#34;&#34;&#34;
+  pass</code></pre>
+</details>
+<div class="desc"><p>Process a single row and generates a DeclarativeBase objects based on inputs.
+Implemented by child classes.</p></div>
+</dd>
+<dt id="cmti_tools.importdata.importdata.DataImporter.map_to_worksheet"><code class="name flex">
+<span>def <span class="ident">map_to_worksheet</span></span>(<span>self,<br>worksheet: pandas.core.frame.DataFrame,<br>source: pandas.core.frame.DataFrame,<br>mapping: dict) ‑> pandas.core.frame.DataFrame</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def map_to_worksheet(self, worksheet:pd.DataFrame, source:pd.DataFrame, mapping:dict) -&gt; pd.DataFrame:
+  &#34;&#34;&#34;
+  Maps source DataFrame to worksheet DataFrame using the provided mapping dictionary.
+  Creates a new DataFrame with the same columns as the worksheet and populates it with values from the source DataFrame.
+
+  :param worksheet: The DataFrame to be populated.
+  :type worksheet: pandas.DataFrame.
+
+  :param source: The DataFrame to be mapped.
+  :type source: pandas.DataFrame.
+
+  :param mapping: A dictionary mapping source columns to worksheet columns.
+  :type mapping: dict.
+
+  :return: The populated worksheet DataFrame.
+  &#34;&#34;&#34;
+  source_df = pd.DataFrame(columns=worksheet.columns)
+
+  for source_col, worksheet_col in mapping.items():
+    if source_col in source.columns:
+      source_df[worksheet_col] = source[source_col]
+    # else:
+    #   raise KeyError(f&#34;Column &#39;{source_col}&#39; not found in source DataFrame.&#34;)
+  return source_df</code></pre>
+</details>
+<div class="desc"><p>Maps source DataFrame to worksheet DataFrame using the provided mapping dictionary.
+Creates a new DataFrame with the same columns as the worksheet and populates it with values from the source DataFrame.</p>
+<p>:param worksheet: The DataFrame to be populated.
+:type worksheet: pandas.DataFrame.</p>
+<p>:param source: The DataFrame to be mapped.
+:type source: pandas.DataFrame.</p>
+<p>:param mapping: A dictionary mapping source columns to worksheet columns.
+:type mapping: dict.</p>
+<p>:return: The populated worksheet DataFrame.</p></div>
+</dd>
+<dt id="cmti_tools.importdata.importdata.DataImporter.series_to_table"><code class="name flex">
+<span>def <span class="ident">series_to_table</span></span>(<span>self,<br>table: sqlalchemy.orm.decl_api.DeclarativeBase,<br>series: pandas.core.series.Series,<br>datamapping: dict) ‑> sqlalchemy.orm.decl_api.DeclarativeBase</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def series_to_table(self, table:DeclarativeBase, series:pd.Series, datamapping:dict) -&gt; DeclarativeBase:
+  &#34;&#34;&#34;
+  Creates a table object from a pandas Series. Fetches table attributes from the series automatically based on mapping
+  &#34;&#34;&#34;
+  table_values = {k: series[v] for k, v in datamapping.items() if v in series}
+  return table(**table_values)</code></pre>
+</details>
+<div class="desc"><p>Creates a table object from a pandas Series. Fetches table attributes from the series automatically based on mapping</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="cmti_tools.importdata.importdata.converter_factory"><code class="flex name class">
+<span>class <span class="ident">converter_factory</span></span>
+<span>(</span><span>types_table, unit_conversion_dict: dict = None, **kwargs)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class converter_factory:
+  &#34;&#34;&#34;
+  A class that generates converters for use in pandas, based on expected column datatypes and default values.
+
+  ...
+
+  Attributes
+  ----------
+  types_table: pandas.DataFrame
+    A DataFrame with columns &#34;Column&#34;, &#34;Type&#34;, and &#34;Default&#34;. Column must have unique values.
+
+  Methods
+  ----------
+  create_converter(column):
+    Uses types_table to create a converter for input column. Returns a function based on column dtype.
+
+  create_converter_dict():
+    Calls create_converter for each Column value in types_table and returns a dictionary of converter functions.
+  &#34;&#34;&#34;
+
+  def __init__(self, types_table, unit_conversion_dict:dict=None, **kwargs):
+    &#34;&#34;&#34;
+    :param types_table: A DataFrame with columns &#34;Column&#34;, &#34;Type&#34;, and &#34;Default&#34;. Column values must be unique.
+    :type types_table: pandas.DataFrame.
+
+    :param unit_conversion_dict: A dictionary of unit conversions for specific columns. Key = column, value = desired unit. Default: None.
+    &#34;&#34;&#34;
+    self.types_table = types_table
+    # Replace &#34;None&#34; with an empty dict if no unit_conversion_dict is provided to avoid errors in create_converter.
+    self.unit_conversion_dict = unit_conversion_dict if unit_conversion_dict is not None else {}
+    self.kwargs = kwargs
+
+  def create_converter(self, column:str):
+    &#34;&#34;&#34;
+    Creates a function for the input column that either returns the default or performs some cleanup action.
+
+    :param column: The Column value from types_table.
+    :type column: str.
+
+    :return: Function
+    &#34;&#34;&#34;
+    col_dtype = self.types_table.loc[self.types_table.Column == column, &#39;Type&#39;].values[0]
+    default = self.types_table.loc[self.types_table.Column == column, &#39;Default&#39;].values[0]
+
+    dimensionless_value_units = self.kwargs.get(&#39;dimensionless_value_unit&#39;, {})
+    
+    # Create a converter function based on dtype
+    match col_dtype:
+
+      # Create a function for each dtype. If the value is NA, return the default value. If column has a unit_conversion, convert the value.
+      case &#39;Int64&#39; | &#39;UInt64&#39; | &#39;u&#39; | &#39;u4&#39; | &#39;u8&#39; | &#39;int&#39;:
+        def get_int(val):
+          if pd.isna(val):
+            return default
+          if column in self.unit_conversion_dict.keys():
+            val = convert_unit(val, desired_unit=self.unit_conversion_dict.get(column), dimensionless_value_unit=dimensionless_value_units.get(column))
+          if isinstance(val, str):
+            val = tools.get_digits(val, &#39;int&#39;)
+          elif isinstance(val, float):
+            val = round(val)
+          return val
+        return get_int
+      
+      case &#39;f&#39; | &#39;float&#39; | &#39;float64&#39; | &#39;f4&#39;:
+        def get_float(val):
+          if pd.isna(val):
+            return default
+          if column in self.unit_conversion_dict.keys():
+            val = convert_unit(val, desired_unit=self.unit_conversion_dict.get(column), dimensionless_value_unit=dimensionless_value_units.get(column))
+          if isinstance(val, str):
+            val = tools.get_digits(val, &#39;float&#39;)
+          return val
+        return get_float
+      
+      case &#39;U&#39;:
+        def get_str(val):
+          if pd.isna(val):
+            return default
+          if isinstance(val, str):
+            return val.strip()
+          return val
+        return get_str
+      
+      case &#39;datetime64[ns]&#39;:
+        def get_datetime(val):
+          if pd.isnull(val):
+            return datetime.now()
+          return val
+        return get_datetime
+      
+      case _:
+        raise ValueError(f&#34;Invalid dtype for column/value: {column} / {col_dtype}&#34;)
+
+  def create_converter_dict(self):
+    &#34;&#34;&#34;
+    Runs create_converter for all columns in types_table.Column.
+
+    :return: dict.
+    &#34;&#34;&#34;
+    converters = {}
+    # Fill converters dict with a function for each column
+    for i, row in self.types_table.iterrows():
+      converters[row.Column] = self.create_converter(row.Column)
+    return converters</code></pre>
+</details>
+<div class="desc"><p>A class that generates converters for use in pandas, based on expected column datatypes and default values.</p>
+<p>&hellip;</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>types_table</code></strong> :&ensp;<code>pandas.DataFrame</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<p>A DataFrame with columns "Column", "Type", and "Default". Column must have unique values.</p>
+<h2 id="methods">Methods</h2>
+<p>create_converter(column):
+Uses types_table to create a converter for input column. Returns a function based on column dtype.</p>
+<p>create_converter_dict():
+Calls create_converter for each Column value in types_table and returns a dictionary of converter functions.</p>
+<p>:param types_table: A DataFrame with columns "Column", "Type", and "Default". Column values must be unique.
+:type types_table: pandas.DataFrame.</p>
+<p>:param unit_conversion_dict: A dictionary of unit conversions for specific columns. Key = column, value = desired unit. Default: None.</p></div>
+<h3>Methods</h3>
+<dl>
+<dt id="cmti_tools.importdata.importdata.converter_factory.create_converter"><code class="name flex">
+<span>def <span class="ident">create_converter</span></span>(<span>self, column: str)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_converter(self, column:str):
+  &#34;&#34;&#34;
+  Creates a function for the input column that either returns the default or performs some cleanup action.
+
+  :param column: The Column value from types_table.
+  :type column: str.
+
+  :return: Function
+  &#34;&#34;&#34;
+  col_dtype = self.types_table.loc[self.types_table.Column == column, &#39;Type&#39;].values[0]
+  default = self.types_table.loc[self.types_table.Column == column, &#39;Default&#39;].values[0]
+
+  dimensionless_value_units = self.kwargs.get(&#39;dimensionless_value_unit&#39;, {})
+  
+  # Create a converter function based on dtype
+  match col_dtype:
+
+    # Create a function for each dtype. If the value is NA, return the default value. If column has a unit_conversion, convert the value.
+    case &#39;Int64&#39; | &#39;UInt64&#39; | &#39;u&#39; | &#39;u4&#39; | &#39;u8&#39; | &#39;int&#39;:
+      def get_int(val):
+        if pd.isna(val):
+          return default
+        if column in self.unit_conversion_dict.keys():
+          val = convert_unit(val, desired_unit=self.unit_conversion_dict.get(column), dimensionless_value_unit=dimensionless_value_units.get(column))
+        if isinstance(val, str):
+          val = tools.get_digits(val, &#39;int&#39;)
+        elif isinstance(val, float):
+          val = round(val)
+        return val
+      return get_int
+    
+    case &#39;f&#39; | &#39;float&#39; | &#39;float64&#39; | &#39;f4&#39;:
+      def get_float(val):
+        if pd.isna(val):
+          return default
+        if column in self.unit_conversion_dict.keys():
+          val = convert_unit(val, desired_unit=self.unit_conversion_dict.get(column), dimensionless_value_unit=dimensionless_value_units.get(column))
+        if isinstance(val, str):
+          val = tools.get_digits(val, &#39;float&#39;)
+        return val
+      return get_float
+    
+    case &#39;U&#39;:
+      def get_str(val):
+        if pd.isna(val):
+          return default
+        if isinstance(val, str):
+          return val.strip()
+        return val
+      return get_str
+    
+    case &#39;datetime64[ns]&#39;:
+      def get_datetime(val):
+        if pd.isnull(val):
+          return datetime.now()
+        return val
+      return get_datetime
+    
+    case _:
+      raise ValueError(f&#34;Invalid dtype for column/value: {column} / {col_dtype}&#34;)</code></pre>
+</details>
+<div class="desc"><p>Creates a function for the input column that either returns the default or performs some cleanup action.</p>
+<p>:param column: The Column value from types_table.
+:type column: str.</p>
+<p>:return: Function</p></div>
+</dd>
+<dt id="cmti_tools.importdata.importdata.converter_factory.create_converter_dict"><code class="name flex">
+<span>def <span class="ident">create_converter_dict</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_converter_dict(self):
+  &#34;&#34;&#34;
+  Runs create_converter for all columns in types_table.Column.
+
+  :return: dict.
+  &#34;&#34;&#34;
+  converters = {}
+  # Fill converters dict with a function for each column
+  for i, row in self.types_table.iterrows():
+    converters[row.Column] = self.create_converter(row.Column)
+  return converters</code></pre>
+</details>
+<div class="desc"><p>Runs create_converter for all columns in types_table.Column.</p>
+<p>:return: dict.</p></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="cmti_tools.importdata" href="index.html">cmti_tools.importdata</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="cmti_tools.importdata.importdata.DataImporter" href="#cmti_tools.importdata.importdata.DataImporter">DataImporter</a></code></h4>
+<ul class="">
+<li><code><a title="cmti_tools.importdata.importdata.DataImporter.clean_input_table" href="#cmti_tools.importdata.importdata.DataImporter.clean_input_table">clean_input_table</a></code></li>
+<li><code><a title="cmti_tools.importdata.importdata.DataImporter.coerce_dtypes" href="#cmti_tools.importdata.importdata.DataImporter.coerce_dtypes">coerce_dtypes</a></code></li>
+<li><code><a title="cmti_tools.importdata.importdata.DataImporter.create_row_records" href="#cmti_tools.importdata.importdata.DataImporter.create_row_records">create_row_records</a></code></li>
+<li><code><a title="cmti_tools.importdata.importdata.DataImporter.map_to_worksheet" href="#cmti_tools.importdata.importdata.DataImporter.map_to_worksheet">map_to_worksheet</a></code></li>
+<li><code><a title="cmti_tools.importdata.importdata.DataImporter.series_to_table" href="#cmti_tools.importdata.importdata.DataImporter.series_to_table">series_to_table</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="cmti_tools.importdata.importdata.converter_factory" href="#cmti_tools.importdata.importdata.converter_factory">converter_factory</a></code></h4>
+<ul class="">
+<li><code><a title="cmti_tools.importdata.importdata.converter_factory.create_converter" href="#cmti_tools.importdata.importdata.converter_factory.create_converter">create_converter</a></code></li>
+<li><code><a title="cmti_tools.importdata.importdata.converter_factory.create_converter_dict" href="#cmti_tools.importdata.importdata.converter_factory.create_converter_dict">create_converter_dict</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>cmti_tools.tools API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>cmti_tools.tools</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="cmti_tools.tools.convert_commodity_name"><code class="name flex">
+<span>def <span class="ident">convert_commodity_name</span></span>(<span>name: str, name_convert_dict: dict, output_type: str = 'full', show_warning=False)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def convert_commodity_name(name:str, name_convert_dict:dict, output_type:str=&#34;full&#34;, show_warning=False):
+  &#34;&#34;&#34;
+  Takes element names and converts them to either symbol or full name. Ignores names not found in name_convert_dict.
+
+  :param name: The commodity name.
+  :type value: str.
+
+  :param name_convert_dict: A dictionary where keys are symbols and values are full names.
+  :type name_convert_dict: dict.
+
+  :param output_type: The type of output desired, either &#34;full&#34; or &#34;symbol&#34;. Commodities that don&#39;t match elements on the 
+    periodic table will revert to &#34;full&#34;. Default: &#34;full&#34;.
+  :type output_type: str.
+
+  :param show_warning:
+    Determines whether or not a warning is printed when &#34;name&#34; isn&#39;t present in &#34;name_convert_dict&#34;.
+    Absences are expected for non-element commodities. Default: False
+  :type name_convert_dict: bool.
+  &#34;&#34;&#34;
+  # _name = name # Save original name in case no match is found. Capitalize name to account for input differences
+  name = name.strip().capitalize()
+
+  cap_dict = {}
+  for symbol, comm in name_convert_dict.items():
+    cap_dict[symbol.capitalize()] = comm
+
+  if output_type == &#34;full&#34;:
+    # Convert symbol to full name
+    comm_name = cap_dict.get(name, None)
+    if comm_name is None:
+      # If name isn&#39;t an element, assume it&#39;s a mineral and return the original. Misspellings will get through.
+      if show_warning:
+          warn(f&#34;Could not convert {name}&#34;)
+      return name
+    else:
+      return comm_name
+  elif output_type == &#34;symbol&#34;:
+    # Convert full name to symbol
+    el_dict_reversed = {value: key for key, value in cap_dict.items()}
+    comm_name = el_dict_reversed.get(name, None)
+    if comm_name is None:
+      if show_warning:
+          warn(f&#34;Could not convert {name}&#34;)
+      return name # If name isn&#39;t in cap_dict, return original name.
+    else:
+      return comm_name
+  else:
+    raise ValueError(&#34;output_type must be either &#39;full&#39; or &#39;symbol&#39;&#34;)</code></pre>
+</details>
+<div class="desc"><p>Takes element names and converts them to either symbol or full name. Ignores names not found in name_convert_dict.</p>
+<p>:param name: The commodity name.
+:type value: str.</p>
+<p>:param name_convert_dict: A dictionary where keys are symbols and values are full names.
+:type name_convert_dict: dict.</p>
+<p>:param output_type: The type of output desired, either "full" or "symbol". Commodities that don't match elements on the
+periodic table will revert to "full". Default: "full".
+:type output_type: str.</p>
+<p>:param show_warning:
+Determines whether or not a warning is printed when "name" isn't present in "name_convert_dict".
+Absences are expected for non-element commodities. Default: False
+:type name_convert_dict: bool.</p></div>
+</dd>
+<dt id="cmti_tools.tools.create_name_dict"><code class="name flex">
+<span>def <span class="ident">create_name_dict</span></span>(<span>elements_csv: pandas.core.frame.DataFrame) ‑> dict</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_name_dict(elements_csv: DataFrame) -&gt; dict:
+  name_convert_dict = dict(zip(elements_csv[&#39;symbol&#39;], elements_csv[&#39;name&#39;]))
+  return name_convert_dict</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tools.get_commodity"><code class="name flex">
+<span>def <span class="ident">get_commodity</span></span>(<span>row: pandas.core.series.Series,<br>commodity_column: str,<br>critical_mineral_list: list,<br>name_convert_dict: dict,<br>metals_dict: dict,<br>mine: <a title="cmti_tools.tables.tables.Mine" href="tables/tables.html#cmti_tools.tables.tables.Mine">Mine</a>,<br>name_type: str = 'full') ‑> <a title="cmti_tools.tables.tables.CommodityRecord" href="tables/tables.html#cmti_tools.tables.tables.CommodityRecord">CommodityRecord</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_commodity(row:pd.Series, commodity_column:str, critical_mineral_list:list, name_convert_dict:dict, 
+                  metals_dict:dict, mine:Mine, name_type:str=&#34;full&#34;) -&gt; CommodityRecord:
+  &#34;&#34;&#34;
+  Takes multiple commodity columns from the spreadsheet and creates a CommodityRecord.
+
+  :param row: A dataframe row.
+  :type row: pandas.Series.
+
+  :param commodity_columns: A list of column names containing commodity values.
+  :type commodity_columns: list.
+
+  :param critical_mineral_list: A list of critical minerals.
+  :type critical_mineral_list: list.
+
+  :param name_convert_dict: A dictionary that can convert commodity element symbols to full names or vice versa.
+  :type name_convert_dict: dict.
+
+  :param metals_dict: A dictionary that determines whether a commodity is a non-metal, metal, or REE.
+  :type metals_dict: dict.
+
+  :param mine: An sqlalchemy ORM class of type Mine.
+  :type mine: sqlalchemy.orm.DeclarativeBase.
+
+  :param name_type: The output style for the commodity name, as entered in convert_commodity_name.
+    Either &#34;full&#34; or &#34;symbol&#34;. Default: &#34;full&#34;.
+  :type name_type: str.
+
+  :return: CommodityRecord
+  &#34;&#34;&#34;
+  # commodityCols = list(filter(lambda x: x.startswith(&#34;Commodity&#34;), dataframe.columns))
+  # Check each &#34;commodity&#34; column in table to see if it has a value
+    # If it has a value, create an ORM object. This commodity does not necessarily need to have quantities
+  try:
+    comm = row[commodity_column].capitalize()
+    comm_name = convert_commodity_name(comm, name_convert_dict, name_type)
+    comm_short = convert_commodity_name(comm, name_convert_dict, output_type=&#34;symbol&#34;)
+    commodity = CommodityRecord(mine=mine, commodity=comm_name)
+  except:
+    raise
+  # Check if metal and critical
+  try:
+    commodity.metal_type = metals_dict.get(comm_short)
+  except KeyError:
+    pass
+  commodity.is_critical = True if comm_name in critical_mineral_list else False
+  # Now try and attach quantities, if present
+  try:
+    grade = row[f&#34;{comm_short}_Grade&#34;]
+    if pd.notna(grade):
+      commodity.grade = grade if isinstance(grade, (float, int)) else get_digits(grade)
+  except KeyError:
+    pass
+  try:
+    produced = row[f&#34;{comm_short}_Produced&#34;]
+    if pd.notna(produced):
+      commodity.produced = produced if isinstance(produced, (float, int)) else get_digits(produced)
+  except KeyError:
+    pass
+  try:
+    contained = row[f&#34;{comm_short}_Contained&#34;]
+    if pd.notna(contained):
+      commodity.contained = contained if isinstance(contained, (float, int)) else get_digits(contained)
+  except KeyError:
+    pass
+
+  return commodity</code></pre>
+</details>
+<div class="desc"><p>Takes multiple commodity columns from the spreadsheet and creates a CommodityRecord.</p>
+<p>:param row: A dataframe row.
+:type row: pandas.Series.</p>
+<p>:param commodity_columns: A list of column names containing commodity values.
+:type commodity_columns: list.</p>
+<p>:param critical_mineral_list: A list of critical minerals.
+:type critical_mineral_list: list.</p>
+<p>:param name_convert_dict: A dictionary that can convert commodity element symbols to full names or vice versa.
+:type name_convert_dict: dict.</p>
+<p>:param metals_dict: A dictionary that determines whether a commodity is a non-metal, metal, or REE.
+:type metals_dict: dict.</p>
+<p>:param mine: An sqlalchemy ORM class of type Mine.
+:type mine: sqlalchemy.orm.DeclarativeBase.</p>
+<p>:param name_type: The output style for the commodity name, as entered in convert_commodity_name.
+Either "full" or "symbol". Default: "full".
+:type name_type: str.</p>
+<p>:return: CommodityRecord</p></div>
+</dd>
+<dt id="cmti_tools.tools.get_digits"><code class="name flex">
+<span>def <span class="ident">get_digits</span></span>(<span>value: str, output: str = 'float')</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_digits(value: str, output: str = &#39;float&#39;):
+  &#34;&#34;&#34;
+  Used for columns that contain quantities and may have erroneously included units.
+
+  :param value: A quantity that includes numerical values.
+  :type value: str.
+
+  :param output: The output type. Either &#39;float&#39; or &#39;int&#39;. Default: &#39;float&#39;.
+  :type output: str.
+
+  :return: A numerical value with units removed.
+  :rtype: Either float or int, according to param &#39;output&#39;.
+  &#34;&#34;&#34;
+  try:
+    if output == &#39;float&#39;:
+      parsed = re.search(r&#34;[+-]*\d+\.*\d*&#34;, value)
+      if parsed is not None:
+        stripped = parsed.group()
+        return float(stripped)
+    elif output == &#39;int&#39;:
+      parsed = re.search(r&#34;\d+&#34;, value)
+      if parsed is not None:
+        stripped = parsed.group()
+        return int(stripped)
+    else:
+      raise ValueError(&#34;&#39;output&#39; must be &#39;float&#39; or &#39;int&#39;&#34;)
+  except ValueError as e:
+    raise</code></pre>
+</details>
+<div class="desc"><p>Used for columns that contain quantities and may have erroneously included units.</p>
+<p>:param value: A quantity that includes numerical values.
+:type value: str.</p>
+<p>:param output: The output type. Either 'float' or 'int'. Default: 'float'.
+:type output: str.</p>
+<p>:return: A numerical value with units removed.
+:rtype: Either float or int, according to param 'output'.</p></div>
+</dd>
+<dt id="cmti_tools.tools.get_table_values"><code class="name flex">
+<span>def <span class="ident">get_table_values</span></span>(<span>row: pandas.core.series.Series, columnDict: dict, default_null: object = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_table_values(row:pd.Series, columnDict:dict, default_null:object=None):
+  &#34;&#34;&#34;
+  Takes column values from columnDict and produces a new dictionary where key = database column and
+  value = original (dataframe/excel) value. This dictionary can be used to create an ORM object via dict unpacking.
+
+  :param row: A dataframe row.
+  :type row: pandas.Series.
+
+  :param columnDict: A dictionary where key = dataframe column name and value = database column name
+  :type name_type: str.
+
+  :param default_null: The value that will be added to the output dictionary if column value is missing.
+  :type default_null: Any
+
+  :return: A dictionary of table values.
+  :rtype: dict.
+  &#34;&#34;&#34;
+  # Use a dictionary to match DF column names to DB table columns
+  valueDict = {}
+  for df_column, db_attribute in columnDict.items():
+    # df_value = row[df_column]
+    df_value = row.get(df_column, pd.NA)
+    if pd.notna(df_value):
+      # If value exists in dataframe row, assign it to dict indicating database column
+      if isinstance(df_value, str):
+        df_value = df_value.strip()
+      valueDict[db_attribute] = df_value
+    else:
+      valueDict[db_attribute] = default_null
+  # Returns a dict where key = database column name and value = dataframe (pandas/excel) column value
+  return valueDict</code></pre>
+</details>
+<div class="desc"><p>Takes column values from columnDict and produces a new dictionary where key = database column and
+value = original (dataframe/excel) value. This dictionary can be used to create an ORM object via dict unpacking.</p>
+<p>:param row: A dataframe row.
+:type row: pandas.Series.</p>
+<p>:param columnDict: A dictionary where key = dataframe column name and value = database column name
+:type name_type: str.</p>
+<p>:param default_null: The value that will be added to the output dictionary if column value is missing.
+:type default_null: Any</p>
+<p>:return: A dictionary of table values.
+:rtype: dict.</p></div>
+</dd>
+<dt id="cmti_tools.tools.load_config"><code class="name flex">
+<span>def <span class="ident">load_config</span></span>(<span>user_config_path=None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load_config(user_config_path=None):
+  config = ConfigParser()
+
+  # Load default config from package
+  default_config_path = Path(__file__).parent.absolute() / &#34;config.toml&#34;
+  config.read(default_config_path)
+
+  # If user supplied a config file, load it next (it overrides defaults)
+  if user_config_path and os.path.exists(user_config_path):
+      config.read(user_config_path)
+
+  return config</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tools.lon_to_utm_zone"><code class="name flex">
+<span>def <span class="ident">lon_to_utm_zone</span></span>(<span>lon_deg: float)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def lon_to_utm_zone(lon_deg:float):
+  &#34;&#34;&#34;
+  Takes the longitude in decimal degrees and returns the UTM zone as an int.
+  Assumes coordinates are in the northern hemisphere.
+
+  :param lon_deg: The longitudinal coordinate in decimal degrees. Include a negative sign for western hemisphere.
+  :type lon_deg: float.
+  &#34;&#34;&#34;
+  zone = ceil(((float(lon_deg) + 180)/6) % 60)
+  return zone</code></pre>
+</details>
+<div class="desc"><p>Takes the longitude in decimal degrees and returns the UTM zone as an int.
+Assumes coordinates are in the northern hemisphere.</p>
+<p>:param lon_deg: The longitudinal coordinate in decimal degrees. Include a negative sign for western hemisphere.
+:type lon_deg: float.</p></div>
+</dd>
+<dt id="cmti_tools.tools.override_config_value"><code class="name flex">
+<span>def <span class="ident">override_config_value</span></span>(<span>config, section, key, value)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def override_config_value(config, section, key, value):
+    if not config.has_section(section):
+        config.add_section(section)
+    config.set(section, key, value)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tools.shift_values"><code class="name flex">
+<span>def <span class="ident">shift_values</span></span>(<span>row: pandas.core.series.Series,<br>col_list: list,<br>blank_values: list = ['Unknown']) ‑> dict</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def shift_values(row:pd.Series, col_list:list, blank_values:list=[&#34;Unknown&#34;]) -&gt; dict:
+  &#34;&#34;&#34;
+  Shifts values of numbered columns to infill from the left.
+
+  :param row: A dataframe row.
+  :type row: pandas.Series.
+
+  :param col_list: A list of column names to shift.
+  :type col_list: list.
+
+  :param blank_values: A list of values that are considered blank. Default: [&#34;Unknown&#34;].
+  :type blank_values: list.
+  &#34;&#34;&#34;
+  
+  # Gather valid values from the row
+  values = [val for val in row[col_list].values.tolist() if pd.notna(val) and val not in blank_values]
+  shifted = {}
+  # Assign values to the dictionary in order
+  for col in col_list:
+    if shifted.get(col) is None and len(values) &gt; 0:
+      shifted[col] = values.pop(0)
+
+  return shifted</code></pre>
+</details>
+<div class="desc"><p>Shifts values of numbered columns to infill from the left.</p>
+<p>:param row: A dataframe row.
+:type row: pandas.Series.</p>
+<p>:param col_list: A list of column names to shift.
+:type col_list: list.</p>
+<p>:param blank_values: A list of values that are considered blank. Default: ["Unknown"].
+:type blank_values: list.</p></div>
+</dd>
+<dt id="cmti_tools.tools.value_to_range"><code class="name flex">
+<span>def <span class="ident">value_to_range</span></span>(<span>value: int | float,<br>unit_singular: str,<br>unit_plural: str = None,<br>intervals: list = [1, 10, 100, 1000, 10000, 100000, 1000000])</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def value_to_range(value:int|float, unit_singular:str, unit_plural:str=None, intervals:list=[1, 10, 100, 1000, 10_000, 100_000, 1_000_000]):
+  &#34;&#34;&#34;
+  Converts a single value to a string representing range.
+
+  :param value: A numerical value.
+  :type value: int or float.
+
+  :param unit_singular: Name of unit if quantity is 1.
+  :type unit_singular: str.
+
+  :param unit_plural: Name of unit is quantity is more than 1.
+  :type unit_plural: str. Default: None.
+
+  :param intervals: A list of cutoff values to create range categories.
+  :type intervals: list.
+  &#34;&#34;&#34;
+
+  if unit_plural == None:
+    unit_plural = unit_singular
+  ranges = [range(intervals[i], intervals[i+1]) for i in range(0, len(intervals) - 1)]
+  if value &lt; intervals[0]:
+      unit = unit_singular if intervals[0] == 1 else unit_plural
+      return f&#34;Under {intervals[0]} {unit}&#34;
+  elif value &gt; intervals[-1]:
+      return f&#34;Over {intervals[-1]} {unit_plural}&#34;
+  else:
+      for r in ranges:
+          if value in r:
+              return f&#34;{r[0]:,} to {r[-1]:,} {unit_plural}&#34;</code></pre>
+</details>
+<div class="desc"><p>Converts a single value to a string representing range.</p>
+<p>:param value: A numerical value.
+:type value: int or float.</p>
+<p>:param unit_singular: Name of unit if quantity is 1.
+:type unit_singular: str.</p>
+<p>:param unit_plural: Name of unit is quantity is more than 1.
+:type unit_plural: str. Default: None.</p>
+<p>:param intervals: A list of cutoff values to create range categories.
+:type intervals: list.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="cmti_tools" href="index.html">cmti_tools</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="cmti_tools.tools.convert_commodity_name" href="#cmti_tools.tools.convert_commodity_name">convert_commodity_name</a></code></li>
+<li><code><a title="cmti_tools.tools.create_name_dict" href="#cmti_tools.tools.create_name_dict">create_name_dict</a></code></li>
+<li><code><a title="cmti_tools.tools.get_commodity" href="#cmti_tools.tools.get_commodity">get_commodity</a></code></li>
+<li><code><a title="cmti_tools.tools.get_digits" href="#cmti_tools.tools.get_digits">get_digits</a></code></li>
+<li><code><a title="cmti_tools.tools.get_table_values" href="#cmti_tools.tools.get_table_values">get_table_values</a></code></li>
+<li><code><a title="cmti_tools.tools.load_config" href="#cmti_tools.tools.load_config">load_config</a></code></li>
+<li><code><a title="cmti_tools.tools.lon_to_utm_zone" href="#cmti_tools.tools.lon_to_utm_zone">lon_to_utm_zone</a></code></li>
+<li><code><a title="cmti_tools.tools.override_config_value" href="#cmti_tools.tools.override_config_value">override_config_value</a></code></li>
+<li><code><a title="cmti_tools.tools.shift_values" href="#cmti_tools.tools.shift_values">shift_values</a></code></li>
+<li><code><a title="cmti_tools.tools.value_to_range" href="#cmti_tools.tools.value_to_range">value_to_range</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

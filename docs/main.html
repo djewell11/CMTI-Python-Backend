@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>cmti_tools.main API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>cmti_tools.main</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="cmti_tools.main.build_cmti"><code class="name flex">
+<span>def <span class="ident">build_cmti</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def build_cmti():
+  
+  parser = argparse.ArgumentParser(description=&#34;Import sources, map to CMTI metadata and apply quality control. To change supplemental data tables, edit the config.toml file.&#34;)
+  parser.add_argument(&#34;--cmti_worksheet&#34;, help=&#34;Path to the CMTI worksheet&#34;, type=str) # cmti_worksheet is &#39;optional&#39; because it has a default to fall back to. It has to be included either here or in config
+  parser.add_argument(&#34;--omi&#34;, help=&#34;Path to the Ontario Mineral Inventory table&#34;, type=str)
+  parser.add_argument(&#34;--oam&#34;, help=&#34;Path to the Orphaned and Abanoned Mines table&#34;, type=str)
+  parser.add_argument(&#34;--bcahm&#34;, help=&#34;Path to the British Columbia Abandoned and Historic Mines table&#34;, type=str)
+  parser.add_argument(&#34;--nsmtd&#34;, help=&#34;Path to the Nova Scotia Mine Tailings Database table&#34;, type=str)
+  parser.add_argument(&#34;--create_ids&#34;, help=&#34;Generate CMTI IDs for records if missing&#34;, action=&#34;store_true&#34;)
+  parser.add_argument(&#34;--out&#34;, help=&#34;Path to the output file&#34;, type=str, required=True)
+  parser.add_argument(&#34;--config&#34;, help=&#34;Path to the config file&#34;, type=str, default=BASE_DIR / &#34;config.toml&#34;)
+
+  args = parser.parse_args() 
+  
+  config = ConfigParser()
+  config.read(args.config)
+
+  def create_path(source_path: str) -&gt; Path:
+    if source_path is None:
+      return
+    normalized = source_path.replace(&#34;\\&#34;, &#34;/&#34;)
+    out_path = (BASE_DIR / normalized).expanduser().resolve()
+    return str(out_path)
+
+  # Data Table Paths
+  cm_list_path = create_path(config.get(&#39;supplemental&#39;, &#39;critical_minerals&#39;))
+  cm_list = pd.read_csv(cm_list_path)[&#39;Critical Minerals List&#39;].tolist()
+  metals_path = create_path(config.get(&#39;supplemental&#39;, &#39;metals&#39;))
+  metals = pd.read_csv(metals_path)
+  metals_dict = dict(zip(metals[&#39;Commodity&#39;], metals[&#39;Type&#39;]))
+  elements_path = create_path(config.get(&#39;supplemental&#39;, &#39;elements&#39;))
+  elements = pd.read_csv(elements_path)
+  name_convert_dict = dict(zip(elements[&#39;symbol&#39;], elements[&#39;name&#39;]))
+  oam_comm_path = create_path(config.get(&#39;supplemental&#39;, &#39;oam_comm_names&#39;))
+  oam_comm_df = pd.read_csv(oam_comm_path)
+  oam_comm_names = dict(zip(oam_comm_df[&#39;Symbol&#39;], oam_comm_df[&#39;Full_Name&#39;]))
+
+  # Import sources, map to worksheet and append
+
+  # Source Paths
+
+  cmti_path = create_path(args.cmti_worksheet)
+  if cmti_path is None:
+    raise ValueError(&#34;Valid CMTI worksheet path is required to provide column names. Table rows can be empty.&#34;)
+  else:
+    cmti_path = cmti_path
+  omi_path = create_path(args.omi)
+  oam_path = create_path(args.oam)
+  bcahm_path = create_path(args.bcahm)
+  nsmtd_path = create_path(args.nsmtd)
+  out = create_path(args.out)
+
+  # Check output path
+  if not Path(out).parent.exists():
+    raise ValueError(f&#34;Output directory does not exist: {Path(out).parent} or cannot be found.&#34;)
+  if not out.endswith(&#39;.csv&#39;):
+    print(&#34;Output file should be a .csv. Adding &#39;.csv&#39; to the end of the file name.&#34;)
+    out = out + &#34;.csv&#34;
+
+  # CMTI Worksheet
+
+  worksheet_importer = source_importers.WorksheetImporter(
+      cm_list=cm_list,
+      name_convert_dict=name_convert_dict,
+      metals_dict=metals_dict
+    )
+
+  cmti_df = worksheet_importer.clean_input_table(cmti_path, calculate_UTM=True, force_dtypes=True, convert_units=False)
+  
+  print(&#34;Worksheet imported.&#34;)
+
+  # Clean up records
+
+  # If multiple years are present for construction year, take the first one
+  for year in cmti_df[&#39;Construction_Year&#39;].items():
+    if isinstance(year[1], str):
+      try:
+        years = [int(year) for year in year[1].split(&#39;,&#39;)]
+        year_start = min(years)
+        cmti_df.at[year[0], &#39;Construction_Year&#39;] = year_start
+      except ValueError:
+        pass
+
+  # OMI
+  if omi_path is not None:
+    omi_importer = source_importers.OMIImporter(
+        cm_list=cm_list,
+        name_convert_dict=name_convert_dict,
+        metals_dict=metals_dict
+    )
+
+    omi_df = omi_importer.clean_input_table(omi_path)
+
+    omi_mapped = omi_importer.map_to_worksheet(cmti_df, omi_df, omi_mapping)
+    omi_mapped[&#39;Province_Territory&#39;] = &#39;BC&#39;
+    omi_mapped[&#39;Site_Type&#39;] = &#39;Mine&#39;
+    omi_mapped[&#39;Source_1&#39;] = &#39;OMI&#39;
+
+    cmti_df = pd.concat([cmti_df, omi_mapped])
+    print(&#34;OMI imported.&#34;)
+
+  #OAM
+  if oam_path is not None:
+    # OAM commodities need special treatment
+    oam_importer = source_importers.OAMImporter(
+        cm_list=cm_list,
+        name_convert_dict=name_convert_dict,
+        metals_dict=metals_dict,
+        oam_comm_names=oam_comm_names
+    )
+
+    oam_df = oam_importer.clean_input_table(oam_path)
+    oam_mapped = oam_importer.map_to_worksheet(cmti_df, oam_df, oam_mapping)
+    oam_mapped[&#39;Site_Type&#39;] = &#39;Mine&#39;
+    oam_mapped[&#39;Source_1&#39;] = &#39;OAM&#39;
+
+    cmti_df = pd.concat([cmti_df, oam_mapped])
+    print(&#34;OAM imported.&#34;)
+
+  # BC AHM
+  if bcahm_path is not None:
+    bcahm_importer = source_importers.BCAHMImporter(
+        cm_list=cm_list,
+        name_convert_dict=name_convert_dict,
+        metals_dict=metals_dict
+    )
+
+    bcahm_df = bcahm_importer.clean_input_table(bcahm_path)
+
+    bcahm_df = bcahm_df.fillna({&#39;DEPOSITTYPE_D1&#39;: &#39;Null&#39;, &#39;DEPOSITTYPE_D2&#39;: &#39;Null&#39;})
+    bcahm_mapped = bcahm_importer.map_to_worksheet(cmti_df, bcahm_df, bcahm_mapping)
+    bcahm_mapped[&#39;Province_Territory&#39;] = &#34;BC&#34;
+    bcahm_mapped[&#39;Site_Type&#39;] = &#39;Mine&#39;
+    bcahm_mapped[&#39;Source_1&#39;] = &#39;BC AHM&#39;
+
+    cmti_df = pd.concat([cmti_df, bcahm_mapped])
+    print(&#34;BC AHM imported.&#34;)
+
+  # NSMTD
+  if nsmtd_path is not None:
+    # nsmtd_df = pd.read_csv(nsmtd_path)
+    # nsmtd_df = nsmtd_df[[&#39;OBJECTID&#39;, &#39;Name&#39;, &#39;Latitude&#39;, &#39;Longitude&#39;, &#39;Tonnes&#39;, &#39;Commodity&#39;, &#39;Dates&#39;, &#39;InfoSource&#39;, &#39;AreaHa&#39;]]
+    nsmtd_importer = source_importers.NSMTDImporter(
+        cm_list=cm_list,
+        name_convert_dict=name_convert_dict,
+        metals_dict=metals_dict
+    )
+
+    nsmtd_df = nsmtd_importer.clean_input_table(nsmtd_path)
+    nsmtd_mapped = nsmtd_importer.map_to_worksheet(cmti_df, nsmtd_df, nsmtd_mapping)
+
+    # Years are in one column and sometimes have bad formatting
+    for value in nsmtd_mapped[&#39;Year_Opened&#39;].items():
+      if pd.notna(value):
+        # Some entries have multiple intervals
+        try:
+          if isinstance(value[1], str):
+            years = []
+            year_entry = value[1].replace(&#39;.&#39;, &#39;&#39;)
+            intervals = year_entry.split(&#39;,&#39;)
+            for interval in intervals:
+              for year in interval.split(&#39;-&#39;):
+                if len(year) == 4:
+                  years.append(int(year))
+            year_start = min(years)
+            year_end = max(years)
+            nsmtd_mapped.at[value[0], &#39;Year_Opened&#39;] = year_start
+            nsmtd_mapped.at[value[0], &#39;Year_Closed&#39;] = year_end
+          else:
+            nsmtd_mapped.at[value[0], &#39;Year_Opened&#39;] = value[1]
+        except ValueError:
+          pass
+
+    nsmtd_mapped[&#39;Province_Territory&#39;] = &#34;NS&#34;
+    nsmtd_mapped[&#39;Site_Type&#39;] = &#39;Mine&#39;
+    nsmtd_mapped[&#39;Source_1&#39;] = &#39;NSMTD&#39;
+    nsmtd_mapped[&#39;Mine_Status&#39;] = &#34;Inactive&#34;
+
+    cmti_df = pd.concat([cmti_df, nsmtd_mapped])
+    print(&#34;NSMTD imported.&#34;)
+
+  # There are currently some extra columns. Remove them
+  # cmti_df = cmti_df.drop(columns=[&#39;Tailings_Mass&#39;, &#39;Tailings_Image_Notes&#39;])
+
+  # Perform some row-wise QA
+
+  # source_cols = [col for col in cmti_df.columns.tolist() if col.startswith(&#34;Source&#34;)]
+
+  # Fill in IDs
+  if args.create_ids:
+    id_manager = ID_Manager()
+    id_vals = cmti_df[&#39;CMTI_ID&#39;].dropna()
+    id_manager.update_prov_ids(id_vals)
+    cmti_df.reset_index(drop=True, inplace=True)
+
+  for i, row in cmti_df.iterrows():
+    
+    # # Shift source columns over
+    # sources_shifted = shift_values(row, source_cols)
+    # for s_col, val in sources_shifted.items():
+    #   cmti_df.at[i, s_col] = val
+
+    # Fill in IDs
+    if args.create_ids and pd.isna(row.CMTI_ID) and pd.notna(row.Province_Territory):
+      pt = row.Province_Territory
+      prov_id = getattr(id_manager, pt)
+      prov_id.generate_id()
+      cmti_df.at[i, &#39;CMTI_ID&#39;] = prov_id.formatted_id
+
+  cmti_df.to_csv(out, index=False)
+  print(f&#34;Output written to {out}&#34;)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="cmti_tools" href="index.html">cmti_tools</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="cmti_tools.main.build_cmti" href="#cmti_tools.main.build_cmti">build_cmti</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

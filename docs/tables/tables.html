@@ -1,0 +1,3654 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>cmti_tools.tables.tables API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>cmti_tools.tables.tables</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="cmti_tools.tables.tables.Alias"><code class="flex name class">
+<span>class <span class="ident">Alias</span></span>
+<span>(</span><span>*, alias_id=None, mine_id=None, alias=None, mine=None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@reg.mapped
+@dataclass(kw_only=True)
+class Alias:
+  __tablename__ = &#34;aliases&#34;
+  __allow_unmapped__ = True # dataclasses process fields before SQLAlchemy, so we need to set this to True to allow the dataclass to be mapped
+  __sa_dataclass_metadata_key__ = &#34;sa&#34; # This is used by the dataclass fields to identify the SQLAlchemy mapped fields
+
+  alias_id: int = field(default=None, metadata={&#34;sa&#34;: mapped_column(Integer, primary_key=True, autoincrement=True)})
+  mine_id: &#34;Mine&#34; = field(default=None, metadata={&#34;sa&#34;: mapped_column(ForeignKey(&#34;mines.id&#34;), primary_key=True)})
+  alias: str = field(default=None, metadata={&#34;sa&#34;: mapped_column(String, nullable=False, primary_key=True)})
+
+  # mine = relationship(&#34;Mine&#34;, back_populates=&#34;aliases&#34;)
+  mine: &#34;Mine&#34; = field(default=None, metadata={&#34;sa&#34;: relationship(&#34;Mine&#34;, back_populates=&#34;aliases&#34;)})
+
+  def __repr__(self) -&gt; str:
+    return f&#34;Alias: {self.alias!r}, Mine Name: {self.mine.name!r}, mine_id: {self.mine_id}&#34;</code></pre>
+</details>
+<div class="desc"><p>Alias(*, alias_id: int = None, mine_id: 'Mine' = None, alias: str = None, mine: 'Mine' = None)</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="cmti_tools.tables.tables.Alias.alias"><code class="name">var <span class="ident">alias</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Alias.alias_id"><code class="name">var <span class="ident">alias_id</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Alias.mine"><code class="name">var <span class="ident">mine</span> : <a title="cmti_tools.tables.tables.Mine" href="#cmti_tools.tables.tables.Mine">Mine</a></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Alias.mine_id"><code class="name">var <span class="ident">mine_id</span> : <a title="cmti_tools.tables.tables.Mine" href="#cmti_tools.tables.tables.Mine">Mine</a></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="cmti_tools.tables.tables.CommodityRecord"><code class="flex name class">
+<span>class <span class="ident">CommodityRecord</span></span>
+<span>(</span><span>*,<br>commodity,<br>grade=None,<br>grade_unit=None,<br>produced=None,<br>produced_unit=None,<br>contained=None,<br>contained_unit=None,<br>metal_type=None,<br>is_critical=None,<br>source='Unknown',<br>source_id='Unknown',<br>source_year_start=None,<br>source_year_end=None,<br>mine=None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@reg.mapped
+@dataclass(kw_only=True)
+class CommodityRecord:
+  __tablename__ = &#34;commodities&#34;
+  __allow_unmapped__ = True # dataclasses process fields before SQLAlchemy, so we need to set this to True to allow the dataclass to be mapped
+  __sa_dataclass_metadata_key__ = &#34;sa&#34; # This is used by the dataclass fields to identify the SQLAlchemy mapped fields
+
+  id: int = field(init=False, metadata={&#34;sa&#34;: mapped_column(Integer, primary_key=True, autoincrement=True)})
+  commodity: str = field(metadata={&#34;sa&#34;: mapped_column(String, primary_key=True)})
+  mine_id: &#34;Mine&#34; = field(init=False, metadata={&#34;sa&#34;: mapped_column(ForeignKey(&#34;mines.id&#34;), primary_key=True)})
+  grade: str = field(default=None, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  grade_unit: str = field(default=None, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  produced: str = field(default=None, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  produced_unit: str = field(default=None, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  contained: str = field(default=None, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  contained_unit: str = field(default=None, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  metal_type: str = field(default=None, metadata={&#34;sa&#34;: mapped_column(String, nullable=True, server_default=&#34;Unknown&#34;)})
+  is_critical: bool = field(default=None, metadata={&#34;sa&#34;: mapped_column(Boolean, server_default=&#34;False&#34;)})
+  source: str = field(default=&#34;Unknown&#34;, metadata={&#34;sa&#34;: mapped_column(String, server_default=&#34;Unknown&#34;)})
+  source_id: str = field(default=&#34;Unknown&#34;, metadata={&#34;sa&#34;: mapped_column(String, server_default=&#34;Unknown&#34;)})
+  source_year_start: int = field(default=None, metadata={&#34;sa&#34;: mapped_column(Integer, nullable=True)})
+  source_year_end: int = field(default=None, metadata={&#34;sa&#34;: mapped_column(Integer, nullable=True)})
+
+  mine: &#34;Mine&#34; = field(default=None, metadata={&#34;sa&#34;: relationship(&#34;Mine&#34;, back_populates=&#34;commodities&#34;)})
+
+  def __repr__(self) -&gt; str:
+    return f&#34;CommodityRecord: {self.commodity!r}, ID: {self.id!r}, Mine Name: {self.mine.name!r}, mine_id: {self.mine_id}, Produced: {self.produced}&#34;</code></pre>
+</details>
+<div class="desc"><p>CommodityRecord(*, commodity: str, grade: str = None, grade_unit: str = None, produced: str = None, produced_unit: str = None, contained: str = None, contained_unit: str = None, metal_type: str = None, is_critical: bool = None, source: str = 'Unknown', source_id: str = 'Unknown', source_year_start: int = None, source_year_end: int = None, mine: 'Mine' = None)</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="cmti_tools.tables.tables.CommodityRecord.commodity"><code class="name">var <span class="ident">commodity</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.CommodityRecord.contained"><code class="name">var <span class="ident">contained</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.CommodityRecord.contained_unit"><code class="name">var <span class="ident">contained_unit</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.CommodityRecord.grade"><code class="name">var <span class="ident">grade</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.CommodityRecord.grade_unit"><code class="name">var <span class="ident">grade_unit</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.CommodityRecord.id"><code class="name">var <span class="ident">id</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.CommodityRecord.is_critical"><code class="name">var <span class="ident">is_critical</span> : bool</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.CommodityRecord.metal_type"><code class="name">var <span class="ident">metal_type</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.CommodityRecord.mine"><code class="name">var <span class="ident">mine</span> : <a title="cmti_tools.tables.tables.Mine" href="#cmti_tools.tables.tables.Mine">Mine</a></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.CommodityRecord.mine_id"><code class="name">var <span class="ident">mine_id</span> : <a title="cmti_tools.tables.tables.Mine" href="#cmti_tools.tables.tables.Mine">Mine</a></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.CommodityRecord.produced"><code class="name">var <span class="ident">produced</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.CommodityRecord.produced_unit"><code class="name">var <span class="ident">produced_unit</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.CommodityRecord.source"><code class="name">var <span class="ident">source</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.CommodityRecord.source_id"><code class="name">var <span class="ident">source_id</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.CommodityRecord.source_year_end"><code class="name">var <span class="ident">source_year_end</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.CommodityRecord.source_year_start"><code class="name">var <span class="ident">source_year_start</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="cmti_tools.tables.tables.Impoundment"><code class="flex name class">
+<span>class <span class="ident">Impoundment</span></span>
+<span>(</span><span>*,<br>is_default=None,<br>cmti_id='NULL',<br>parent_tsf_id,<br>name=None,<br>area=None,<br>area_from_images=None,<br>area_notes=None,<br>raise_type=None,<br>capacity=None,<br>volume=None,<br>acid_generating=None,<br>storage_method=None,<br>max_height=None,<br>treatment=None,<br>rating_index=None,<br>stability_concerns=None,<br>parentTsf)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@reg.mapped
+@dataclass(kw_only=True)
+class Impoundment:
+  __tablename__ = &#34;impoundments&#34;
+  __allow_unmapped__ = True # dataclasses process fields before SQLAlchemy, so we need to set this to True to allow the dataclass to be mapped
+  __sa_dataclass_metadata_key__ = &#34;sa&#34; # This is used by the dataclass fields to identify the SQLAlchemy mapped fields
+
+  id: int = field(init=False, metadata={&#34;sa&#34;: mapped_column(Integer, primary_key=True, autoincrement=True)})
+  is_default: bool = field(default=None, metadata={&#34;sa&#34;: mapped_column(Boolean, nullable=False, default=False)})
+  cmti_id: str = field(default=&#34;NULL&#34;, metadata={&#34;sa&#34;: mapped_column(String, nullable=False)})
+  parent_tsf_id: &#34;TailingsFacility&#34; = field(metadata={&#34;sa&#34;:  mapped_column(ForeignKey(&#34;tailings_facilities.id&#34;))})
+  name: str = field(default=None, metadata={&#34;sa&#34;: mapped_column(String, nullable=False)})
+  area: float = field(default=None, metadata={&#34;sa&#34;: mapped_column(Float, nullable=True)})
+  area_from_images: float = field(default=None, metadata={&#34;sa&#34;: mapped_column(Float, nullable=True)})
+  area_notes: str = field(default=None, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  raise_type: str = field(default=None, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  capacity: float = field(default=None, metadata={&#34;sa&#34;: mapped_column(Float, nullable=True)})
+  volume: float = field(default=None, metadata={&#34;sa&#34;: mapped_column(Float, nullable=True)})
+  acid_generating: bool = field(default=None, metadata={&#34;sa&#34;: mapped_column(Boolean, nullable=True)}) # TODO: Make this a bool - DONE but not tested
+  storage_method: str = field(default=None, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  max_height: float = field(default=None, metadata={&#34;sa&#34;: mapped_column(Float, nullable=True)})
+  treatment: str = field(default=None, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  rating_index: str = field(default=None, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  stability_concerns: str = field(default=None, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+
+  parentTsf: &#34;TailingsFacility&#34; = field(metadata={&#34;sa&#34;: relationship(&#34;TailingsFacility&#34;, back_populates=&#34;impoundments&#34;)})
+
+  def __repr__(self) -&gt; str:
+    return f&#34;Impoundment: {self.name!r}, ID: {self.id!r}, cmti_id: {self.cmti_id}&#34;</code></pre>
+</details>
+<div class="desc"><p>Impoundment(*, is_default: bool = None, cmti_id: str = 'NULL', parent_tsf_id: 'TailingsFacility', name: str = None, area: float = None, area_from_images: float = None, area_notes: str = None, raise_type: str = None, capacity: float = None, volume: float = None, acid_generating: bool = None, storage_method: str = None, max_height: float = None, treatment: str = None, rating_index: str = None, stability_concerns: str = None, parentTsf: 'TailingsFacility')</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="cmti_tools.tables.tables.Impoundment.acid_generating"><code class="name">var <span class="ident">acid_generating</span> : bool</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Impoundment.area"><code class="name">var <span class="ident">area</span> : float</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Impoundment.area_from_images"><code class="name">var <span class="ident">area_from_images</span> : float</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Impoundment.area_notes"><code class="name">var <span class="ident">area_notes</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Impoundment.capacity"><code class="name">var <span class="ident">capacity</span> : float</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Impoundment.cmti_id"><code class="name">var <span class="ident">cmti_id</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Impoundment.id"><code class="name">var <span class="ident">id</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Impoundment.is_default"><code class="name">var <span class="ident">is_default</span> : bool</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Impoundment.max_height"><code class="name">var <span class="ident">max_height</span> : float</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Impoundment.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Impoundment.parentTsf"><code class="name">var <span class="ident">parentTsf</span> : <a title="cmti_tools.tables.tables.TailingsFacility" href="#cmti_tools.tables.tables.TailingsFacility">TailingsFacility</a></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Impoundment.parent_tsf_id"><code class="name">var <span class="ident">parent_tsf_id</span> : <a title="cmti_tools.tables.tables.TailingsFacility" href="#cmti_tools.tables.tables.TailingsFacility">TailingsFacility</a></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Impoundment.raise_type"><code class="name">var <span class="ident">raise_type</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Impoundment.rating_index"><code class="name">var <span class="ident">rating_index</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Impoundment.stability_concerns"><code class="name">var <span class="ident">stability_concerns</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Impoundment.storage_method"><code class="name">var <span class="ident">storage_method</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Impoundment.treatment"><code class="name">var <span class="ident">treatment</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Impoundment.volume"><code class="name">var <span class="ident">volume</span> : float</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine"><code class="flex name class">
+<span>class <span class="ident">Mine</span></span>
+<span>(</span><span>*,<br>cmti_id='NULL',<br>name,<br>prov_terr,<br>latitude,<br>longitude,<br>last_revised=NaT,<br>datum=83,<br>utm_zone=&lt;NA&gt;,<br>easting=&lt;NA&gt;,<br>northing=&lt;NA&gt;,<br>nts_area='Unknown',<br>mining_district='Unknown',<br>mine_type='Unknown',<br>mine_status='Unknown',<br>mining_method='Unknown',<br>orebody_type='Unknown',<br>orebody_class='Unknown',<br>orebody_minerals='Unknown',<br>processing_method='Unknown',<br>ore_processed=&lt;NA&gt;,<br>ore_processed_unit='Unknown',<br>development_stage='Unknown',<br>site_access='Unknown',<br>construction_year=&lt;NA&gt;,<br>year_opened=&lt;NA&gt;,<br>year_closed=&lt;NA&gt;,<br>ds_comments=None,<br>sa_comments=None,<br>shaft_depth=&lt;NA&gt;,<br>reserves_resources='Unknown',<br>other_mineralization='Unknown',<br>sedar='Unknown',<br>notes='Unknown',<br>forcing_features='Unknown',<br>feature_references='Unknown',<br>noami_status='Unknown',<br>noami_site_class='Unknown',<br>hazard_class='Unknown',<br>hazard_system='Unknown',<br>prp_rating='Unknown',<br>rehab_plan=None,<br>ews='Unknown',<br>ews_rating='Unknown',<br>commodities=None,<br>aliases=&lt;factory&gt;,<br>owners=&lt;factory&gt;,<br>tailings_facilities=&lt;factory&gt;,<br>orebody=None,<br>references=&lt;factory&gt;)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@reg.mapped
+@dataclass(kw_only=True)
+class Mine:
+  __tablename__ = &#34;mines&#34;
+  __allow_unmapped__ = True # dataclasses process fields before SQLAlchemy, so we need to set this to True to allow the dataclass to be mapped
+  __sa_dataclass_metadata_key__ = &#34;sa&#34; # This is used by the dataclass fields to identify the SQLAlchemy mapped fields
+
+  # Non-nullable (required values)
+  id: int = field(init=False, metadata={&#34;sa&#34;: mapped_column(Integer, primary_key=True, autoincrement=True)})
+  cmti_id: str = field(default=&#34;NULL&#34;, metadata={&#34;sa&#34;: mapped_column(String, nullable=False)})
+  name: str = field(metadata={&#34;sa&#34;: mapped_column(String, nullable=False)})
+  prov_terr: str = field(metadata = {&#34;sa&#34;: mapped_column(String(2), nullable=False)})
+  latitude: float = field(metadata={&#34;sa&#34;: mapped_column(Float, nullable=False)})
+  longitude: float = field(metadata={&#34;sa&#34;: mapped_column(Float, nullable=False)})
+  # Nullable (optional values)
+  last_revised: datetime=field(default=NaT, metadata={&#34;sa&#34;: mapped_column(DateTime, nullable=True)})
+  datum: int = field(default=83, metadata={&#34;sa&#34;: mapped_column(Integer, nullable=True)})
+  utm_zone: int = field(default=NA, metadata={&#34;sa&#34;: mapped_column(Integer, nullable=True)})
+  easting: float = field(default=NA, metadata={&#34;sa&#34;: mapped_column(Float, nullable=True)})
+  northing: float = field(default=NA, metadata={&#34;sa&#34;: mapped_column(Float, nullable=True)})
+  nts_area: str = field(default=&#34;Unknown&#34;, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  mining_district: str = field(default=&#34;Unknown&#34;, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  mine_type: str = field(default=&#34;Unknown&#34;, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  mine_status: str = field(default=&#34;Unknown&#34;, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  mining_method: str = field(default=&#34;Unknown&#34;, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  orebody_type: str = field(default=&#34;Unknown&#34;, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  orebody_class: str = field(default=&#34;Unknown&#34;, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  orebody_minerals: str = field(default=&#34;Unknown&#34;, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  processing_method: str = field(default=&#34;Unknown&#34;, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  ore_processed: float = field(default=NA, metadata={&#34;sa&#34;: mapped_column(Float, nullable=True)})
+  ore_processed_unit: str = field(default=&#34;Unknown&#34;, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  development_stage: str = field(default=&#34;Unknown&#34;, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  site_access: str = field(default=&#34;Unknown&#34;, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  construction_year: int = field(default=NA, metadata={&#34;sa&#34;: mapped_column(Integer, nullable=True)})
+  year_opened: int  = field(default=NA, metadata={&#34;sa&#34;: mapped_column(Integer, nullable=True)})
+  year_closed: int = field(default=NA, metadata={&#34;sa&#34;: mapped_column(Integer, nullable=True)})
+  # Likely to be removed:
+  ds_comments: Optional[str] = field(default=None, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  sa_comments: Optional[str] = field(default=None, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  shaft_depth: Optional[float] = field(default=NA, metadata={&#34;sa&#34;: mapped_column(nullable=True)})
+  reserves_resources: Optional[str] = field(default=&#34;Unknown&#34;, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  other_mineralization: Optional[str] = field(default=&#34;Unknown&#34;, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  sedar: Optional[str] = field(default=&#34;Unknown&#34;, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  notes: Optional[str] = field(default=&#34;Unknown&#34;, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  other_mineralization: Optional[str] = field(default=&#34;Unknown&#34;, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  forcing_features: Optional[str] = field(default=&#34;Unknown&#34;, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  feature_references: Optional[str] = field(default=&#34;Unknown&#34;, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  noami_status: Optional[str] = field(default=&#34;Unknown&#34;, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  noami_site_class: Optional[str] = field(default=&#34;Unknown&#34;, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  hazard_class: Optional[str] = field(default=&#34;Unknown&#34;, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  hazard_system: Optional[str] = field(default=&#34;Unknown&#34;, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  prp_rating: Optional[str] = field(default=&#34;Unknown&#34;, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  rehab_plan: Optional[bool] = field(default=None, metadata={&#34;sa&#34;: mapped_column(server_default=&#34;False&#34;)})
+  ews: Optional[str] = field(default=&#34;Unknown&#34;, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  ews_rating: Optional[str] = field(default=&#34;Unknown&#34;, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+
+  # Relationships
+  commodities: &#34;CommodityRecord&#34; = field(default=None, metadata={&#34;sa&#34;: relationship(&#34;CommodityRecord&#34;, back_populates=&#34;mine&#34;, cascade=&#34;all, delete-orphan&#34;)})
+  aliases: List[&#34;Alias&#34;] = field(default_factory=list, metadata={&#34;sa&#34;:relationship(&#34;Alias&#34;, back_populates=&#34;mine&#34;, cascade=&#34;all, delete-orphan&#34;)})
+  owners: List[&#34;OwnerAssociation&#34;] = field(default_factory=list, metadata={&#34;sa&#34;: relationship(back_populates = &#34;mine&#34;)})
+  tailings_facilities: List[&#34;TailingsFacility&#34;] = field(
+    default_factory=list, 
+    metadata={
+      &#34;sa&#34;: relationship(
+        secondary = &#34;tsf_mine_associations&#34;,
+        back_populates = &#34;mines&#34;
+      )
+    }
+  )
+  orebody: &#34;Orebody&#34; = field(default=None, metadata={&#34;sa&#34;: relationship(&#34;Orebody&#34;, back_populates=&#34;mine&#34;)})
+  references: List[&#34;Reference&#34;] = field(default_factory=list, metadata={&#34;sa&#34;: relationship(&#34;Reference&#34;, back_populates=&#34;mine&#34;)})
+
+  def __repr__(self) -&gt; str:
+    return f&#34;Mine: {self.name!r}, ID: {self.id!r}, cmti_id: {self.cmti_id}&#34;</code></pre>
+</details>
+<div class="desc"><p>Mine(*, cmti_id: str = 'NULL', name: str, prov_terr: str, latitude: float, longitude: float, last_revised: datetime.datetime = NaT, datum: int = 83, utm_zone: int = <NA>, easting: float = <NA>, northing: float = <NA>, nts_area: str = 'Unknown', mining_district: str = 'Unknown', mine_type: str = 'Unknown', mine_status: str = 'Unknown', mining_method: str = 'Unknown', orebody_type: str = 'Unknown', orebody_class: str = 'Unknown', orebody_minerals: str = 'Unknown', processing_method: str = 'Unknown', ore_processed: float = <NA>, ore_processed_unit: str = 'Unknown', development_stage: str = 'Unknown', site_access: str = 'Unknown', construction_year: int = <NA>, year_opened: int = <NA>, year_closed: int = <NA>, ds_comments: Optional[str] = None, sa_comments: Optional[str] = None, shaft_depth: Optional[float] = <NA>, reserves_resources: Optional[str] = 'Unknown', other_mineralization: Optional[str] = 'Unknown', sedar: Optional[str] = 'Unknown', notes: Optional[str] = 'Unknown', forcing_features: Optional[str] = 'Unknown', feature_references: Optional[str] = 'Unknown', noami_status: Optional[str] = 'Unknown', noami_site_class: Optional[str] = 'Unknown', hazard_class: Optional[str] = 'Unknown', hazard_system: Optional[str] = 'Unknown', prp_rating: Optional[str] = 'Unknown', rehab_plan: Optional[bool] = None, ews: Optional[str] = 'Unknown', ews_rating: Optional[str] = 'Unknown', commodities: 'CommodityRecord' = None, aliases: List[ForwardRef('Alias')] = <factory>, owners: List[ForwardRef('OwnerAssociation')] = <factory>, tailings_facilities: List[ForwardRef('TailingsFacility')] = <factory>, orebody: 'Orebody' = None, references: List[ForwardRef('Reference')] = <factory>)</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="cmti_tools.tables.tables.Mine.aliases"><code class="name">var <span class="ident">aliases</span> : List[<a title="cmti_tools.tables.tables.Alias" href="#cmti_tools.tables.tables.Alias">Alias</a>]</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.cmti_id"><code class="name">var <span class="ident">cmti_id</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.commodities"><code class="name">var <span class="ident">commodities</span> : <a title="cmti_tools.tables.tables.CommodityRecord" href="#cmti_tools.tables.tables.CommodityRecord">CommodityRecord</a></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.construction_year"><code class="name">var <span class="ident">construction_year</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.datum"><code class="name">var <span class="ident">datum</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.development_stage"><code class="name">var <span class="ident">development_stage</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.ds_comments"><code class="name">var <span class="ident">ds_comments</span> : str | None</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.easting"><code class="name">var <span class="ident">easting</span> : float</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.ews"><code class="name">var <span class="ident">ews</span> : str | None</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.ews_rating"><code class="name">var <span class="ident">ews_rating</span> : str | None</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.feature_references"><code class="name">var <span class="ident">feature_references</span> : str | None</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.forcing_features"><code class="name">var <span class="ident">forcing_features</span> : str | None</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.hazard_class"><code class="name">var <span class="ident">hazard_class</span> : str | None</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.hazard_system"><code class="name">var <span class="ident">hazard_system</span> : str | None</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.id"><code class="name">var <span class="ident">id</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.last_revised"><code class="name">var <span class="ident">last_revised</span> : datetime.datetime</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.latitude"><code class="name">var <span class="ident">latitude</span> : float</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.longitude"><code class="name">var <span class="ident">longitude</span> : float</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.mine_status"><code class="name">var <span class="ident">mine_status</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.mine_type"><code class="name">var <span class="ident">mine_type</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.mining_district"><code class="name">var <span class="ident">mining_district</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.mining_method"><code class="name">var <span class="ident">mining_method</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.noami_site_class"><code class="name">var <span class="ident">noami_site_class</span> : str | None</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.noami_status"><code class="name">var <span class="ident">noami_status</span> : str | None</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.northing"><code class="name">var <span class="ident">northing</span> : float</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.notes"><code class="name">var <span class="ident">notes</span> : str | None</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.nts_area"><code class="name">var <span class="ident">nts_area</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.ore_processed"><code class="name">var <span class="ident">ore_processed</span> : float</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.ore_processed_unit"><code class="name">var <span class="ident">ore_processed_unit</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.orebody"><code class="name">var <span class="ident">orebody</span> : <a title="cmti_tools.tables.tables.Orebody" href="#cmti_tools.tables.tables.Orebody">Orebody</a></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.orebody_class"><code class="name">var <span class="ident">orebody_class</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.orebody_minerals"><code class="name">var <span class="ident">orebody_minerals</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.orebody_type"><code class="name">var <span class="ident">orebody_type</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.other_mineralization"><code class="name">var <span class="ident">other_mineralization</span> : str | None</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.owners"><code class="name">var <span class="ident">owners</span> : List[<a title="cmti_tools.tables.tables.OwnerAssociation" href="#cmti_tools.tables.tables.OwnerAssociation">OwnerAssociation</a>]</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.processing_method"><code class="name">var <span class="ident">processing_method</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.prov_terr"><code class="name">var <span class="ident">prov_terr</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.prp_rating"><code class="name">var <span class="ident">prp_rating</span> : str | None</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.references"><code class="name">var <span class="ident">references</span> : List[<a title="cmti_tools.tables.tables.Reference" href="#cmti_tools.tables.tables.Reference">Reference</a>]</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.rehab_plan"><code class="name">var <span class="ident">rehab_plan</span> : bool | None</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.reserves_resources"><code class="name">var <span class="ident">reserves_resources</span> : str | None</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.sa_comments"><code class="name">var <span class="ident">sa_comments</span> : str | None</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.sedar"><code class="name">var <span class="ident">sedar</span> : str | None</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.shaft_depth"><code class="name">var <span class="ident">shaft_depth</span> : float | None</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.site_access"><code class="name">var <span class="ident">site_access</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.tailings_facilities"><code class="name">var <span class="ident">tailings_facilities</span> : List[<a title="cmti_tools.tables.tables.TailingsFacility" href="#cmti_tools.tables.tables.TailingsFacility">TailingsFacility</a>]</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.utm_zone"><code class="name">var <span class="ident">utm_zone</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.year_closed"><code class="name">var <span class="ident">year_closed</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Mine.year_opened"><code class="name">var <span class="ident">year_opened</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="cmti_tools.tables.tables.Orebody"><code class="flex name class">
+<span>class <span class="ident">Orebody</span></span>
+<span>(</span><span>*, mine_id=None, ore_type=None, ore_class=None, minerals=None, ore_processed=None, mine)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@reg.mapped
+@dataclass(kw_only=True)
+class Orebody:
+  __tablename__ = &#34;orebodies&#34;
+  __allow_unmapped__ = True # dataclasses process fields before SQLAlchemy, so we need to set this to True to allow the dataclass to be mapped
+  __sa_dataclass_metadata_key__ = &#34;sa&#34; # This is used by the dataclass fields to identify the SQLAlchemy mapped fields
+
+  id: int = field(init=False, metadata={&#34;sa&#34;: mapped_column(Integer, primary_key=True, autoincrement=True)})
+  mine_id: &#34;Mine&#34; = field(default=None, metadata={&#34;sa&#34;: mapped_column(ForeignKey(&#34;mines.id&#34;), primary_key=True)})
+  ore_type: str = field(default=None, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  ore_class: str = field(default=None, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  minerals: str = field(default=None, metadata={&#34;sa&#34;: mapped_column(String, nullable=True)})
+  ore_processed: float = field(default=None, metadata={&#34;sa&#34;: mapped_column(nullable=True)})
+
+  mine: &#34;Mine&#34; = field(metadata={&#34;sa&#34;: relationship(&#34;Mine&#34;, back_populates=&#34;orebody&#34;)})
+
+  def __repr__(self) -&gt; str:
+    return f&#34;Orebody: {self.ore_type!r}, ID: {self.id!r}, mineral: {self.mineral}, Mine Name: {self.mine.name}, mine_id: {self.mine_id}&#34;</code></pre>
+</details>
+<div class="desc"><p>Orebody(*, mine_id: 'Mine' = None, ore_type: str = None, ore_class: str = None, minerals: str = None, ore_processed: float = None, mine: 'Mine')</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="cmti_tools.tables.tables.Orebody.id"><code class="name">var <span class="ident">id</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Orebody.mine"><code class="name">var <span class="ident">mine</span> : <a title="cmti_tools.tables.tables.Mine" href="#cmti_tools.tables.tables.Mine">Mine</a></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Orebody.mine_id"><code class="name">var <span class="ident">mine_id</span> : <a title="cmti_tools.tables.tables.Mine" href="#cmti_tools.tables.tables.Mine">Mine</a></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Orebody.minerals"><code class="name">var <span class="ident">minerals</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Orebody.ore_class"><code class="name">var <span class="ident">ore_class</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Orebody.ore_processed"><code class="name">var <span class="ident">ore_processed</span> : float</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Orebody.ore_type"><code class="name">var <span class="ident">ore_type</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="cmti_tools.tables.tables.Owner"><code class="flex name class">
+<span>class <span class="ident">Owner</span></span>
+<span>(</span><span>*, id=None, name=None, mines=&lt;factory&gt;)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@reg.mapped
+@dataclass(kw_only=True)
+class Owner:
+  __tablename__ = &#34;owners&#34;
+  __allow_unmapped__ = True # dataclasses process fields before SQLAlchemy, so we need to set this to True to allow the dataclass to be mapped
+  __sa_dataclass_metadata_key__ = &#34;sa&#34; # This is used by the dataclass fields to identify the SQLAlchemy mapped fields
+
+  id: int = field(default=None, metadata={&#34;sa&#34;: mapped_column(Integer, primary_key=True, autoincrement=True)})
+  name: str = field(default=None, metadata={&#34;sa&#34;: mapped_column(String, nullable=False)})
+
+  mines: List[&#34;OwnerAssociation&#34;] = field(default_factory=list, metadata={&#34;sa&#34;: relationship(back_populates = &#34;owner&#34;)})
+
+  def __repr__(self) -&gt; str:
+    return f&#34;Owner: {self.name!r}, ID: {self.id!r}, Mines: {self.mines}&#34;</code></pre>
+</details>
+<div class="desc"><p>Owner(*, id: int = None, name: str = None, mines: List[ForwardRef('OwnerAssociation')] = <factory>)</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="cmti_tools.tables.tables.Owner.id"><code class="name">var <span class="ident">id</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Owner.mines"><code class="name">var <span class="ident">mines</span> : List[<a title="cmti_tools.tables.tables.OwnerAssociation" href="#cmti_tools.tables.tables.OwnerAssociation">OwnerAssociation</a>]</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Owner.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="cmti_tools.tables.tables.OwnerAssociation"><code class="flex name class">
+<span>class <span class="ident">OwnerAssociation</span></span>
+<span>(</span><span>*, is_current_owner=None, start_year=None, end_year=None, owner, mine)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@reg.mapped
+@dataclass(kw_only=True)
+class OwnerAssociation:
+  __tablename__ = &#34;owner_associations&#34;
+  __allow_unmapped__ = True # dataclasses process fields before SQLAlchemy, so we need to set this to True to allow the dataclass to be mapped
+  __sa_dataclass_metadata_key__ = &#34;sa&#34; # This is used by the dataclass fields to identify the SQLAlchemy mapped fields
+
+  owner_id: &#34;Owner&#34; = field(init=False, metadata={&#34;sa&#34;: mapped_column(ForeignKey(&#34;owners.id&#34;), primary_key=True)})
+  mine_id: &#34;Mine&#34; = field(init= False, default=None, metadata={&#34;sa&#34;: mapped_column(ForeignKey(&#34;mines.id&#34;), primary_key=True)})
+  is_current_owner: bool = field(default=None, metadata={&#34;sa&#34;: mapped_column(Boolean, nullable=False, default=False)})
+  start_year: int = field(default=None, metadata={&#34;sa&#34;: mapped_column(Integer, nullable=True)})
+  end_year: int = field(default=None, metadata={&#34;sa&#34;: mapped_column(Integer, nullable=True)})
+
+  owner: &#34;Owner&#34; = field(metadata={&#34;sa&#34;: relationship(&#34;Owner&#34;, back_populates=&#34;mines&#34;)})
+  mine: &#34;Mine&#34; = field(metadata={&#34;sa&#34;: relationship(&#34;Mine&#34;, back_populates=&#34;owners&#34;)})
+
+  def __repr__(self) -&gt; str:
+    return f&#34;Owner ID: {self.owner_id}, mine_id: {self.mine_id}&#34;</code></pre>
+</details>
+<div class="desc"><p>OwnerAssociation(*, is_current_owner: bool = None, start_year: int = None, end_year: int = None, owner: 'Owner', mine: 'Mine')</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="cmti_tools.tables.tables.OwnerAssociation.end_year"><code class="name">var <span class="ident">end_year</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.OwnerAssociation.is_current_owner"><code class="name">var <span class="ident">is_current_owner</span> : bool</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.OwnerAssociation.mine"><code class="name">var <span class="ident">mine</span> : <a title="cmti_tools.tables.tables.Mine" href="#cmti_tools.tables.tables.Mine">Mine</a></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.OwnerAssociation.mine_id"><code class="name">var <span class="ident">mine_id</span> : <a title="cmti_tools.tables.tables.Mine" href="#cmti_tools.tables.tables.Mine">Mine</a></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.OwnerAssociation.owner"><code class="name">var <span class="ident">owner</span> : <a title="cmti_tools.tables.tables.Owner" href="#cmti_tools.tables.tables.Owner">Owner</a></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.OwnerAssociation.owner_id"><code class="name">var <span class="ident">owner_id</span> : <a title="cmti_tools.tables.tables.Owner" href="#cmti_tools.tables.tables.Owner">Owner</a></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.OwnerAssociation.start_year"><code class="name">var <span class="ident">start_year</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="cmti_tools.tables.tables.Reference"><code class="flex name class">
+<span>class <span class="ident">Reference</span></span>
+<span>(</span><span>*, mine_id=None, source_id=None, source=None, link=None, mine)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@reg.mapped
+@dataclass(kw_only=True)
+class Reference:
+  __tablename__ = &#34;references&#34;
+  __allow_unmapped__ = True # dataclasses process fields before SQLAlchemy, so we need to set this to True to allow the dataclass to be mapped
+  __sa_dataclass_metadata_key__ = &#34;sa&#34; # This is used by the dataclass fields to identify the SQLAlchemy mapped fields
+
+  id: int = field(init=False, metadata={&#34;sa&#34;: mapped_column(primary_key=True, autoincrement=True)})
+  mine_id: &#34;Mine&#34; = field(default=None, metadata={&#34;sa&#34;: mapped_column(ForeignKey(&#34;mines.id&#34;), primary_key=True)})
+  source_id: str = field(default=None, metadata={&#34;sa&#34;: mapped_column(String, nullable=False, primary_key=True)})
+  source: str = field(default=None, metadata={&#34;sa&#34;: mapped_column(String, nullable=False)})
+  link: str = field(default=None, metadata={&#34;sa&#34;: mapped_column(String, nullable=True, server_default=&#34;Unknown&#34;)})
+
+  mine: &#34;Mine&#34; = field(metadata={&#34;sa&#34;: relationship(&#34;Mine&#34;, back_populates=&#34;references&#34;)})
+
+  def __repr__(self):
+    return f&#34;Reference: {self.source}, Source_ID: {self.source_id}, Mine Name: {self.mine.name}, mine_id: {self.mine_id}&#34;</code></pre>
+</details>
+<div class="desc"><p>Reference(*, mine_id: 'Mine' = None, source_id: str = None, source: str = None, link: str = None, mine: 'Mine')</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="cmti_tools.tables.tables.Reference.id"><code class="name">var <span class="ident">id</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Reference.link"><code class="name">var <span class="ident">link</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Reference.mine"><code class="name">var <span class="ident">mine</span> : <a title="cmti_tools.tables.tables.Mine" href="#cmti_tools.tables.tables.Mine">Mine</a></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Reference.mine_id"><code class="name">var <span class="ident">mine_id</span> : <a title="cmti_tools.tables.tables.Mine" href="#cmti_tools.tables.tables.Mine">Mine</a></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Reference.source"><code class="name">var <span class="ident">source</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.Reference.source_id"><code class="name">var <span class="ident">source_id</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="cmti_tools.tables.tables.TailingsAssociation"><code class="flex name class">
+<span>class <span class="ident">TailingsAssociation</span></span>
+<span>(</span><span>*, mine_id, tsf_id, start_year=None, end_year=None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@reg.mapped
+@dataclass(kw_only=True)
+class TailingsAssociation:
+  __tablename__ = &#34;tsf_mine_associations&#34;
+  __allow_unmapped__ = True # dataclasses process fields before SQLAlchemy, so we need to set this to True to allow the dataclass to be mapped
+  __sa_dataclass_metadata_key__ = &#34;sa&#34; # This is used by the dataclass fields to identify the SQLAlchemy mapped fields
+
+  mine_id: &#34;Mine&#34; = field(metadata={&#34;sa&#34;: mapped_column(ForeignKey(&#34;mines.id&#34;), primary_key=True)})
+  tsf_id: &#34;TailingsFacility&#34; = field(metadata={&#34;sa&#34;: mapped_column(ForeignKey(&#34;tailings_facilities.id&#34;), primary_key=True)})
+  start_year: int = field(default=None, metadata={&#34;sa&#34;: mapped_column(Integer, nullable=True)})
+  end_year: int = field(default=None, metadata={&#34;sa&#34;: mapped_column(Integer, nullable=True)})
+
+  def __repr__(self) -&gt; str:
+    return f&#34;tsf_id: {self.tsf_id!r}, mine_id: {self.mine_id}&#34;</code></pre>
+</details>
+<div class="desc"><p>TailingsAssociation(*, mine_id: 'Mine', tsf_id: 'TailingsFacility', start_year: int = None, end_year: int = None)</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="cmti_tools.tables.tables.TailingsAssociation.end_year"><code class="name">var <span class="ident">end_year</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.TailingsAssociation.mine_id"><code class="name">var <span class="ident">mine_id</span> : <a title="cmti_tools.tables.tables.Mine" href="#cmti_tools.tables.tables.Mine">Mine</a></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.TailingsAssociation.start_year"><code class="name">var <span class="ident">start_year</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.TailingsAssociation.tsf_id"><code class="name">var <span class="ident">tsf_id</span> : <a title="cmti_tools.tables.tables.TailingsFacility" href="#cmti_tools.tables.tables.TailingsFacility">TailingsFacility</a></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="cmti_tools.tables.tables.TailingsFacility"><code class="flex name class">
+<span>class <span class="ident">TailingsFacility</span></span>
+<span>(</span><span>*,<br>id=None,<br>is_default=None,<br>cmti_id='NULL',<br>name='Unknown',<br>status=None,<br>hazard_class=None,<br>latitude=None,<br>longitude=None,<br>mines=&lt;factory&gt;,<br>impoundments=&lt;factory&gt;)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@reg.mapped
+@dataclass(kw_only=True)
+class TailingsFacility:
+  __tablename__ = &#34;tailings_facilities&#34;
+  __allow_unmapped__ = True # dataclasses process fields before SQLAlchemy, so we need to set this to True to allow the dataclass to be mapped
+  __sa_dataclass_metadata_key__ = &#34;sa&#34; # This is used by the dataclass fields to identify the SQLAlchemy mapped fields
+
+  id: int = field(default=None, metadata={&#34;sa&#34;: mapped_column(Integer, primary_key=True, autoincrement=True)})
+  is_default: bool = field(default=None, metadata={&#34;sa&#34;: mapped_column(Boolean, nullable=False, default=False)})
+  cmti_id: str = field(default=&#34;NULL&#34;, metadata={&#34;sa&#34;: mapped_column(String, nullable=False)})
+  name: str = field(default=&#34;Unknown&#34;, metadata={&#34;sa&#34;: mapped_column(String, nullable=False)})
+  status: str = field(default=None, metadata={&#34;sa&#34;: mapped_column(String, server_default=&#34;Unknown&#34;, nullable=True)})
+  hazard_class: str = field(default=None, metadata={&#34;sa&#34;: mapped_column(String, server_default=&#34;Unknown&#34;, nullable=True)})
+  # Coordinates are optional for TSFs, will likely be listed as the same as their parent mine
+  latitude: float = field(default=None, metadata={&#34;sa&#34;: mapped_column(Float, nullable=True)})
+  longitude: float = field(default=None, metadata={&#34;sa&#34;: mapped_column(Float, nullable=True)})
+  mines: List[&#34;Mine&#34;] = field(default_factory=list, metadata={
+    &#34;sa&#34;: relationship(
+      secondary = &#34;tsf_mine_associations&#34;,
+      back_populates = &#34;tailings_facilities&#34;)
+    }
+  )
+  impoundments: List[&#34;Impoundment&#34;] = field(default_factory=list, metadata={
+    &#34;sa&#34;: relationship(&#34;Impoundment&#34;, back_populates = &#34;parentTsf&#34;, cascade = &#34;all, delete-orphan&#34;)
+    }
+  )
+  
+  def __repr__(self) -&gt; str:
+    return f&#34;TailingsFacility: {self.name!r}, ID: {self.id!r}, cmti_id: {self.cmti_id}, isDefault: {self.is_default}&#34;</code></pre>
+</details>
+<div class="desc"><p>TailingsFacility(*, id: int = None, is_default: bool = None, cmti_id: str = 'NULL', name: str = 'Unknown', status: str = None, hazard_class: str = None, latitude: float = None, longitude: float = None, mines: List[ForwardRef('Mine')] = <factory>, impoundments: List[ForwardRef('Impoundment')] = <factory>)</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="cmti_tools.tables.tables.TailingsFacility.cmti_id"><code class="name">var <span class="ident">cmti_id</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.TailingsFacility.hazard_class"><code class="name">var <span class="ident">hazard_class</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.TailingsFacility.id"><code class="name">var <span class="ident">id</span> : int</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.TailingsFacility.impoundments"><code class="name">var <span class="ident">impoundments</span> : List[<a title="cmti_tools.tables.tables.Impoundment" href="#cmti_tools.tables.tables.Impoundment">Impoundment</a>]</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.TailingsFacility.is_default"><code class="name">var <span class="ident">is_default</span> : bool</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.TailingsFacility.latitude"><code class="name">var <span class="ident">latitude</span> : float</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.TailingsFacility.longitude"><code class="name">var <span class="ident">longitude</span> : float</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.TailingsFacility.mines"><code class="name">var <span class="ident">mines</span> : List[<a title="cmti_tools.tables.tables.Mine" href="#cmti_tools.tables.tables.Mine">Mine</a>]</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.TailingsFacility.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.tables.tables.TailingsFacility.status"><code class="name">var <span class="ident">status</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def __get__(
+    self, instance: Optional[object], owner: Any
+) -&gt; Union[InstrumentedAttribute[_T_co], _T_co]:
+    if instance is None:
+        return self
+
+    dict_ = instance_dict(instance)
+    if self.impl.supports_population and self.key in dict_:
+        return dict_[self.key]  # type: ignore[no-any-return]
+    else:
+        try:
+            state = instance_state(instance)
+        except AttributeError as err:
+            raise orm_exc.UnmappedInstanceError(instance) from err
+        return self.impl.get(state, dict_)  # type: ignore[no-any-return]</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="cmti_tools.tables" href="index.html">cmti_tools.tables</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="cmti_tools.tables.tables.Alias" href="#cmti_tools.tables.tables.Alias">Alias</a></code></h4>
+<ul class="">
+<li><code><a title="cmti_tools.tables.tables.Alias.alias" href="#cmti_tools.tables.tables.Alias.alias">alias</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Alias.alias_id" href="#cmti_tools.tables.tables.Alias.alias_id">alias_id</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Alias.mine" href="#cmti_tools.tables.tables.Alias.mine">mine</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Alias.mine_id" href="#cmti_tools.tables.tables.Alias.mine_id">mine_id</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="cmti_tools.tables.tables.CommodityRecord" href="#cmti_tools.tables.tables.CommodityRecord">CommodityRecord</a></code></h4>
+<ul class="two-column">
+<li><code><a title="cmti_tools.tables.tables.CommodityRecord.commodity" href="#cmti_tools.tables.tables.CommodityRecord.commodity">commodity</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.CommodityRecord.contained" href="#cmti_tools.tables.tables.CommodityRecord.contained">contained</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.CommodityRecord.contained_unit" href="#cmti_tools.tables.tables.CommodityRecord.contained_unit">contained_unit</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.CommodityRecord.grade" href="#cmti_tools.tables.tables.CommodityRecord.grade">grade</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.CommodityRecord.grade_unit" href="#cmti_tools.tables.tables.CommodityRecord.grade_unit">grade_unit</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.CommodityRecord.id" href="#cmti_tools.tables.tables.CommodityRecord.id">id</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.CommodityRecord.is_critical" href="#cmti_tools.tables.tables.CommodityRecord.is_critical">is_critical</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.CommodityRecord.metal_type" href="#cmti_tools.tables.tables.CommodityRecord.metal_type">metal_type</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.CommodityRecord.mine" href="#cmti_tools.tables.tables.CommodityRecord.mine">mine</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.CommodityRecord.mine_id" href="#cmti_tools.tables.tables.CommodityRecord.mine_id">mine_id</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.CommodityRecord.produced" href="#cmti_tools.tables.tables.CommodityRecord.produced">produced</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.CommodityRecord.produced_unit" href="#cmti_tools.tables.tables.CommodityRecord.produced_unit">produced_unit</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.CommodityRecord.source" href="#cmti_tools.tables.tables.CommodityRecord.source">source</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.CommodityRecord.source_id" href="#cmti_tools.tables.tables.CommodityRecord.source_id">source_id</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.CommodityRecord.source_year_end" href="#cmti_tools.tables.tables.CommodityRecord.source_year_end">source_year_end</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.CommodityRecord.source_year_start" href="#cmti_tools.tables.tables.CommodityRecord.source_year_start">source_year_start</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="cmti_tools.tables.tables.Impoundment" href="#cmti_tools.tables.tables.Impoundment">Impoundment</a></code></h4>
+<ul class="two-column">
+<li><code><a title="cmti_tools.tables.tables.Impoundment.acid_generating" href="#cmti_tools.tables.tables.Impoundment.acid_generating">acid_generating</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Impoundment.area" href="#cmti_tools.tables.tables.Impoundment.area">area</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Impoundment.area_from_images" href="#cmti_tools.tables.tables.Impoundment.area_from_images">area_from_images</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Impoundment.area_notes" href="#cmti_tools.tables.tables.Impoundment.area_notes">area_notes</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Impoundment.capacity" href="#cmti_tools.tables.tables.Impoundment.capacity">capacity</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Impoundment.cmti_id" href="#cmti_tools.tables.tables.Impoundment.cmti_id">cmti_id</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Impoundment.id" href="#cmti_tools.tables.tables.Impoundment.id">id</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Impoundment.is_default" href="#cmti_tools.tables.tables.Impoundment.is_default">is_default</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Impoundment.max_height" href="#cmti_tools.tables.tables.Impoundment.max_height">max_height</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Impoundment.name" href="#cmti_tools.tables.tables.Impoundment.name">name</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Impoundment.parentTsf" href="#cmti_tools.tables.tables.Impoundment.parentTsf">parentTsf</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Impoundment.parent_tsf_id" href="#cmti_tools.tables.tables.Impoundment.parent_tsf_id">parent_tsf_id</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Impoundment.raise_type" href="#cmti_tools.tables.tables.Impoundment.raise_type">raise_type</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Impoundment.rating_index" href="#cmti_tools.tables.tables.Impoundment.rating_index">rating_index</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Impoundment.stability_concerns" href="#cmti_tools.tables.tables.Impoundment.stability_concerns">stability_concerns</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Impoundment.storage_method" href="#cmti_tools.tables.tables.Impoundment.storage_method">storage_method</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Impoundment.treatment" href="#cmti_tools.tables.tables.Impoundment.treatment">treatment</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Impoundment.volume" href="#cmti_tools.tables.tables.Impoundment.volume">volume</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="cmti_tools.tables.tables.Mine" href="#cmti_tools.tables.tables.Mine">Mine</a></code></h4>
+<ul class="">
+<li><code><a title="cmti_tools.tables.tables.Mine.aliases" href="#cmti_tools.tables.tables.Mine.aliases">aliases</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.cmti_id" href="#cmti_tools.tables.tables.Mine.cmti_id">cmti_id</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.commodities" href="#cmti_tools.tables.tables.Mine.commodities">commodities</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.construction_year" href="#cmti_tools.tables.tables.Mine.construction_year">construction_year</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.datum" href="#cmti_tools.tables.tables.Mine.datum">datum</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.development_stage" href="#cmti_tools.tables.tables.Mine.development_stage">development_stage</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.ds_comments" href="#cmti_tools.tables.tables.Mine.ds_comments">ds_comments</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.easting" href="#cmti_tools.tables.tables.Mine.easting">easting</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.ews" href="#cmti_tools.tables.tables.Mine.ews">ews</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.ews_rating" href="#cmti_tools.tables.tables.Mine.ews_rating">ews_rating</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.feature_references" href="#cmti_tools.tables.tables.Mine.feature_references">feature_references</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.forcing_features" href="#cmti_tools.tables.tables.Mine.forcing_features">forcing_features</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.hazard_class" href="#cmti_tools.tables.tables.Mine.hazard_class">hazard_class</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.hazard_system" href="#cmti_tools.tables.tables.Mine.hazard_system">hazard_system</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.id" href="#cmti_tools.tables.tables.Mine.id">id</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.last_revised" href="#cmti_tools.tables.tables.Mine.last_revised">last_revised</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.latitude" href="#cmti_tools.tables.tables.Mine.latitude">latitude</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.longitude" href="#cmti_tools.tables.tables.Mine.longitude">longitude</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.mine_status" href="#cmti_tools.tables.tables.Mine.mine_status">mine_status</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.mine_type" href="#cmti_tools.tables.tables.Mine.mine_type">mine_type</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.mining_district" href="#cmti_tools.tables.tables.Mine.mining_district">mining_district</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.mining_method" href="#cmti_tools.tables.tables.Mine.mining_method">mining_method</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.name" href="#cmti_tools.tables.tables.Mine.name">name</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.noami_site_class" href="#cmti_tools.tables.tables.Mine.noami_site_class">noami_site_class</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.noami_status" href="#cmti_tools.tables.tables.Mine.noami_status">noami_status</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.northing" href="#cmti_tools.tables.tables.Mine.northing">northing</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.notes" href="#cmti_tools.tables.tables.Mine.notes">notes</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.nts_area" href="#cmti_tools.tables.tables.Mine.nts_area">nts_area</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.ore_processed" href="#cmti_tools.tables.tables.Mine.ore_processed">ore_processed</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.ore_processed_unit" href="#cmti_tools.tables.tables.Mine.ore_processed_unit">ore_processed_unit</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.orebody" href="#cmti_tools.tables.tables.Mine.orebody">orebody</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.orebody_class" href="#cmti_tools.tables.tables.Mine.orebody_class">orebody_class</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.orebody_minerals" href="#cmti_tools.tables.tables.Mine.orebody_minerals">orebody_minerals</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.orebody_type" href="#cmti_tools.tables.tables.Mine.orebody_type">orebody_type</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.other_mineralization" href="#cmti_tools.tables.tables.Mine.other_mineralization">other_mineralization</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.owners" href="#cmti_tools.tables.tables.Mine.owners">owners</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.processing_method" href="#cmti_tools.tables.tables.Mine.processing_method">processing_method</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.prov_terr" href="#cmti_tools.tables.tables.Mine.prov_terr">prov_terr</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.prp_rating" href="#cmti_tools.tables.tables.Mine.prp_rating">prp_rating</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.references" href="#cmti_tools.tables.tables.Mine.references">references</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.rehab_plan" href="#cmti_tools.tables.tables.Mine.rehab_plan">rehab_plan</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.reserves_resources" href="#cmti_tools.tables.tables.Mine.reserves_resources">reserves_resources</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.sa_comments" href="#cmti_tools.tables.tables.Mine.sa_comments">sa_comments</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.sedar" href="#cmti_tools.tables.tables.Mine.sedar">sedar</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.shaft_depth" href="#cmti_tools.tables.tables.Mine.shaft_depth">shaft_depth</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.site_access" href="#cmti_tools.tables.tables.Mine.site_access">site_access</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.tailings_facilities" href="#cmti_tools.tables.tables.Mine.tailings_facilities">tailings_facilities</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.utm_zone" href="#cmti_tools.tables.tables.Mine.utm_zone">utm_zone</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.year_closed" href="#cmti_tools.tables.tables.Mine.year_closed">year_closed</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Mine.year_opened" href="#cmti_tools.tables.tables.Mine.year_opened">year_opened</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="cmti_tools.tables.tables.Orebody" href="#cmti_tools.tables.tables.Orebody">Orebody</a></code></h4>
+<ul class="two-column">
+<li><code><a title="cmti_tools.tables.tables.Orebody.id" href="#cmti_tools.tables.tables.Orebody.id">id</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Orebody.mine" href="#cmti_tools.tables.tables.Orebody.mine">mine</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Orebody.mine_id" href="#cmti_tools.tables.tables.Orebody.mine_id">mine_id</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Orebody.minerals" href="#cmti_tools.tables.tables.Orebody.minerals">minerals</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Orebody.ore_class" href="#cmti_tools.tables.tables.Orebody.ore_class">ore_class</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Orebody.ore_processed" href="#cmti_tools.tables.tables.Orebody.ore_processed">ore_processed</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Orebody.ore_type" href="#cmti_tools.tables.tables.Orebody.ore_type">ore_type</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="cmti_tools.tables.tables.Owner" href="#cmti_tools.tables.tables.Owner">Owner</a></code></h4>
+<ul class="">
+<li><code><a title="cmti_tools.tables.tables.Owner.id" href="#cmti_tools.tables.tables.Owner.id">id</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Owner.mines" href="#cmti_tools.tables.tables.Owner.mines">mines</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Owner.name" href="#cmti_tools.tables.tables.Owner.name">name</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="cmti_tools.tables.tables.OwnerAssociation" href="#cmti_tools.tables.tables.OwnerAssociation">OwnerAssociation</a></code></h4>
+<ul class="two-column">
+<li><code><a title="cmti_tools.tables.tables.OwnerAssociation.end_year" href="#cmti_tools.tables.tables.OwnerAssociation.end_year">end_year</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.OwnerAssociation.is_current_owner" href="#cmti_tools.tables.tables.OwnerAssociation.is_current_owner">is_current_owner</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.OwnerAssociation.mine" href="#cmti_tools.tables.tables.OwnerAssociation.mine">mine</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.OwnerAssociation.mine_id" href="#cmti_tools.tables.tables.OwnerAssociation.mine_id">mine_id</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.OwnerAssociation.owner" href="#cmti_tools.tables.tables.OwnerAssociation.owner">owner</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.OwnerAssociation.owner_id" href="#cmti_tools.tables.tables.OwnerAssociation.owner_id">owner_id</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.OwnerAssociation.start_year" href="#cmti_tools.tables.tables.OwnerAssociation.start_year">start_year</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="cmti_tools.tables.tables.Reference" href="#cmti_tools.tables.tables.Reference">Reference</a></code></h4>
+<ul class="two-column">
+<li><code><a title="cmti_tools.tables.tables.Reference.id" href="#cmti_tools.tables.tables.Reference.id">id</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Reference.link" href="#cmti_tools.tables.tables.Reference.link">link</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Reference.mine" href="#cmti_tools.tables.tables.Reference.mine">mine</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Reference.mine_id" href="#cmti_tools.tables.tables.Reference.mine_id">mine_id</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Reference.source" href="#cmti_tools.tables.tables.Reference.source">source</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.Reference.source_id" href="#cmti_tools.tables.tables.Reference.source_id">source_id</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="cmti_tools.tables.tables.TailingsAssociation" href="#cmti_tools.tables.tables.TailingsAssociation">TailingsAssociation</a></code></h4>
+<ul class="">
+<li><code><a title="cmti_tools.tables.tables.TailingsAssociation.end_year" href="#cmti_tools.tables.tables.TailingsAssociation.end_year">end_year</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.TailingsAssociation.mine_id" href="#cmti_tools.tables.tables.TailingsAssociation.mine_id">mine_id</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.TailingsAssociation.start_year" href="#cmti_tools.tables.tables.TailingsAssociation.start_year">start_year</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.TailingsAssociation.tsf_id" href="#cmti_tools.tables.tables.TailingsAssociation.tsf_id">tsf_id</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="cmti_tools.tables.tables.TailingsFacility" href="#cmti_tools.tables.tables.TailingsFacility">TailingsFacility</a></code></h4>
+<ul class="two-column">
+<li><code><a title="cmti_tools.tables.tables.TailingsFacility.cmti_id" href="#cmti_tools.tables.tables.TailingsFacility.cmti_id">cmti_id</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.TailingsFacility.hazard_class" href="#cmti_tools.tables.tables.TailingsFacility.hazard_class">hazard_class</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.TailingsFacility.id" href="#cmti_tools.tables.tables.TailingsFacility.id">id</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.TailingsFacility.impoundments" href="#cmti_tools.tables.tables.TailingsFacility.impoundments">impoundments</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.TailingsFacility.is_default" href="#cmti_tools.tables.tables.TailingsFacility.is_default">is_default</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.TailingsFacility.latitude" href="#cmti_tools.tables.tables.TailingsFacility.latitude">latitude</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.TailingsFacility.longitude" href="#cmti_tools.tables.tables.TailingsFacility.longitude">longitude</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.TailingsFacility.mines" href="#cmti_tools.tables.tables.TailingsFacility.mines">mines</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.TailingsFacility.name" href="#cmti_tools.tables.tables.TailingsFacility.name">name</a></code></li>
+<li><code><a title="cmti_tools.tables.tables.TailingsFacility.status" href="#cmti_tools.tables.tables.TailingsFacility.status">status</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

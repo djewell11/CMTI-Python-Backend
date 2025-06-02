@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>cmti_tools.qualitycontrol.qualitycontrol API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>cmti_tools.qualitycontrol.qualitycontrol</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="cmti_tools.qualitycontrol.qualitycontrol.check_categorical_values"><code class="name flex">
+<span>def <span class="ident">check_categorical_values</span></span>(<span>row: pandas.core.series.Series,<br>qa_dict: dict,<br>ignore_unknown=True,<br>ignore_na=True,<br>ignore_blank=True)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def check_categorical_values(row:pd.Series, qa_dict:dict, ignore_unknown=True, ignore_na=True, ignore_blank=True):
+  &#34;&#34;&#34;
+  Verifies that value given matches list of approved values in template. #TODO determine behaviour for bad values (currently prints to console).
+
+  :param row: A row from an input DataFrame.
+  :type row: pandas.Series
+
+  :param qa_dict: A dictionary where keys are columns and values are lists of approved strings for those columns.
+  :type qa_dict: dict
+
+  :param ignore_unknown: Whether to flag entries where value == &#39;Unknown&#39; or &#39;N/A/Unknown&#39;. Default: True.
+  :type ignore_unknown: bool
+
+  :param ignore_na: Whether to flag entries where value is an NA type. Default: True.
+  :type ignore_na: bool
+
+  :param ignore_blank: Whether to flag entries where value == &#39;&#39;. Default: True.
+  :type ignore_blank: bool
+  &#34;&#34;&#34;
+  # qa_dict keys are columns, values are allowed values
+  # This function flags errant values but doesn&#39;t change them
+  def print_bad_value(key, val):
+    print(f&#34;{row.Site_Name} -- {key}: {val}&#34;)
+
+  for col_key, value_list in qa_dict.items():
+    if pd.isna(row[col_key]) and ignore_na:
+      pass
+    else:
+      col_values = [val.strip() for val in str(row[col_key]).split(&#39;,&#39;)]
+      for col_value in col_values:
+        if col_value not in value_list:
+          if ignore_unknown and str(col_value) in [&#39;Unknown&#39;, &#39;N/A/Unknown&#39;]:
+            pass
+          elif ignore_blank and len(col_value) == 0:
+            pass
+          else:
+            print_bad_value(col_key, col_value)</code></pre>
+</details>
+<div class="desc"><p>Verifies that value given matches list of approved values in template. #TODO determine behaviour for bad values (currently prints to console).</p>
+<p>:param row: A row from an input DataFrame.
+:type row: pandas.Series</p>
+<p>:param qa_dict: A dictionary where keys are columns and values are lists of approved strings for those columns.
+:type qa_dict: dict</p>
+<p>:param ignore_unknown: Whether to flag entries where value == 'Unknown' or 'N/A/Unknown'. Default: True.
+:type ignore_unknown: bool</p>
+<p>:param ignore_na: Whether to flag entries where value is an NA type. Default: True.
+:type ignore_na: bool</p>
+<p>:param ignore_blank: Whether to flag entries where value == ''. Default: True.
+:type ignore_blank: bool</p></div>
+</dd>
+<dt id="cmti_tools.qualitycontrol.qualitycontrol.convert_unit"><code class="name flex">
+<span>def <span class="ident">convert_unit</span></span>(<span>value,<br>desired_unit: str,<br>dimensionless_value_unit: str = None,<br>ureg: pint.registry.UnitRegistry = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def convert_unit(value, desired_unit:str, dimensionless_value_unit:str = None, ureg:UnitRegistry = None):
+  &#34;&#34;&#34;
+  Converts a value to a desired unit using a pint.UnitRegistry object.
+
+  :param value: The input value.
+  :type value: int, float, or str
+
+  :param desired_unit: The desired output unit. If None, the usual defaults are used.
+  :type desired_unit: str
+
+  :param ureg: A pint.UnitRegistry object.
+  :type ureg: pint.UnitRegistry
+
+  :param dimensionless_value_unit: The unit of the input value if dimensionless. If None, dimensionless values are ignored. Will not overwrite strings with dimensions. Default: None.
+  :type dimensionless_value_unit: str 
+
+  :return: The converted value.
+  :rtype: int, float
+  &#34;&#34;&#34;
+
+  # TODO: This function is extremely slow and needs optimizing. It currently tries to convert every value entered.
+
+  from pint import DimensionalityError
+  from pint import UndefinedUnitError
+
+  if ureg is None:
+    ureg = UnitRegistry()
+    ureg.define(&#39;km2 = kilometer ** 2&#39;)
+    ureg.define(&#39;m2 = meter ** 2&#39;)
+    ureg.define(&#39;Ha = hectare = 10000 m2&#39;)
+    ureg.define(&#39;m3 = meter ** 3&#39;)
+
+  Q = ureg.Quantity
+
+  # Pint doesn&#39;t like None values. Exit early if value is None.
+  if pd.isna(value) or desired_unit is None:
+    return value
+  
+  value = value.replace(&#39; &#39;, &#39;&#39;) if isinstance(value, str) else value
+  try:
+    # Try a simple conversion, if value contains unit
+    return Q(value).to(desired_unit).magnitude
+  except DimensionalityError:
+    try:
+      # If value has no dimension, but a dimensionless unit is provided, try to add it
+      if dimensionless_value_unit is not None:
+        # This should handle strings or stringified numbers
+        value_dim = f&#39;{value} {dimensionless_value_unit}&#39;
+        return Q(value_dim).to(desired_unit).magnitude
+      else:
+        # If no dimensionless unit is provided, return the value as is
+        return value
+    except:
+      # This shouldn&#39;t be reachable, but if it is, raise an error
+      raise(f&#34;Could not convert value: {value} to desired unit.&#34;)
+  except UndefinedUnitError:
+    # If the unit is not defined, return the value as is
+      return value
+  except:
+    raise</code></pre>
+</details>
+<div class="desc"><p>Converts a value to a desired unit using a pint.UnitRegistry object.</p>
+<p>:param value: The input value.
+:type value: int, float, or str</p>
+<p>:param desired_unit: The desired output unit. If None, the usual defaults are used.
+:type desired_unit: str</p>
+<p>:param ureg: A pint.UnitRegistry object.
+:type ureg: pint.UnitRegistry</p>
+<p>:param dimensionless_value_unit: The unit of the input value if dimensionless. If None, dimensionless values are ignored. Will not overwrite strings with dimensions. Default: None.
+:type dimensionless_value_unit: str </p>
+<p>:return: The converted value.
+:rtype: int, float</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="cmti_tools.qualitycontrol.qualitycontrol.DataGrader"><code class="flex name class">
+<span>class <span class="ident">DataGrader</span></span>
+<span>(</span><span>main: dict,<br>comms: dict,<br>years: dict,<br>source: dict,<br>comm_col_count=8,<br>source_col_count=4)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DataGrader:
+
+  def __init__(self, main:dict, comms:dict, years:dict, source:dict, comm_col_count=8, source_col_count=4):
+    self.main = main
+    self.comms = comms
+    self.commodity_cols = [f&#34;Commodity{n}&#34; for n in range(1, comm_col_count+1)]
+    self.years = years
+    self.source = source
+    self.source_col_count = source_col_count
+    self.source_cols = self.__create_source_columns()
+    self.perfect_score=0
+    self.perfect_score = self.__perfect_score()
+
+
+  # Init methods
+  def __create_source_columns(self):
+    source_cols = []
+    for source_n  in range(1, self.source_col_count+1):
+      source_cols += [f&#34;Source_{source_n}&#34;, f&#34;Source_{source_n}_ID&#34;, f&#34;Source_{source_n}_Link&#34;]
+      return source_cols
+
+  def perfect_row(self):
+    all_cols = {}
+    for col_dict in [self.main, self.comms, self.years, self.source]:
+      cols = col_dict.keys()
+      all_cols.update(dict(zip(cols, [True for n in range(len(cols))])))
+
+    full_row = pd.Series(all_cols)
+    return full_row
+
+  def __perfect_score(self):
+    perfect_score = 0
+    for point_dict in [self.main, self.comms, self.years, self.source]:
+      for points in point_dict.values():
+        perfect_score += points
+    return perfect_score
+
+  # Points calculation methods. These could be used individually, but it&#39;s easier to just call self.assign_score()
+
+  def calculate_main_values(self, row):
+    initial_points = 0
+    for key in self.main.keys():
+      entry = row[key]
+      if pd.notna(entry) and entry != &#39;Unknown&#39;:
+        initial_points += self.main[key]
+    return initial_points
+
+  def calculate_commodity_values(self, row):
+    comm_points_list = []
+    cols_with_values = set()
+    for commodity_col in self.commodity_cols:
+      comm = row[commodity_col]
+      comm_points = 0
+      if pd.notna(comm):
+        comm = comm.strip()
+        comm_points += self.comms[&#39;Commodity&#39;]
+        if f&#34;{comm}_Produced&#34; in row.index.to_list() and pd.notna(row[f&#34;{comm}_Produced&#34;]):
+          comm_points += self.comms[&#39;Commodity_Produced&#39;]
+        if f&#34;{comm}_Contained&#34; in row.index.to_list() and pd.notna(row[f&#34;{comm}_Contained&#34;]):
+          comm_points += self.comms[&#39;Commodity_Contained&#39;]
+        if f&#34;{comm}_Grade&#34; in row.index.to_list() and pd.notna(row[f&#34;{comm}_Grade&#34;]):
+          comm_points += self.comms[&#39;Commodity_Grade&#39;]
+      comm_points_list.append(comm_points)
+
+    return max(comm_points_list)
+
+  def calculate_year_values(self, row):
+    for col in self.years.keys():
+      col_value = row[col]
+      if pd.notnull(col_value) and col_value != &#39;Unknown&#39;:
+        # The first time a value is encountered, return value and exit method
+        year_points = self.years[col]
+        return year_points
+    return 0 # If no value encountered, no points returned
+
+  def calculate_source_values(self, row):
+    points_list = []
+    for i in range(1, self.source_col_count+1):
+      source_points = 0
+      if pd.notna(row[f&#39;Source_{i}&#39;]):
+        source_points += self.source[&#39;Source&#39;]
+        if pd.notna(row[f&#39;Source_{i}_ID&#39;]):
+          source_points += self.source[&#39;Source_ID&#39;]
+        elif pd.notna(row[f&#39;Source_{i}_Link&#39;]) and pd.isna(row[f&#39;Source_{i}_ID&#39;]):
+          source_points += self.source[&#39;Source_Link&#39;]
+
+      points_list.append(source_points)
+    return max(points_list)
+
+  def assign_score(self, row):
+    total_points = (
+        self.calculate_main_values(row) +
+        self.calculate_commodity_values(row) +
+        self.calculate_year_values(row) +
+        self.calculate_source_values(row)
+        )
+    score = round((total_points/self.perfect_score)*100, 2)
+    return score</code></pre>
+</details>
+<div class="desc"></div>
+<h3>Methods</h3>
+<dl>
+<dt id="cmti_tools.qualitycontrol.qualitycontrol.DataGrader.assign_score"><code class="name flex">
+<span>def <span class="ident">assign_score</span></span>(<span>self, row)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def assign_score(self, row):
+  total_points = (
+      self.calculate_main_values(row) +
+      self.calculate_commodity_values(row) +
+      self.calculate_year_values(row) +
+      self.calculate_source_values(row)
+      )
+  score = round((total_points/self.perfect_score)*100, 2)
+  return score</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.qualitycontrol.qualitycontrol.DataGrader.calculate_commodity_values"><code class="name flex">
+<span>def <span class="ident">calculate_commodity_values</span></span>(<span>self, row)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def calculate_commodity_values(self, row):
+  comm_points_list = []
+  cols_with_values = set()
+  for commodity_col in self.commodity_cols:
+    comm = row[commodity_col]
+    comm_points = 0
+    if pd.notna(comm):
+      comm = comm.strip()
+      comm_points += self.comms[&#39;Commodity&#39;]
+      if f&#34;{comm}_Produced&#34; in row.index.to_list() and pd.notna(row[f&#34;{comm}_Produced&#34;]):
+        comm_points += self.comms[&#39;Commodity_Produced&#39;]
+      if f&#34;{comm}_Contained&#34; in row.index.to_list() and pd.notna(row[f&#34;{comm}_Contained&#34;]):
+        comm_points += self.comms[&#39;Commodity_Contained&#39;]
+      if f&#34;{comm}_Grade&#34; in row.index.to_list() and pd.notna(row[f&#34;{comm}_Grade&#34;]):
+        comm_points += self.comms[&#39;Commodity_Grade&#39;]
+    comm_points_list.append(comm_points)
+
+  return max(comm_points_list)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.qualitycontrol.qualitycontrol.DataGrader.calculate_main_values"><code class="name flex">
+<span>def <span class="ident">calculate_main_values</span></span>(<span>self, row)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def calculate_main_values(self, row):
+  initial_points = 0
+  for key in self.main.keys():
+    entry = row[key]
+    if pd.notna(entry) and entry != &#39;Unknown&#39;:
+      initial_points += self.main[key]
+  return initial_points</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.qualitycontrol.qualitycontrol.DataGrader.calculate_source_values"><code class="name flex">
+<span>def <span class="ident">calculate_source_values</span></span>(<span>self, row)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def calculate_source_values(self, row):
+  points_list = []
+  for i in range(1, self.source_col_count+1):
+    source_points = 0
+    if pd.notna(row[f&#39;Source_{i}&#39;]):
+      source_points += self.source[&#39;Source&#39;]
+      if pd.notna(row[f&#39;Source_{i}_ID&#39;]):
+        source_points += self.source[&#39;Source_ID&#39;]
+      elif pd.notna(row[f&#39;Source_{i}_Link&#39;]) and pd.isna(row[f&#39;Source_{i}_ID&#39;]):
+        source_points += self.source[&#39;Source_Link&#39;]
+
+    points_list.append(source_points)
+  return max(points_list)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.qualitycontrol.qualitycontrol.DataGrader.calculate_year_values"><code class="name flex">
+<span>def <span class="ident">calculate_year_values</span></span>(<span>self, row)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def calculate_year_values(self, row):
+  for col in self.years.keys():
+    col_value = row[col]
+    if pd.notnull(col_value) and col_value != &#39;Unknown&#39;:
+      # The first time a value is encountered, return value and exit method
+      year_points = self.years[col]
+      return year_points
+  return 0 # If no value encountered, no points returned</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.qualitycontrol.qualitycontrol.DataGrader.perfect_row"><code class="name flex">
+<span>def <span class="ident">perfect_row</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def perfect_row(self):
+  all_cols = {}
+  for col_dict in [self.main, self.comms, self.years, self.source]:
+    cols = col_dict.keys()
+    all_cols.update(dict(zip(cols, [True for n in range(len(cols))])))
+
+  full_row = pd.Series(all_cols)
+  return full_row</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="cmti_tools.qualitycontrol" href="index.html">cmti_tools.qualitycontrol</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="cmti_tools.qualitycontrol.qualitycontrol.check_categorical_values" href="#cmti_tools.qualitycontrol.qualitycontrol.check_categorical_values">check_categorical_values</a></code></li>
+<li><code><a title="cmti_tools.qualitycontrol.qualitycontrol.convert_unit" href="#cmti_tools.qualitycontrol.qualitycontrol.convert_unit">convert_unit</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="cmti_tools.qualitycontrol.qualitycontrol.DataGrader" href="#cmti_tools.qualitycontrol.qualitycontrol.DataGrader">DataGrader</a></code></h4>
+<ul class="">
+<li><code><a title="cmti_tools.qualitycontrol.qualitycontrol.DataGrader.assign_score" href="#cmti_tools.qualitycontrol.qualitycontrol.DataGrader.assign_score">assign_score</a></code></li>
+<li><code><a title="cmti_tools.qualitycontrol.qualitycontrol.DataGrader.calculate_commodity_values" href="#cmti_tools.qualitycontrol.qualitycontrol.DataGrader.calculate_commodity_values">calculate_commodity_values</a></code></li>
+<li><code><a title="cmti_tools.qualitycontrol.qualitycontrol.DataGrader.calculate_main_values" href="#cmti_tools.qualitycontrol.qualitycontrol.DataGrader.calculate_main_values">calculate_main_values</a></code></li>
+<li><code><a title="cmti_tools.qualitycontrol.qualitycontrol.DataGrader.calculate_source_values" href="#cmti_tools.qualitycontrol.qualitycontrol.DataGrader.calculate_source_values">calculate_source_values</a></code></li>
+<li><code><a title="cmti_tools.qualitycontrol.qualitycontrol.DataGrader.calculate_year_values" href="#cmti_tools.qualitycontrol.qualitycontrol.DataGrader.calculate_year_values">calculate_year_values</a></code></li>
+<li><code><a title="cmti_tools.qualitycontrol.qualitycontrol.DataGrader.perfect_row" href="#cmti_tools.qualitycontrol.qualitycontrol.DataGrader.perfect_row">perfect_row</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

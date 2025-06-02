@@ -1,0 +1,2165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>cmti_tools.importdata.source_importers.importers API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>cmti_tools.importdata.source_importers.importers</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="cmti_tools.importdata.source_importers.importers.BCAHMImporter"><code class="flex name class">
+<span>class <span class="ident">BCAHMImporter</span></span>
+<span>(</span><span>cm_list: list = 'config',<br>metals_dict: dict = 'config',<br>name_convert_dict: dict = 'config')</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class BCAHMImporter(DataImporter):
+  def __init__(self, cm_list:list=&#39;config&#39;, metals_dict:dict=&#39;config&#39;, name_convert_dict:dict=&#39;config&#39;):
+    &#34;&#34;&#34;
+    Initializes the BCAHMImporter class with configuration data.
+    
+    :param cm_list: List of critical minerals.
+    :type cm_list: list
+
+    :param metals_dict: Dictionary mapping metal names to properties.
+    :type metals_dict: dict
+
+    :param name_convert_dict: Dictionary for converting commodity names.
+    :type name_convert_dict: dict
+    &#34;&#34;&#34;
+    super().__init__(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_convert_dict)
+
+  def clean_input_table(self, input_table, drop_NA_columns=[&#39;OBJECTID&#39;, &#39;MINFILNO&#39;, &#39;NAME1&#39;, &#39;LATITUDE&#39;, &#39;LONGITUDE&#39;], calculate_UTM=True, force_dtypes=True, convert_units=False):
+    bcahm_dtypes = {
+      &#34;OBJECTID&#34;: &#34;u4&#34;,
+      &#34;MINFILNO&#34;: &#34;U&#34;,
+      &#34;NAME1&#34;: &#34;U&#34;,
+      &#34;NAME2&#34;: &#34;U&#34;,
+      &#34;STATUS&#34;: &#34;U&#34;,
+      &#34;LATITUDE&#34;: &#34;f4&#34;,
+      &#34;LONGITUDE&#34;: &#34;f4&#34;,
+      &#34;UTM_ZONE&#34;: &#34;Int64&#34;,
+      &#34;UTM_NORT&#34;: &#34;Int64&#34;,
+      &#34;UTM_EAST&#34;: &#34;Int64&#34;,
+      &#34;ELEV&#34;: &#34;f4&#34;,
+      &#34;COMMOD_C1&#34;: &#34;U&#34;,
+      &#34;COMMOD_C2&#34;: &#34;U&#34;,
+      &#34;COMMOD_C3&#34;: &#34;U&#34;,
+      &#34;DEPOSITTYPE_D1&#34;: &#34;U&#34;,
+      &#34;DEPOSITTYPE_D2&#34;: &#34;U&#34;,
+      &#34;DEPOSITCLASS_D1&#34;: &#34;U&#34;,
+      &#34;DEPOSITCLASS_D2&#34;: &#34;U&#34;,
+      &#34;NTSMAP_C1&#34;: &#34;U&#34;,
+      &#34;NTSMAP_C2&#34;: &#34;U&#34;,
+      &#34;Permit1&#34;: &#34;U&#34;,
+      &#34;Permit2&#34;: &#34;U&#34;,
+      &#34;Mine_Name&#34;: &#34;U&#34;,
+      &#34;Mine_Statu&#34;: &#34;U&#34;,
+      &#34;Region&#34;: &#34;U&#34;,
+      &#34;Tailings&#34;: &#34;U&#34;,
+      &#34;Disposal_Method&#34;: &#34;U&#34;,
+      &#34;Mined&#34;: &#34;f4&#34;,
+      &#34;Milled&#34;: &#34;f4&#34;,
+      &#34;Mine_type&#34;: &#34;U&#34;,
+      &#34;Permitee1&#34;: &#34;U&#34;,
+      &#34;Permittee2&#34;: &#34;U&#34;,
+      &#34;URL&#34;: &#34;U&#34;,
+      &#34;Current_st&#34;: &#34;U&#34;,
+      &#34;Permit1_Status&#34;: &#34;U&#34;,
+      &#34;Permit2_Status&#34;: &#34;U&#34;,
+      &#34;First_Year&#34;: &#34;Int64&#34;,
+      &#34;Last_Year&#34;: &#34;Int64&#34;
+    }
+
+    bcahm_defaults = [&#34;Unknown&#34; if t == &#34;U&#34; else pd.NA for t in bcahm_dtypes]
+    bcahm_types_table = pd.DataFrame(data={&#39;Column&#39;: bcahm_dtypes.keys(), &#39;Type&#39;: bcahm_dtypes.values(), &#39;Default&#39;: bcahm_defaults})
+    conversion_dict = None # Placeholder for unit conversion dictionary
+
+    converters = converter_factory(bcahm_types_table, conversion_dict).create_converter_dict()
+
+    if isinstance(input_table, str):
+      try:
+        bcahm_df = pd.read_excel(input_table, header=0, converters=converters)
+      except:
+        bcahm_df = pd.read_csv(input_table, header=0, converters=converters)
+    else:
+      bcahm_df = input_table
+
+    # Drop rows that are missing critical values in the drop_NA_columns list before converting types
+    bcahm_df = bcahm_df.dropna(subset=drop_NA_columns)
+
+    # Apply converters for initial cleanup
+    for col, func in converters.items():
+      try:
+        bcahm_df[col] = bcahm_df[col].apply(func)
+      except ValueError as ve:
+        raise ve
+      except KeyError as ke:
+        print(f&#34;Column {col} not found in input table.&#34;)
+        pass
+
+    # Calculate UTM Zone
+    if calculate_UTM:
+      for row in bcahm_df.itertuples():
+        if pd.isna(row.LONGITUDE):
+          bcahm_df.at[row.Index, &#39;UTM_Zone&#39;] = None
+        elif pd.isna(row.UTM_ZONE):
+          try:
+            bcahm_df.at[row.Index, &#39;UTM_ZONE&#39;] = tools.lon_to_utm_zone(row.LONGITUDE)
+          except:
+            print(f&#34;Error calculating UTM Zone for row {row.Index}.&#34;)
+            raise
+
+    # Coerce types
+    if force_dtypes:
+      bcahm_df = self.coerce_dtypes(bcahm_types_table, bcahm_df)
+
+    return bcahm_df
+
+  def create_row_records(self, row: pd.Series, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None):
+    &#34;&#34;&#34;
+    Processes a row of data from the BCAHM dataset and creates associated database records.
+    
+    :param row: The data row to be processed.
+    :type row: pd.Series
+
+    :param cm_list: List of critical minerals, defaults to the class attribute.
+    :type cm_list: list
+
+    :param metals_dict: Dictionary of metals and their properties, defaults to the class attribute.
+    :type metals_dict: dict
+
+    :param name_convert_dict: Dictionary for commodity name conversion, defaults to the class attribute.
+    :type name_convert_dict: dict
+    
+    :return list[object]: A list of created data records.
+    &#34;&#34;&#34;
+    # Data tables will default to BCAHMImporter attributes but can be overridden
+    if cm_list is None:
+      cm_list = self.cm_list
+    if metals_dict is None:
+      metals_dict = self.metals_dict
+    if name_convert_dict is None:
+      name_convert_dict = self.name_convert_dict
+
+    row_records = []
+    try:
+      mine_vals = {
+        &#34;name&#34;: row[&#34;NAME1&#34;],
+        &#34;latitude&#34;: row[&#34;LATITUDE&#34;],
+        &#34;longitude&#34;: row[&#34;LONGITUDE&#34;],
+        &#34;utm_zone&#34;: row[&#34;UTM_ZONE&#34;],
+        &#34;northing&#34;: row[&#34;UTM_NORT&#34;],
+        &#34;easting&#34;: row[&#34;UTM_EAST&#34;],
+        &#34;year_opened&#34;: row[&#34;First_Year&#34;],
+        &#34;year_closed&#34;: row[&#34;Last_Year&#34;],
+        &#34;nts_area&#34;: row[&#34;NTSMAP_C1&#34;],
+        &#34;prov_terr&#34;: &#34;BC&#34;,
+        &#34;mine_status&#34;: &#34;Inactive&#34;
+      }
+
+      # If either lat or lon are missing, don&#39;t add that record
+      if (pd.isna(mine_vals[&#34;latitude&#34;]) or mine_vals[&#34;latitude&#34;] == &#39;Null&#39;) or (pd.isna(mine_vals[&#34;longitude&#34;]) or mine_vals[&#34;longitude&#34;] == &#39;Null&#39;):
+          raise ValueError(&#34;Latitude or Longitude missing from record.&#34;)
+      
+      # Check coordinates for null strings as well
+      if pd.isna(mine_vals[&#39;northing&#39;]) or mine_vals[&#39;northing&#39;] == &#39;Null&#39;:
+        del(mine_vals[&#39;northing&#39;])
+      if pd.isna(mine_vals[&#39;easting&#39;]) or mine_vals[&#39;easting&#39;] == &#39;Null&#39;:
+        del(mine_vals[&#39;easting&#39;])
+      if pd.isna(mine_vals[&#39;utm_zone&#39;]) or mine_vals[&#39;utm_zone&#39;] == &#39;Null&#39;:
+        mine_vals[&#39;utm_zone&#39;] = tools.lon_to_utm_zone(mine_vals[&#39;longitude&#39;])
+      
+      mine = Mine(**mine_vals)
+      row_records.append(mine)
+
+      # Create alias if there&#39;s another name
+      if pd.notna(row[&#34;NAME2&#34;]):
+        alias = Alias(mine=mine, alias=row[&#34;NAME2&#34;])
+        row_records.append(alias)
+      
+      # Commodities
+      for comm_col in [&#39;COMMOD_C1&#39;, &#39;COMMOD_C2&#39;, &#39;COMMOD_C3&#39;]:
+        if pd.notna(row[comm_col]):
+          commodity_record = tools.get_commodity(row, comm_col, cm_list, name_convert_dict, metals_dict, mine)
+          row_records.append(commodity_record)
+
+      # TSF
+      tsf = TailingsFacility(is_default = True, name = f&#34;default_TSF_{mine_vals[&#39;name&#39;]}&#34;.strip())
+      mine.tailings_facilities.append(tsf)
+      row_records.append(tsf)
+
+      # Impoundment
+      impoundment = Impoundment(
+        parentTsf=tsf,
+        parent_tsf_id=tsf.cmti_id,
+        is_default=True,
+        name=f&#34;{tsf.name}_impoundment&#34;
+      )
+      row_records.append(impoundment)
+
+      #Reference
+      reference = Reference(mine = mine, source = &#34;BCAHM&#34;, source_id = str(row.OBJECTID))
+      row_records.append(reference)
+      if row.MINFILNO != &#34;Null&#34;:
+        minefileref = Reference(mine = mine, source = &#34;BC Minfile&#34;, source_id = row.MINFILNO)
+        row_records.append(minefileref)
+
+      # Orebody
+      if row[&#34;DEPOSITTYPE_D1&#34;] != &#34;Null&#34; and pd.notna(row[&#34;DEPOSITTYPE_D1&#34;]):
+        orebody = Orebody(mine = mine, ore_type = row[&#34;DEPOSITTYPE_D1&#34;], ore_class = row[&#34;DEPOSITCLASS_D1&#34;])
+        row_records.append(orebody)
+      if row[&#34;DEPOSITTYPE_D2&#34;] != &#34;Null&#34; and pd.notna(row[&#34;DEPOSITTYPE_D2&#34;]):
+        orebody2 = Orebody(mine = mine, ore_type = row[&#34;DEPOSITTYPE_D2&#34;], ore_class = row[&#34;DEPOSITCLASS_D2&#34;])
+        row_records.append(orebody2)
+
+      return row_records
+    except Exception as e:
+      raise(e)</code></pre>
+</details>
+<div class="desc"><p>An abstract base class for importing data sources.
+Manages data initialization, record creation, and database ingestion.</p>
+<p>Initializes the BCAHMImporter class with configuration data.</p>
+<p>:param cm_list: List of critical minerals.
+:type cm_list: list</p>
+<p>:param metals_dict: Dictionary mapping metal names to properties.
+:type metals_dict: dict</p>
+<p>:param name_convert_dict: Dictionary for converting commodity names.
+:type name_convert_dict: dict</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="cmti_tools.importdata.importdata.DataImporter" href="../importdata.html#cmti_tools.importdata.importdata.DataImporter">DataImporter</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="cmti_tools.importdata.source_importers.importers.BCAHMImporter.create_row_records"><code class="name flex">
+<span>def <span class="ident">create_row_records</span></span>(<span>self,<br>row: pandas.core.series.Series,<br>cm_list: list = None,<br>metals_dict: dict = None,<br>name_convert_dict: dict = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_row_records(self, row: pd.Series, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None):
+  &#34;&#34;&#34;
+  Processes a row of data from the BCAHM dataset and creates associated database records.
+  
+  :param row: The data row to be processed.
+  :type row: pd.Series
+
+  :param cm_list: List of critical minerals, defaults to the class attribute.
+  :type cm_list: list
+
+  :param metals_dict: Dictionary of metals and their properties, defaults to the class attribute.
+  :type metals_dict: dict
+
+  :param name_convert_dict: Dictionary for commodity name conversion, defaults to the class attribute.
+  :type name_convert_dict: dict
+  
+  :return list[object]: A list of created data records.
+  &#34;&#34;&#34;
+  # Data tables will default to BCAHMImporter attributes but can be overridden
+  if cm_list is None:
+    cm_list = self.cm_list
+  if metals_dict is None:
+    metals_dict = self.metals_dict
+  if name_convert_dict is None:
+    name_convert_dict = self.name_convert_dict
+
+  row_records = []
+  try:
+    mine_vals = {
+      &#34;name&#34;: row[&#34;NAME1&#34;],
+      &#34;latitude&#34;: row[&#34;LATITUDE&#34;],
+      &#34;longitude&#34;: row[&#34;LONGITUDE&#34;],
+      &#34;utm_zone&#34;: row[&#34;UTM_ZONE&#34;],
+      &#34;northing&#34;: row[&#34;UTM_NORT&#34;],
+      &#34;easting&#34;: row[&#34;UTM_EAST&#34;],
+      &#34;year_opened&#34;: row[&#34;First_Year&#34;],
+      &#34;year_closed&#34;: row[&#34;Last_Year&#34;],
+      &#34;nts_area&#34;: row[&#34;NTSMAP_C1&#34;],
+      &#34;prov_terr&#34;: &#34;BC&#34;,
+      &#34;mine_status&#34;: &#34;Inactive&#34;
+    }
+
+    # If either lat or lon are missing, don&#39;t add that record
+    if (pd.isna(mine_vals[&#34;latitude&#34;]) or mine_vals[&#34;latitude&#34;] == &#39;Null&#39;) or (pd.isna(mine_vals[&#34;longitude&#34;]) or mine_vals[&#34;longitude&#34;] == &#39;Null&#39;):
+        raise ValueError(&#34;Latitude or Longitude missing from record.&#34;)
+    
+    # Check coordinates for null strings as well
+    if pd.isna(mine_vals[&#39;northing&#39;]) or mine_vals[&#39;northing&#39;] == &#39;Null&#39;:
+      del(mine_vals[&#39;northing&#39;])
+    if pd.isna(mine_vals[&#39;easting&#39;]) or mine_vals[&#39;easting&#39;] == &#39;Null&#39;:
+      del(mine_vals[&#39;easting&#39;])
+    if pd.isna(mine_vals[&#39;utm_zone&#39;]) or mine_vals[&#39;utm_zone&#39;] == &#39;Null&#39;:
+      mine_vals[&#39;utm_zone&#39;] = tools.lon_to_utm_zone(mine_vals[&#39;longitude&#39;])
+    
+    mine = Mine(**mine_vals)
+    row_records.append(mine)
+
+    # Create alias if there&#39;s another name
+    if pd.notna(row[&#34;NAME2&#34;]):
+      alias = Alias(mine=mine, alias=row[&#34;NAME2&#34;])
+      row_records.append(alias)
+    
+    # Commodities
+    for comm_col in [&#39;COMMOD_C1&#39;, &#39;COMMOD_C2&#39;, &#39;COMMOD_C3&#39;]:
+      if pd.notna(row[comm_col]):
+        commodity_record = tools.get_commodity(row, comm_col, cm_list, name_convert_dict, metals_dict, mine)
+        row_records.append(commodity_record)
+
+    # TSF
+    tsf = TailingsFacility(is_default = True, name = f&#34;default_TSF_{mine_vals[&#39;name&#39;]}&#34;.strip())
+    mine.tailings_facilities.append(tsf)
+    row_records.append(tsf)
+
+    # Impoundment
+    impoundment = Impoundment(
+      parentTsf=tsf,
+      parent_tsf_id=tsf.cmti_id,
+      is_default=True,
+      name=f&#34;{tsf.name}_impoundment&#34;
+    )
+    row_records.append(impoundment)
+
+    #Reference
+    reference = Reference(mine = mine, source = &#34;BCAHM&#34;, source_id = str(row.OBJECTID))
+    row_records.append(reference)
+    if row.MINFILNO != &#34;Null&#34;:
+      minefileref = Reference(mine = mine, source = &#34;BC Minfile&#34;, source_id = row.MINFILNO)
+      row_records.append(minefileref)
+
+    # Orebody
+    if row[&#34;DEPOSITTYPE_D1&#34;] != &#34;Null&#34; and pd.notna(row[&#34;DEPOSITTYPE_D1&#34;]):
+      orebody = Orebody(mine = mine, ore_type = row[&#34;DEPOSITTYPE_D1&#34;], ore_class = row[&#34;DEPOSITCLASS_D1&#34;])
+      row_records.append(orebody)
+    if row[&#34;DEPOSITTYPE_D2&#34;] != &#34;Null&#34; and pd.notna(row[&#34;DEPOSITTYPE_D2&#34;]):
+      orebody2 = Orebody(mine = mine, ore_type = row[&#34;DEPOSITTYPE_D2&#34;], ore_class = row[&#34;DEPOSITCLASS_D2&#34;])
+      row_records.append(orebody2)
+
+    return row_records
+  except Exception as e:
+    raise(e)</code></pre>
+</details>
+<div class="desc"><p>Processes a row of data from the BCAHM dataset and creates associated database records.</p>
+<p>:param row: The data row to be processed.
+:type row: pd.Series</p>
+<p>:param cm_list: List of critical minerals, defaults to the class attribute.
+:type cm_list: list</p>
+<p>:param metals_dict: Dictionary of metals and their properties, defaults to the class attribute.
+:type metals_dict: dict</p>
+<p>:param name_convert_dict: Dictionary for commodity name conversion, defaults to the class attribute.
+:type name_convert_dict: dict</p>
+<p>:return list[object]: A list of created data records.</p></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="cmti_tools.importdata.importdata.DataImporter" href="../importdata.html#cmti_tools.importdata.importdata.DataImporter">DataImporter</a></b></code>:
+<ul class="hlist">
+<li><code><a title="cmti_tools.importdata.importdata.DataImporter.clean_input_table" href="../importdata.html#cmti_tools.importdata.importdata.DataImporter.clean_input_table">clean_input_table</a></code></li>
+<li><code><a title="cmti_tools.importdata.importdata.DataImporter.coerce_dtypes" href="../importdata.html#cmti_tools.importdata.importdata.DataImporter.coerce_dtypes">coerce_dtypes</a></code></li>
+<li><code><a title="cmti_tools.importdata.importdata.DataImporter.map_to_worksheet" href="../importdata.html#cmti_tools.importdata.importdata.DataImporter.map_to_worksheet">map_to_worksheet</a></code></li>
+<li><code><a title="cmti_tools.importdata.importdata.DataImporter.series_to_table" href="../importdata.html#cmti_tools.importdata.importdata.DataImporter.series_to_table">series_to_table</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="cmti_tools.importdata.source_importers.importers.NSMTDImporter"><code class="flex name class">
+<span>class <span class="ident">NSMTDImporter</span></span>
+<span>(</span><span>name_convert_dict='config', cm_list='config', metals_dict='config')</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class NSMTDImporter(DataImporter):
+  
+  def __init__(self, name_convert_dict = &#39;config&#39;, cm_list = &#39;config&#39;, metals_dict = &#39;config&#39;):
+    super().__init__(name_convert_dict, cm_list, metals_dict)
+
+  def clean_input_table(self, input_table, force_dtypes = True, convert_units=True):
+    nsmtd_defaults = {
+      &#39;OBJECTID&#39;: &#39;Int64&#39;,
+      &#39;Name&#39;: &#39;U&#39;,
+      &#39;Latitude&#39;: &#39;f4&#39;,
+      &#39;Longitude&#39;: &#39;f4&#39;,
+      &#39;Tonnes&#39;: &#39;int&#39;,
+      &#39;Commodity&#39;: &#39;U&#39;,
+      &#39;Crusher1&#39;: &#39;Int64&#39;,
+      &#39;Crusher2&#39;: &#39;Int64&#39;,
+      &#39;Dates&#39;: &#39;U&#39;,
+      &#39;InfoSource&#39;: &#39;U&#39;,
+      &#39;AreaHa&#39;: &#39;f4&#39;,
+      &#39;Shape_Area&#39;: &#39;f4&#39;}
+
+    nsmtd_types_table = pd.DataFrame(data={&#39;Column&#39;: nsmtd_defaults.keys(), &#39;Type&#39;: nsmtd_defaults.values(), &#39;Default&#39;: nsmtd_defaults.values()})
+    if convert_units:
+      unit_converters = {&#39;AreaHa&#39;: &#39;km2&#39;}
+      dimless_units = {&#39;dimensionless_value_unit&#39;: &#39;Ha&#39;}
+    else:
+      unit_converters = None
+      dimless_unit = None
+
+    converters = converter_factory(nsmtd_types_table, unit_conversion_dict=unit_converters, kwargs=dimless_units).create_converter_dict()
+
+    if isinstance(input_table, str):
+      try:
+        nsmtd_df = pd.read_excel(input_table, header=0, converters=converters)
+      except:
+        nsmtd_df = pd.read_csv(input_table, header=0, converters=converters)
+    else:
+      nsmtd_df = input_table
+
+    if force_dtypes:
+      nsmtd_df = self.coerce_dtypes(nsmtd_types_table, nsmtd_df)
+    
+    return nsmtd_df
+  
+  def create_row_records(self, row: pd.Series, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None):
+    &#34;&#34;&#34;
+    Processes a row of data from the BCAHM dataset and creates associated database records.
+    
+    :param row: The data row to be processed.
+    :type row: pd.Series
+
+    :param cm_list: List of critical minerals, defaults to the class attribute.
+    :type cm_list: list
+
+    :param metals_dict: Dictionary of metals and their properties, defaults to the class attribute.
+    :type metals_dict: dict
+
+    :param name_convert_dict: Dictionary for commodity name conversion, defaults to the class attribute.
+    :type name_convert_dict: dict
+    
+    :return list[object]: A list of created data records.
+    &#34;&#34;&#34;
+    if cm_list is None:
+      cm_list = self.cm_list
+    if metals_dict is None:
+      metals_dict = self.metals_dict
+    if name_convert_dict is None:
+      name_convert_dict = self.name_convert_dict
+
+    row_records = []
+    try:
+
+      mine_vals = {
+        &#34;name&#34;: row[&#39;Name&#39;],
+        &#34;latitude&#34;: row[&#34;Latitude&#34;],
+        &#34;longitude&#34;: row[&#34;Longitude&#34;],
+        &#34;prov_terr&#34;: &#34;NS&#34;,
+        &#34;mine_status&#34;: &#34;Inactive&#34;
+      }
+      # Parse date range
+      if pd.notna(row[&#34;Dates&#34;]):
+        dates = []
+        for date in row[&#34;Dates&#34;]:
+          try:
+              eras = date.split(&#34;,&#34;)
+              for era in eras:
+                era_dates = era.split(&#34;-&#34;)
+                if len(era_dates) == 4: # Sometimes written as, e.g., 1850-65
+                  date_ints = [int(d) for d in era_dates]
+                  dates.append(date_ints)
+          except:
+            raise
+        if len(dates) &gt; 0:
+          mine.start_year = min(dates)
+          mine.end_year = max(dates)
+
+      mine = Mine(**mine_vals)
+      row_records.append(mine)
+
+      # Aliases
+      alias_name = row[&#39;Name&#39;].split(&#39;(&#39;)[0].strip()
+      alias = Alias(mine=mine, alias=alias_name)
+      row_records.append(alias)
+
+      # Commodities
+      comms = row[&#34;Commodity&#34;].split(&#34;,&#34;)
+      for comm_name in comms:
+        if pd.notna(comm_name):
+          comm_name = tools.convert_commodity_name(comm_name, name_convert_dict, output_type=&#39;symbol&#39;, show_warning=False)
+          commodity_record = CommodityRecord(
+            mine=mine,
+            commodity=comm_name
+          )
+          commodity_record.is_critical = True if comm_name in cm_list else False
+          commodity_record.is_metal = metals_dict.get(comm_name)
+          row_records.append(commodity_record)
+
+      # TSF
+      tsf = TailingsFacility(is_default = True, name = f&#34;default_TSF_{mine_vals[&#39;name&#39;]}&#34;.strip())
+      mine.tailings_facilities.append(tsf)
+      row_records.append(tsf)
+
+      # Impoundment
+      impoundment_vals = {
+        &#34;name&#34;: f&#34;{tsf.name}_impoundment&#34;,
+        &#34;parentTsf&#34;: tsf,
+        &#34;parent_tsf_id&#34;: tsf.cmti_id,
+        &#34;is_default&#34;: True,
+        &#34;area&#34;: row[&#34;AreaHa&#34;], # If running clean_input_table, this will be in km2
+        &#34;volume&#34;: row[&#34;Tonnes&#34;]
+      }
+      impoundment = Impoundment(**impoundment_vals)
+      row_records.append(impoundment)
+
+      #Reference
+      reference = Reference(mine = mine, source = &#34;NSMTD&#34;, source_id = row[&#39;OBJECTID&#39;])
+      row_records.append(reference)
+
+      return row_records
+    except Exception as e:
+      raise(e)</code></pre>
+</details>
+<div class="desc"><p>An abstract base class for importing data sources.
+Manages data initialization, record creation, and database ingestion.</p>
+<p>Initializes the DataImporter class with optional configurations for
+name conversion, critical minerals, and metals classification.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="cmti_tools.importdata.importdata.DataImporter" href="../importdata.html#cmti_tools.importdata.importdata.DataImporter">DataImporter</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="cmti_tools.importdata.source_importers.importers.NSMTDImporter.create_row_records"><code class="name flex">
+<span>def <span class="ident">create_row_records</span></span>(<span>self,<br>row: pandas.core.series.Series,<br>cm_list: list = None,<br>metals_dict: dict = None,<br>name_convert_dict: dict = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_row_records(self, row: pd.Series, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None):
+  &#34;&#34;&#34;
+  Processes a row of data from the BCAHM dataset and creates associated database records.
+  
+  :param row: The data row to be processed.
+  :type row: pd.Series
+
+  :param cm_list: List of critical minerals, defaults to the class attribute.
+  :type cm_list: list
+
+  :param metals_dict: Dictionary of metals and their properties, defaults to the class attribute.
+  :type metals_dict: dict
+
+  :param name_convert_dict: Dictionary for commodity name conversion, defaults to the class attribute.
+  :type name_convert_dict: dict
+  
+  :return list[object]: A list of created data records.
+  &#34;&#34;&#34;
+  if cm_list is None:
+    cm_list = self.cm_list
+  if metals_dict is None:
+    metals_dict = self.metals_dict
+  if name_convert_dict is None:
+    name_convert_dict = self.name_convert_dict
+
+  row_records = []
+  try:
+
+    mine_vals = {
+      &#34;name&#34;: row[&#39;Name&#39;],
+      &#34;latitude&#34;: row[&#34;Latitude&#34;],
+      &#34;longitude&#34;: row[&#34;Longitude&#34;],
+      &#34;prov_terr&#34;: &#34;NS&#34;,
+      &#34;mine_status&#34;: &#34;Inactive&#34;
+    }
+    # Parse date range
+    if pd.notna(row[&#34;Dates&#34;]):
+      dates = []
+      for date in row[&#34;Dates&#34;]:
+        try:
+            eras = date.split(&#34;,&#34;)
+            for era in eras:
+              era_dates = era.split(&#34;-&#34;)
+              if len(era_dates) == 4: # Sometimes written as, e.g., 1850-65
+                date_ints = [int(d) for d in era_dates]
+                dates.append(date_ints)
+        except:
+          raise
+      if len(dates) &gt; 0:
+        mine.start_year = min(dates)
+        mine.end_year = max(dates)
+
+    mine = Mine(**mine_vals)
+    row_records.append(mine)
+
+    # Aliases
+    alias_name = row[&#39;Name&#39;].split(&#39;(&#39;)[0].strip()
+    alias = Alias(mine=mine, alias=alias_name)
+    row_records.append(alias)
+
+    # Commodities
+    comms = row[&#34;Commodity&#34;].split(&#34;,&#34;)
+    for comm_name in comms:
+      if pd.notna(comm_name):
+        comm_name = tools.convert_commodity_name(comm_name, name_convert_dict, output_type=&#39;symbol&#39;, show_warning=False)
+        commodity_record = CommodityRecord(
+          mine=mine,
+          commodity=comm_name
+        )
+        commodity_record.is_critical = True if comm_name in cm_list else False
+        commodity_record.is_metal = metals_dict.get(comm_name)
+        row_records.append(commodity_record)
+
+    # TSF
+    tsf = TailingsFacility(is_default = True, name = f&#34;default_TSF_{mine_vals[&#39;name&#39;]}&#34;.strip())
+    mine.tailings_facilities.append(tsf)
+    row_records.append(tsf)
+
+    # Impoundment
+    impoundment_vals = {
+      &#34;name&#34;: f&#34;{tsf.name}_impoundment&#34;,
+      &#34;parentTsf&#34;: tsf,
+      &#34;parent_tsf_id&#34;: tsf.cmti_id,
+      &#34;is_default&#34;: True,
+      &#34;area&#34;: row[&#34;AreaHa&#34;], # If running clean_input_table, this will be in km2
+      &#34;volume&#34;: row[&#34;Tonnes&#34;]
+    }
+    impoundment = Impoundment(**impoundment_vals)
+    row_records.append(impoundment)
+
+    #Reference
+    reference = Reference(mine = mine, source = &#34;NSMTD&#34;, source_id = row[&#39;OBJECTID&#39;])
+    row_records.append(reference)
+
+    return row_records
+  except Exception as e:
+    raise(e)</code></pre>
+</details>
+<div class="desc"><p>Processes a row of data from the BCAHM dataset and creates associated database records.</p>
+<p>:param row: The data row to be processed.
+:type row: pd.Series</p>
+<p>:param cm_list: List of critical minerals, defaults to the class attribute.
+:type cm_list: list</p>
+<p>:param metals_dict: Dictionary of metals and their properties, defaults to the class attribute.
+:type metals_dict: dict</p>
+<p>:param name_convert_dict: Dictionary for commodity name conversion, defaults to the class attribute.
+:type name_convert_dict: dict</p>
+<p>:return list[object]: A list of created data records.</p></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="cmti_tools.importdata.importdata.DataImporter" href="../importdata.html#cmti_tools.importdata.importdata.DataImporter">DataImporter</a></b></code>:
+<ul class="hlist">
+<li><code><a title="cmti_tools.importdata.importdata.DataImporter.clean_input_table" href="../importdata.html#cmti_tools.importdata.importdata.DataImporter.clean_input_table">clean_input_table</a></code></li>
+<li><code><a title="cmti_tools.importdata.importdata.DataImporter.coerce_dtypes" href="../importdata.html#cmti_tools.importdata.importdata.DataImporter.coerce_dtypes">coerce_dtypes</a></code></li>
+<li><code><a title="cmti_tools.importdata.importdata.DataImporter.map_to_worksheet" href="../importdata.html#cmti_tools.importdata.importdata.DataImporter.map_to_worksheet">map_to_worksheet</a></code></li>
+<li><code><a title="cmti_tools.importdata.importdata.DataImporter.series_to_table" href="../importdata.html#cmti_tools.importdata.importdata.DataImporter.series_to_table">series_to_table</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="cmti_tools.importdata.source_importers.importers.OAMImporter"><code class="flex name class">
+<span>class <span class="ident">OAMImporter</span></span>
+<span>(</span><span>oam_comm_names: dict = 'config',<br>cm_list='config',<br>metals_dict='config',<br>name_convert_dict='config')</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class OAMImporter(DataImporter):
+  def __init__(self, oam_comm_names:dict=&#39;config&#39;, cm_list=&#39;config&#39;, metals_dict=&#39;config&#39;, name_convert_dict=&#39;config&#39;):
+    &#34;&#34;&#34;
+    Initializes the OAMImporter class with configuration data and commodity names.
+
+    :param oam_comm_names: Dictionary of OAM commodity names.
+    :type oam_comm_names: dict
+
+    :param cm_list: List of critical minerals.
+    :type cm_list: list
+
+    :param metals_dict: Dictionary mapping metal names to properties.
+    :type metals_dict: dict
+
+    :param name_convert_dict: Dictionary for converting commodity names.
+    :type name_convert_dict: dict
+
+    &#34;&#34;&#34;
+
+    super(OAMImporter, self).__init__(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_convert_dict)
+    
+    if oam_comm_names == &#39;config&#39;:
+      # Load OAM commodity names from a CSV file
+      oam_comm_path = BASE_DIR / self.config[&#39;supplemental&#39;][&#39;oam_comm_names&#39;]
+      oam_comm_data = pd.read_csv(oam_comm_path)
+      oam_comm_names = dict(zip(oam_comm_data[&#39;Symbol&#39;], oam_comm_data[&#39;Full_Name&#39;]))
+      
+    self.oam_comm_names = oam_comm_names
+
+  def check_year(self, val):
+    &#34;&#34;&#34;
+    Checks and extracts the year from a value.
+
+    :param val: Value to be checked for a year.
+    :type val: str or float
+    :return int or None: Extracted year or None if not available.
+    &#34;&#34;&#34;
+    if isinstance(val, str):
+      return tools.get_digits(val)
+    elif pd.isna(val):
+      return None
+    else:
+      return val
+
+  def clean_input_table(self, input_table, drop_NA_columns=[&#39;OID&#39;, &#39;Lat_DD&#39;, &#39;Long_DD&#39;, &#39;Name&#39;],  force_dtypes=True, convert_units=False):
+    oam_dtypes = {
+      &#39;OID&#39;: &#39;U&#39;,
+      &#39;Lat_DD&#39;: &#39;f4&#39;,
+      &#39;Long_DD&#39;: &#39;f4&#39;,
+      &#39;Jurisdiction&#39;: &#39;U&#39;,
+      &#39;Juris_ID&#39;: &#39;U&#39;,
+      &#39;Name&#39;: &#39;U&#39;,
+      &#39;Status&#39;: &#39;U&#39;,
+      &#39;Commodity_Code&#39;: &#39;U&#39;,
+      &#39;Commodity_Full_Name&#39;: &#39;U&#39;,
+      &#39;Mined_Quantity&#39;: &#39;f4&#39;,
+      &#39;Mine_Type&#39;: &#39;U&#39;,
+      &#39;Last_Year&#39;: &#39;Int64&#39;,
+      &#39;Permit&#39;: &#39;U&#39;,
+      &#39;URL&#39;: &#39;U&#39;,
+      &#39;Forcing_Features&#39;: &#39;U&#39;,
+      &#39;Feature_References&#39;: &#39;U&#39;,
+      &#39;Feature_Class&#39;: &#39;U&#39;,
+      &#39;Location&#39;: &#39;U&#39;,
+      &#39;County&#39;: &#39;U&#39;,
+      &#39;Landowner&#39;: &#39;U&#39;,
+      &#39;Last_Operator&#39;: &#39;U&#39;,
+      &#39;Start_Date&#39;: &#39;Int64&#39;,
+      &#39;Peak_Production&#39;: &#39;U&#39;,
+      &#39;Last_Updated&#39;: &#39;f4&#39;
+  }
+
+    # Take keys and values as columns and types for dataframe
+    # Set default values based on datatype
+    oam_defaults = [&#34;Unknown&#34; if t == &#34;U&#34; else pd.NA for t in oam_dtypes]
+    oam_types_table = pd.DataFrame(data={&#39;Column&#39;: oam_dtypes.keys(), &#39;Type&#39;: oam_dtypes.values(), &#39;Default&#39;: oam_defaults})
+    conversion_dict = None # Placeholder for unit conversion dictionary if needed.
+    
+    converters = converter_factory(oam_types_table, conversion_dict).create_converter_dict()
+
+    if isinstance(input_table, str):
+      try:
+        oam_df = pd.read_csv(input_table, header=0, converters=converters)
+      except:
+        oam_df = pd.read_excel(input_table, header=0, converters=converters)
+    else:
+      oam_df = input_table
+
+    # Drop rows that are missing critical values in the drop_NA_columns list before converting types
+    oam_df = oam_df.dropna(subset=drop_NA_columns)
+
+    # Apply converters for initial cleanup
+    for col, func in converters.items():
+      try:
+        oam_df[col] = oam_df[col].apply(func)
+      except ValueError as ve:
+        raise ve
+      except KeyError as ke:
+        print(f&#34;Column {col} not found in input table.&#34;)
+        pass
+
+    # Coerce types
+    if force_dtypes:
+      oam_df = self.coerce_dtypes(oam_types_table, oam_df)
+
+    return oam_df
+
+  def create_row_records(self, row: pd.Series, oam_comm_names:dict=None, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None):
+    &#34;&#34;&#34;
+    Processes a row of OAM data and creates associated database records.
+
+    :param row: The data row to be processed.
+    :type row: pd.Series
+
+    :param oam_comm_names: Dictionary of OAM commodity names.
+    :type oam_comm_names: dict
+
+    :param cm_list: List of critical minerals.
+    :type cm_list: list
+
+    :param metals_dict: Dictionary mapping metal names to properties.
+    :type metals_dict: dict
+
+    :param name_convert_dict: Dictionary for converting commodity names.
+    :type name_convert_dict: dict
+
+    :return list[object]: A list of created data records.
+    &#34;&#34;&#34;
+    # Data tables will default to OAMImporter attributes but can be overridden
+    if oam_comm_names is None:
+      oam_comm_names = self.oam_comm_names
+    if cm_list is None:
+      cm_list = self.cm_list
+    if metals_dict is None:
+      metals_dict = self.metals_dict
+    if name_convert_dict is None:
+      name_convert_dict = self.name_convert_dict
+
+    row_records = []
+    try:
+      mine = Mine(
+        name = row[&#34;Name&#34;].title(),
+        latitude = row[&#34;Lat_DD&#34;],
+        longitude = row[&#34;Long_DD&#34;],
+        prov_terr = row[&#34;Jurisdiction&#34;],
+        mine_status = row[&#34;Status&#34;],
+        mine_type = row[&#34;Mine_Type&#34;],
+        construction_year = row[&#34;Start_Date&#34;]
+      )
+      row_records.append(mine)
+
+      comm_code = row[&#39;Commodity_Code&#39;]
+      comm_full = row[&#39;Commodity_Full_Name&#39;] # Records have either code or full name. Check both.
+      comm_name = comm_code if pd.notna(comm_code) else comm_full # This assumes that no row_ have both.
+      if pd.notna(comm_name):
+        try:
+          # Sometimes multiple listed in code, split it up and add one entry for each
+          commodities = [comm.strip() for comm in comm_name.split(&#34;,&#34;)]
+          for comm in commodities:
+            # Convert to full name using OAM name values, then to element names
+            comm_full_oam = tools.convert_commodity_name(comm, oam_comm_names, output_type=&#39;full&#39;, show_warning=False)
+            comm_name = tools.convert_commodity_name(comm_full_oam, name_convert_dict, output_type=&#39;symbol&#39;, show_warning=False)
+            start_year = self.check_year(row[&#39;Start_Date&#39;])
+            end_year = self.check_year(row[&#39;Last_Year&#39;])
+            produced = row[&#34;Mined_Quantity&#34;] if pd.notna(row[&#34;Mined_Quantity&#34;]) else None
+            commodity_record = CommodityRecord(
+              mine=mine,
+              commodity=comm_name,
+              produced=produced,
+              source_year_start=start_year,
+              source_year_end=end_year
+            )
+            commodity_record.is_critical = True if comm_name in cm_list else False
+            commodity_record.is_metal = metals_dict.get(comm_name)
+
+            row_records.append(commodity_record)
+        except Exception as e:
+          print(e)
+
+      tsf = TailingsFacility(is_default = True, name = f&#34;default_TSF_{mine.name}&#34;.strip())
+      mine.tailings_facilities.append(tsf)
+      row_records.append(tsf)
+
+      impoundment = Impoundment(
+        parentTsf = tsf,
+        parent_tsf_id=tsf.cmti_id, 
+        is_default = True, 
+        name = f&#34;{tsf.name}_impoundment&#34;)
+      row_records.append(impoundment)
+
+      if pd.notna(row[&#39;Last_Operator&#39;]):
+        owner = Owner(name = row[&#34;Last_Operator&#34;])
+        owner_association = OwnerAssociation(owner=owner, mine= mine, is_current_owner=False)
+        mine.owners.append(owner_association)
+        row_records.append(owner_association)
+
+      oam_reference = Reference(mine = mine, source = &#34;OAM&#34;, source_id = row[&#34;OID&#34;], link = row[&#34;URL&#34;])
+      row_records.append(oam_reference)
+
+      return row_records
+    except Exception as e:
+      print(e)</code></pre>
+</details>
+<div class="desc"><p>An abstract base class for importing data sources.
+Manages data initialization, record creation, and database ingestion.</p>
+<p>Initializes the OAMImporter class with configuration data and commodity names.</p>
+<p>:param oam_comm_names: Dictionary of OAM commodity names.
+:type oam_comm_names: dict</p>
+<p>:param cm_list: List of critical minerals.
+:type cm_list: list</p>
+<p>:param metals_dict: Dictionary mapping metal names to properties.
+:type metals_dict: dict</p>
+<p>:param name_convert_dict: Dictionary for converting commodity names.
+:type name_convert_dict: dict</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="cmti_tools.importdata.importdata.DataImporter" href="../importdata.html#cmti_tools.importdata.importdata.DataImporter">DataImporter</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="cmti_tools.importdata.source_importers.importers.OAMImporter.check_year"><code class="name flex">
+<span>def <span class="ident">check_year</span></span>(<span>self, val)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def check_year(self, val):
+  &#34;&#34;&#34;
+  Checks and extracts the year from a value.
+
+  :param val: Value to be checked for a year.
+  :type val: str or float
+  :return int or None: Extracted year or None if not available.
+  &#34;&#34;&#34;
+  if isinstance(val, str):
+    return tools.get_digits(val)
+  elif pd.isna(val):
+    return None
+  else:
+    return val</code></pre>
+</details>
+<div class="desc"><p>Checks and extracts the year from a value.</p>
+<p>:param val: Value to be checked for a year.
+:type val: str or float
+:return int or None: Extracted year or None if not available.</p></div>
+</dd>
+<dt id="cmti_tools.importdata.source_importers.importers.OAMImporter.create_row_records"><code class="name flex">
+<span>def <span class="ident">create_row_records</span></span>(<span>self,<br>row: pandas.core.series.Series,<br>oam_comm_names: dict = None,<br>cm_list: list = None,<br>metals_dict: dict = None,<br>name_convert_dict: dict = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_row_records(self, row: pd.Series, oam_comm_names:dict=None, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None):
+  &#34;&#34;&#34;
+  Processes a row of OAM data and creates associated database records.
+
+  :param row: The data row to be processed.
+  :type row: pd.Series
+
+  :param oam_comm_names: Dictionary of OAM commodity names.
+  :type oam_comm_names: dict
+
+  :param cm_list: List of critical minerals.
+  :type cm_list: list
+
+  :param metals_dict: Dictionary mapping metal names to properties.
+  :type metals_dict: dict
+
+  :param name_convert_dict: Dictionary for converting commodity names.
+  :type name_convert_dict: dict
+
+  :return list[object]: A list of created data records.
+  &#34;&#34;&#34;
+  # Data tables will default to OAMImporter attributes but can be overridden
+  if oam_comm_names is None:
+    oam_comm_names = self.oam_comm_names
+  if cm_list is None:
+    cm_list = self.cm_list
+  if metals_dict is None:
+    metals_dict = self.metals_dict
+  if name_convert_dict is None:
+    name_convert_dict = self.name_convert_dict
+
+  row_records = []
+  try:
+    mine = Mine(
+      name = row[&#34;Name&#34;].title(),
+      latitude = row[&#34;Lat_DD&#34;],
+      longitude = row[&#34;Long_DD&#34;],
+      prov_terr = row[&#34;Jurisdiction&#34;],
+      mine_status = row[&#34;Status&#34;],
+      mine_type = row[&#34;Mine_Type&#34;],
+      construction_year = row[&#34;Start_Date&#34;]
+    )
+    row_records.append(mine)
+
+    comm_code = row[&#39;Commodity_Code&#39;]
+    comm_full = row[&#39;Commodity_Full_Name&#39;] # Records have either code or full name. Check both.
+    comm_name = comm_code if pd.notna(comm_code) else comm_full # This assumes that no row_ have both.
+    if pd.notna(comm_name):
+      try:
+        # Sometimes multiple listed in code, split it up and add one entry for each
+        commodities = [comm.strip() for comm in comm_name.split(&#34;,&#34;)]
+        for comm in commodities:
+          # Convert to full name using OAM name values, then to element names
+          comm_full_oam = tools.convert_commodity_name(comm, oam_comm_names, output_type=&#39;full&#39;, show_warning=False)
+          comm_name = tools.convert_commodity_name(comm_full_oam, name_convert_dict, output_type=&#39;symbol&#39;, show_warning=False)
+          start_year = self.check_year(row[&#39;Start_Date&#39;])
+          end_year = self.check_year(row[&#39;Last_Year&#39;])
+          produced = row[&#34;Mined_Quantity&#34;] if pd.notna(row[&#34;Mined_Quantity&#34;]) else None
+          commodity_record = CommodityRecord(
+            mine=mine,
+            commodity=comm_name,
+            produced=produced,
+            source_year_start=start_year,
+            source_year_end=end_year
+          )
+          commodity_record.is_critical = True if comm_name in cm_list else False
+          commodity_record.is_metal = metals_dict.get(comm_name)
+
+          row_records.append(commodity_record)
+      except Exception as e:
+        print(e)
+
+    tsf = TailingsFacility(is_default = True, name = f&#34;default_TSF_{mine.name}&#34;.strip())
+    mine.tailings_facilities.append(tsf)
+    row_records.append(tsf)
+
+    impoundment = Impoundment(
+      parentTsf = tsf,
+      parent_tsf_id=tsf.cmti_id, 
+      is_default = True, 
+      name = f&#34;{tsf.name}_impoundment&#34;)
+    row_records.append(impoundment)
+
+    if pd.notna(row[&#39;Last_Operator&#39;]):
+      owner = Owner(name = row[&#34;Last_Operator&#34;])
+      owner_association = OwnerAssociation(owner=owner, mine= mine, is_current_owner=False)
+      mine.owners.append(owner_association)
+      row_records.append(owner_association)
+
+    oam_reference = Reference(mine = mine, source = &#34;OAM&#34;, source_id = row[&#34;OID&#34;], link = row[&#34;URL&#34;])
+    row_records.append(oam_reference)
+
+    return row_records
+  except Exception as e:
+    print(e)</code></pre>
+</details>
+<div class="desc"><p>Processes a row of OAM data and creates associated database records.</p>
+<p>:param row: The data row to be processed.
+:type row: pd.Series</p>
+<p>:param oam_comm_names: Dictionary of OAM commodity names.
+:type oam_comm_names: dict</p>
+<p>:param cm_list: List of critical minerals.
+:type cm_list: list</p>
+<p>:param metals_dict: Dictionary mapping metal names to properties.
+:type metals_dict: dict</p>
+<p>:param name_convert_dict: Dictionary for converting commodity names.
+:type name_convert_dict: dict</p>
+<p>:return list[object]: A list of created data records.</p></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="cmti_tools.importdata.importdata.DataImporter" href="../importdata.html#cmti_tools.importdata.importdata.DataImporter">DataImporter</a></b></code>:
+<ul class="hlist">
+<li><code><a title="cmti_tools.importdata.importdata.DataImporter.clean_input_table" href="../importdata.html#cmti_tools.importdata.importdata.DataImporter.clean_input_table">clean_input_table</a></code></li>
+<li><code><a title="cmti_tools.importdata.importdata.DataImporter.coerce_dtypes" href="../importdata.html#cmti_tools.importdata.importdata.DataImporter.coerce_dtypes">coerce_dtypes</a></code></li>
+<li><code><a title="cmti_tools.importdata.importdata.DataImporter.map_to_worksheet" href="../importdata.html#cmti_tools.importdata.importdata.DataImporter.map_to_worksheet">map_to_worksheet</a></code></li>
+<li><code><a title="cmti_tools.importdata.importdata.DataImporter.series_to_table" href="../importdata.html#cmti_tools.importdata.importdata.DataImporter.series_to_table">series_to_table</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="cmti_tools.importdata.source_importers.importers.OMIImporter"><code class="flex name class">
+<span>class <span class="ident">OMIImporter</span></span>
+<span>(</span><span>cm_list: list = 'config',<br>metals_dict: dict = 'config',<br>name_convert_dict: dict = 'config',<br>force_dtypes: bool = True)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class OMIImporter(DataImporter):
+  def __init__(self, cm_list:list=&#39;config&#39;, metals_dict:dict=&#39;config&#39;, name_convert_dict:dict=&#39;config&#39;, force_dtypes:bool=True):
+    &#34;&#34;&#34;
+    Initializes the OMIImporter class with configuration data.
+    
+    :param cm_list: List of critical minerals.
+    :type cm_list: list
+
+    :param metals_dict: Dictionary mapping metal names to properties.
+    :type metals_dict: dict
+
+    :param name_convert_dict: Dictionary for converting commodity names.
+    :type name_convert_dict: dict
+    &#34;&#34;&#34;
+    super().__init__(cm_list=cm_list, metals_dict=metals_dict, name_convert_dict=name_convert_dict)
+  
+  def clean_input_table(self, input_table, drop_NA_columns=[&#39;MDI_IDENT&#39;, &#39;NAME&#39;, &#39;LONGITUDE&#39;, &#39;LATITUDE&#39;], force_dtypes=True, clean_input_table=False):
+    omi_dtypes = {
+      &#39;MDI_IDENT&#39;: &#39;U&#39;,
+      &#39;NAME&#39;: &#39;U&#39;,
+      &#39;STATUS&#39;: &#39;U&#39;,
+      &#39;TWP_AREA&#39;: &#39;U&#39;,
+      &#39;RGP_DIST&#39;: &#39;U&#39;,
+      &#39;P_COMMOD&#39;: &#39;U&#39;,
+      &#39;S_COMMOD&#39;: &#39;U&#39;,
+      &#39;ALL_NAMES&#39;: &#39;U&#39;,
+      &#39;DEP_CLASS&#39;: &#39;U&#39;,
+      &#39;LONGITUDE&#39;: &#39;f4&#39;,
+      &#39;LATITUDE&#39;: &#39;f4&#39;,
+      &#39;LL_DATUM&#39;: &#39;U&#39;,
+      &#39;DETAIL&#39;: &#39;U&#39;
+    }
+
+    omi_defaults = [&#34;Unknown&#34; if t == &#34;U&#34; else pd.NA for t in omi_dtypes]
+    omi_types_table = pd.DataFrame(data={&#39;Column&#39;: omi_dtypes.keys(), &#39;Type&#39;: omi_dtypes.values(), &#39;Default&#39;: omi_defaults})
+
+    converters = converter_factory(omi_types_table).create_converter_dict()
+
+    if isinstance(input_table, str):
+      try:
+        omi_df = pd.read_csv(input_table, header=0, converters=converters)
+      except:
+        omi_df = pd.read_excel(input_table, header=0, converters=converters)
+    elif isinstance(input_table, pd.DataFrame):
+      omi_df = input_table
+    
+    # Drop rows that are missing critical values in the drop_NA_columns list before converting types
+    omi_df = omi_df.dropna(subset=drop_NA_columns)
+    
+    # Apply converters for initial cleanup
+    for col, func in converters.items():
+      try:
+        omi_df[col] = omi_df[col].apply(func)
+      except ValueError as ve:
+        raise ve
+      except KeyError:
+        print(f&#34;Column {col} not found in input table.&#34;)
+        raise
+
+    # Enforce types
+    if force_dtypes:
+      omi_df = self.coerce_dtypes(omi_types_table, omi_df)
+
+    return omi_df
+
+  def create_row_records(self, row: pd.Series, name_convert_dict: dict=None) -&gt; list[object]:
+    &#34;&#34;&#34;
+    Processes a row of data and creates associated database records.
+    
+    :param row: The data row to be processed.
+    :type row: pd.Series
+
+    :param name_convert_dict: Optional dictionary for commodity name conversion.
+    :type name_convert_dict: dict, optional
+
+    :return list[object]: A list of created data records.
+    &#34;&#34;&#34;
+    # name_convert_dict will default to the OMIImporter attribute but can be overridden
+    if name_convert_dict is None:
+      name_convert_dict = self.name_convert_dict
+    row_records = []
+    try:
+      mine = Mine(
+        name = row[&#39;NAME&#39;],
+        latitude = row[&#39;LATITUDE&#39;],
+        longitude = row[&#39;LONGITUDE&#39;],
+        prov_terr = &#34;ON&#34;,
+        mining_district = row[&#39;RGP_DIST&#39;],
+        status = &#34;Active&#34; if row[&#39;STATUS&#39;] == &#34;Producing Mine&#34; else &#34;Inactive&#34;
+      )
+      row_records.append(mine)
+
+      # Aliases
+      aliases = [name.strip() for name in row[&#39;ALL_NAMES&#39;].split(&#34;,&#34;)]
+      for alias_val in aliases:
+        alias = Alias(mine=mine, alias=alias_val)
+        row_records.append(alias)
+      
+      # Commodities
+      for comm_col in [&#39;P_COMMOD&#39;, &#39;S_COMMOD&#39;]:
+        if pd.notna(row[comm_col]):
+          comm_record = tools.get_commodity(row, comm_col, self.cm_list, self.name_convert_dict, self.metals_dict, mine)
+          row_records.append(comm_record)
+
+      # Default TSF
+      tsf = TailingsFacility(is_default = True, name = f&#34;default_TSF_{mine.name}&#34;.strip())
+      mine.tailings_facilities.append(tsf)
+      row_records.append(tsf)
+
+      # Default Impoundment
+      impoundment = Impoundment(
+        parentTsf=tsf,
+        parent_tsf_id=tsf.cmti_id,
+        is_default = True, name = f&#34;{tsf.name}_impoundment&#34;
+      )
+      row_records.append(impoundment)
+
+      omi_reference = Reference(mine=mine, source = &#34;OMI&#34;, source_id = row[&#34;MDI_IDENT&#34;], link=row[&#39;DETAIL&#39;])
+      row_records.append(omi_reference)
+
+      return row_records
+    except Exception as e:
+      raise e</code></pre>
+</details>
+<div class="desc"><p>An abstract base class for importing data sources.
+Manages data initialization, record creation, and database ingestion.</p>
+<p>Initializes the OMIImporter class with configuration data.</p>
+<p>:param cm_list: List of critical minerals.
+:type cm_list: list</p>
+<p>:param metals_dict: Dictionary mapping metal names to properties.
+:type metals_dict: dict</p>
+<p>:param name_convert_dict: Dictionary for converting commodity names.
+:type name_convert_dict: dict</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="cmti_tools.importdata.importdata.DataImporter" href="../importdata.html#cmti_tools.importdata.importdata.DataImporter">DataImporter</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="cmti_tools.importdata.source_importers.importers.OMIImporter.create_row_records"><code class="name flex">
+<span>def <span class="ident">create_row_records</span></span>(<span>self, row: pandas.core.series.Series, name_convert_dict: dict = None) ‑> list[object]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_row_records(self, row: pd.Series, name_convert_dict: dict=None) -&gt; list[object]:
+  &#34;&#34;&#34;
+  Processes a row of data and creates associated database records.
+  
+  :param row: The data row to be processed.
+  :type row: pd.Series
+
+  :param name_convert_dict: Optional dictionary for commodity name conversion.
+  :type name_convert_dict: dict, optional
+
+  :return list[object]: A list of created data records.
+  &#34;&#34;&#34;
+  # name_convert_dict will default to the OMIImporter attribute but can be overridden
+  if name_convert_dict is None:
+    name_convert_dict = self.name_convert_dict
+  row_records = []
+  try:
+    mine = Mine(
+      name = row[&#39;NAME&#39;],
+      latitude = row[&#39;LATITUDE&#39;],
+      longitude = row[&#39;LONGITUDE&#39;],
+      prov_terr = &#34;ON&#34;,
+      mining_district = row[&#39;RGP_DIST&#39;],
+      status = &#34;Active&#34; if row[&#39;STATUS&#39;] == &#34;Producing Mine&#34; else &#34;Inactive&#34;
+    )
+    row_records.append(mine)
+
+    # Aliases
+    aliases = [name.strip() for name in row[&#39;ALL_NAMES&#39;].split(&#34;,&#34;)]
+    for alias_val in aliases:
+      alias = Alias(mine=mine, alias=alias_val)
+      row_records.append(alias)
+    
+    # Commodities
+    for comm_col in [&#39;P_COMMOD&#39;, &#39;S_COMMOD&#39;]:
+      if pd.notna(row[comm_col]):
+        comm_record = tools.get_commodity(row, comm_col, self.cm_list, self.name_convert_dict, self.metals_dict, mine)
+        row_records.append(comm_record)
+
+    # Default TSF
+    tsf = TailingsFacility(is_default = True, name = f&#34;default_TSF_{mine.name}&#34;.strip())
+    mine.tailings_facilities.append(tsf)
+    row_records.append(tsf)
+
+    # Default Impoundment
+    impoundment = Impoundment(
+      parentTsf=tsf,
+      parent_tsf_id=tsf.cmti_id,
+      is_default = True, name = f&#34;{tsf.name}_impoundment&#34;
+    )
+    row_records.append(impoundment)
+
+    omi_reference = Reference(mine=mine, source = &#34;OMI&#34;, source_id = row[&#34;MDI_IDENT&#34;], link=row[&#39;DETAIL&#39;])
+    row_records.append(omi_reference)
+
+    return row_records
+  except Exception as e:
+    raise e</code></pre>
+</details>
+<div class="desc"><p>Processes a row of data and creates associated database records.</p>
+<p>:param row: The data row to be processed.
+:type row: pd.Series</p>
+<p>:param name_convert_dict: Optional dictionary for commodity name conversion.
+:type name_convert_dict: dict, optional</p>
+<p>:return list[object]: A list of created data records.</p></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="cmti_tools.importdata.importdata.DataImporter" href="../importdata.html#cmti_tools.importdata.importdata.DataImporter">DataImporter</a></b></code>:
+<ul class="hlist">
+<li><code><a title="cmti_tools.importdata.importdata.DataImporter.clean_input_table" href="../importdata.html#cmti_tools.importdata.importdata.DataImporter.clean_input_table">clean_input_table</a></code></li>
+<li><code><a title="cmti_tools.importdata.importdata.DataImporter.coerce_dtypes" href="../importdata.html#cmti_tools.importdata.importdata.DataImporter.coerce_dtypes">coerce_dtypes</a></code></li>
+<li><code><a title="cmti_tools.importdata.importdata.DataImporter.map_to_worksheet" href="../importdata.html#cmti_tools.importdata.importdata.DataImporter.map_to_worksheet">map_to_worksheet</a></code></li>
+<li><code><a title="cmti_tools.importdata.importdata.DataImporter.series_to_table" href="../importdata.html#cmti_tools.importdata.importdata.DataImporter.series_to_table">series_to_table</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="cmti_tools.importdata.source_importers.importers.WorksheetImporter"><code class="flex name class">
+<span>class <span class="ident">WorksheetImporter</span></span>
+<span>(</span><span>name_convert_dict='config',<br>cm_list='config',<br>metals_dict='config',<br>auto_generate_cmti_ids: bool = False)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class WorksheetImporter(DataImporter):
+  &#34;&#34;&#34;
+  Imports worksheet data into the database.
+  &#34;&#34;&#34;
+  def __init__(self, name_convert_dict = &#39;config&#39;, cm_list = &#39;config&#39;, metals_dict = &#39;config&#39;, auto_generate_cmti_ids:bool=False):
+    super().__init__(name_convert_dict, cm_list, metals_dict)
+
+    # ID Manager currently relies on a session query to initialize IDs. Leave this out for now.
+    # if auto_generate_cmti_ids:
+    #   self.id_manager = ID_Manager()
+  
+  def clean_input_table(
+      self,
+      input_table, 
+      drop_NA_columns=[&#39;Site_Name&#39;, &#39;Site_Type&#39;, &#39;CMTI_ID&#39;, &#39;Latitude&#39;, &#39;Longitude&#39;], 
+      calculate_UTM=True, 
+      force_dtypes=True, 
+      convert_units:bool=True,
+      **kwargs
+    ):
+
+    &#39;&#39;&#39;
+    :param input_table: The input table to be cleaned.
+    :type input_table: pd.DataFrame or str
+
+    :param drop_NA_columns: Columns where row should be dropped if value is missing. Provides a way of removing rows that lack required values before committing to database. 
+      Default: [&#39;Site_Name&#39;, &#39;Site_Type&#39;, &#39;CMTI_ID&#39;, &#39;Latitude&#39;, &#39;Longitude&#39;]
+    :type drop_NA_columns: list
+
+    :param calculate_UTM: If True, calculate UTM Zone based on Longitude. Default: True
+    :type calculate_UTM: bool
+
+    :param force_dtypes: If True, enforce data types for all columns. Default: True
+    :type force_dtypes: bool
+
+    :param convert_units_dict: Dictionary where key == column and value == desired unit. Leave empty to ignore. Default: {}
+    :type convert_units_dict: dict
+
+    :param kwargs: Additional keyword arguments for unit definitions:
+      :param unit_definitions: Dictionary of unit definitions to be added to Pint UnitRegistry. Values should follow pattern &#39;{unit} = {str of definition}&#39;. E.g.: &#39;m2 = meter ** 2&#39;.
+        Default: None
+      :type unit_definitions: dict
+
+      :param dimensionless_value_units: Dictionary of dimensionless value units. Key = column, value = unit. If None, a default list will be used. Set as {} to disable. Default: None
+      :type dimensionless_value_units: dict
+    &#39;&#39;&#39;
+      
+    cmti_dtypes = {&#39;Site_Name&#39;:&#39;U&#39;, &#39;Site_Type&#39;:&#39;U&#39;, &#39;CMTI_ID&#39;:&#39;U&#39;, &#39;Site_Aliases&#39;: &#39;U&#39;, &#39;Last_Revised&#39;: &#39;datetime64[ns]&#39;,
+      &#39;Datum&#39;: &#39;U&#39;, &#39;UTM_Zone&#39;:&#39;Int64&#39;, &#39;Easting&#39;:&#39;Int64&#39;, &#39;Northing&#39;:&#39;Int64&#39;, &#39;Latitude&#39;: &#39;f&#39;,
+      &#39;Longitude&#39;: &#39;f&#39;, &#39;Country&#39;:&#39;U&#39;,&#39;Province_Territory&#39;: &#39;U&#39;, &#39;NTS_Area&#39;:&#39;U&#39;, &#39;Mining_District&#39;: &#39;U&#39;, &#39;Parent&#39;: &#39;U&#39;, &#39;Parent_ID&#39;: &#39;U&#39;,
+      &#39;Commodity1&#39;:&#39;U&#39;, &#39;Commodity2&#39;:&#39;U&#39;, &#39;Commodity3&#39;: &#39;U&#39;, &#39;Commodity4&#39;: &#39;U&#39;, &#39;Commodity5&#39;: &#39;U&#39;, &#39;Commodity6&#39;:&#39;U&#39;,
+      &#39;Commodity7&#39;:&#39;U&#39;, &#39;Commodity8&#39;:&#39;U&#39;, &#39;Mine_Type&#39;:&#39;U&#39;,  &#39;Mining_Method&#39;:&#39;U&#39;, &#39;Mine_Status&#39;: &#39;U&#39;,
+      &#39;Owner_Operator&#39;: &#39;U&#39;, &#39;Past_Owners&#39;: &#39;U&#39;, &#39;Dev_Stage&#39;: &#39;U&#39;, &#39;DS_Comments&#39;: &#39;U&#39;, &#39;Site_Access&#39;: &#39;U&#39;,
+      &#39;SA_Comments&#39;: &#39;U&#39;,  &#39;Shaft_Depth&#39;:&#39;f&#39;, &#39;Construction_Year&#39;: &#39;Int64&#39;, &#39;Year_Opened&#39;: &#39;Int64&#39;, &#39;Year_Closed&#39;: &#39;Int64&#39;,
+      &#39;Reserves_Resources&#39;: &#39;f&#39;, &#39;SEDAR&#39;: &#39;U&#39;, &#39;Source_1&#39;: &#39;U&#39;, &#39;Source_1_ID&#39;: &#39;U&#39;, &#39;Source_1_Link&#39;: &#39;U&#39;,
+      &#39;Source_2&#39;: &#39;U&#39;, &#39;Source_2_ID&#39;: &#39;U&#39;, &#39;Source_2_Link&#39;: &#39;U&#39;, &#39;Source_3&#39;: &#39;U&#39;, &#39;Source_3_ID&#39;: &#39;U&#39;, &#39;Source_3_Link&#39;: &#39;U&#39;,
+      &#39;Source_4&#39;: &#39;U&#39;, &#39;Source_4_ID&#39;: &#39;U&#39;, &#39;Source_4_Link&#39;: &#39;U&#39;, &#39;Notes&#39;: &#39;U&#39;, &#39;Orebody_Type&#39;:&#39;U&#39;, &#39;Orebody_Class&#39;:&#39;U&#39;,
+      &#39;Ore_Minerals&#39;:&#39;U&#39;, &#39;Processing_Method&#39;:&#39;U&#39;,  &#39;Ore_Processed&#39;: &#39;f&#39;, &#39;Ore_Processed_Unit&#39;:&#39;U&#39;,
+      &#39;Other_Mineralization&#39;: &#39;U&#39;, &#39;Spectral_Mineralization&#39;: &#39;U&#39;, &#39;Forcing_Features&#39;: &#39;U&#39;, &#39;Feature_References&#39;: &#39;U&#39;,
+      &#39;NOAMI_Status&#39;: &#39;U&#39;, &#39;NOAMI_Site_Class&#39;: &#39;U&#39;, &#39;Hazard_Class&#39;:&#39;U&#39;, &#39;Hazard_System&#39;:&#39;U&#39;, &#39;PRP_Rating&#39;:&#39;U&#39;,
+      &#39;Rehab_Plan&#39;:&#39;U&#39;, &#39;EWS&#39;:&#39;U&#39;, &#39;EWS_Rating&#39;:&#39;U&#39;, &#39;Raise_Type&#39;:&#39;U&#39;, &#39;History_Stability_Concerns&#39;:&#39;U&#39;,
+      &#39;Rating_Index&#39;:&#39;U&#39;, &#39;Acid_Generating&#39;:&#39;U&#39;,  &#39;Treatment&#39;:&#39;U&#39;, &#39;Current_Max_Height&#39;: &#39;f&#39;, &#39;Tailings_Storage_Method&#39;: &#39;U&#39;,
+      &#39;Tailings_Volume&#39;: &#39;f&#39;, &#39;Tailings_Capacity&#39;:&#39;f&#39;, &#39;Tailings_Area&#39;:&#39;f&#39;, &#39;Tailings_Area_From_Images&#39;:&#39;f&#39;,
+      &#39;Tailings_Area_Notes&#39;: &#39;U&#39;, &#39;Orebody_Type&#39;:&#39;U&#39;, &#39;Orebody_Class&#39;:&#39;U&#39;, &#39;Orebody_Minerals&#39;:&#39;U&#39;, &#39;Ore_Processed&#39;:&#39;f&#39;}
+    grades = [&#39;Au_Grade&#39;, &#39;Au_Contained&#39;, &#39;Au_Produced&#39;, &#39;Ag_Grade&#39;, &#39;Ag_Contained&#39;, &#39;Ag_Produced&#39;, &#39;Barite_Grade&#39;,
+      &#39;Barite_Contained&#39;, &#39;Barite_Produced&#39;, &#39;Bi_Grade&#39;, &#39;Bi_Contained&#39;, &#39;Bi_Produced&#39;, &#39;Cd_Grade&#39;, &#39;Cd_Contained&#39;,
+      &#39;Cd_Produced&#39;, &#39;Coal_Type&#39;, &#39;Coal_Rank&#39;, &#39;Coal_Production&#39;, &#39;Coal_Produced&#39;, &#39;Co_Grade&#39;, &#39;Co_Contained&#39;,
+      &#39;Co_Produced&#39;, &#39;Cu_Grade&#39;, &#39;Cu_Contained&#39;, &#39;Cu_Produced&#39;, &#39;Diamond&#39;, &#39;Diamond_Grade&#39;, &#39;Fe_Grade&#39;, &#39;Fe_Produced&#39;,
+      &#39;Fe_Ore_Extracted&#39;, &#39;Fe_Ore_Smelted&#39;, &#39;Flourspar_Grade&#39;, &#39;Flourspar_Contained&#39;, &#39;Graphite_Grade&#39;, &#39;Graphite_Contained&#39;,
+      &#39;Gypsum_Produced&#39;, &#39;In_Grade&#39;, &#39;In_Contained&#39;, &#39;In_Produced&#39;, &#39;Mo_Grade&#39;, &#39;Mo_Contained&#39;, &#39;Mo_Produced&#39;,
+      &#39;Ni_Grade&#39;, &#39;Ni_Contained&#39;, &#39;Ni_Produced&#39;, &#39;Pb_Grade&#39;, &#39;Pb_Contained&#39;, &#39;Pb_Produced&#39;, &#39;Pd_Grade&#39;, &#39;Pd_Contained&#39;,
+      &#39;Pd_Produced&#39;, &#39;Potash_Grade&#39;, &#39;Potash_Contained&#39;, &#39;Potash_Produced&#39;, &#39;Pt_Grade&#39;, &#39;Pt_Contained&#39;, &#39;Pt_Produced&#39;,
+      &#39;Sb_Grade&#39;, &#39;Sb_Contained&#39;, &#39;Sb_Produced&#39;, &#39;Sn_Grade&#39;, &#39;Sn_Contained&#39;, &#39;Sn_Produced&#39;, &#39;U_Grade&#39;, &#39;U_Contained&#39;,
+      &#39;U_Produced&#39;, &#39;W_Grade&#39;, &#39;W_Contained&#39;, &#39;W_Produced&#39;, &#39;Zn_Grade&#39;, &#39;Zn_Contained&#39;, &#39;Zn_Produced&#39;]
+
+    for grade in grades:
+      cmti_dtypes[grade] = &#39;f&#39;
+    cmti_defaults = {}
+    for key, val in cmti_dtypes.items():
+      if val == &#39;Site_Aliases&#39;:
+        cmti_defaults[key] = None
+      elif val[0] in [&#39;i&#39;,&#39;I&#39;,&#39;u&#39;,&#39;f&#39;]:
+        cmti_defaults[key] = None
+      elif val == &#39;U&#39;:
+        cmti_defaults[key] = &#39;Unknown&#39;
+      elif val == &#39;datetime64[ns]&#39;:
+        cmti_defaults[key] = pd.NaT   
+        
+    cmti_types_table = pd.DataFrame(data={&#39;Column&#39;: list(cmti_dtypes.keys()), &#39;Type&#39;: list(cmti_dtypes.values()), &#39;Default&#39;: list(cmti_defaults.values())})
+    
+    if convert_units:
+
+      if &#39;dimensionless_value_units&#39; not in kwargs:
+        dimensionless_value_units = {}
+
+      def create_default_unit_conversion_dict():
+        &#34;&#34;&#34;
+        Creates a default unit conversion dictionary for the WorksheetImporter.
+        &#34;&#34;&#34;
+        unit_conversion_dict={
+        &#39;Tailings_Area&#39;: &#39;km2&#39;,
+        &#39;Tailings_Volume&#39;: &#39;m3&#39;,
+        &#39;Tailings_Capacity&#39;: &#39;m3&#39;,
+        &#39;Current_Max_Height&#39;: &#39;m&#39;,
+        &#39;Ore_Processed&#39;: &#39;t&#39;}
+        unit_conversion_dict.update(dict.fromkeys([col for col in input_table.columns if &#39;Produced&#39; in col], &#39;kg&#39;))
+        unit_conversion_dict.update(dict.fromkeys([col for col in input_table.columns if &#39;Contained&#39; in col], &#39;kg&#39;)) # Maybe redundant/inefficient to have each in their own loop, but makes it easier to change later.
+        # Also inefficient, but overwrite gold and silver values
+        unit_conversion_dict[&#39;Au_Produced&#39;] = &#39;oz&#39;
+        unit_conversion_dict[&#39;Au_Contained&#39;] = &#39;oz&#39;
+        unit_conversion_dict[&#39;Ag_Produced&#39;] = &#39;oz&#39;
+        unit_conversion_dict[&#39;Ag_Contained&#39;] = &#39;oz&#39;
+        
+        return unit_conversion_dict
+
+      # Get the unit conversion dictionary from the kwargs, if it exists or create a default one using the function above.
+      unit_conversion_dict = kwargs.get(&#39;unit_conversion_dict&#39;, create_default_unit_conversion_dict())
+      
+    else:
+      unit_conversion_dict = None
+      dimensionless_value_units = None
+
+    # Currently not dealing with grades. It&#39;s a bit of a mess in the CMTI data.
+
+    converters = converter_factory(cmti_types_table, unit_conversion_dict, dimensionless_value_units=dimensionless_value_units).create_converter_dict()
+
+    # If passing a directory for input_table, read the file. Otherwise, assume it&#39;s a DataFrame.
+    if isinstance(input_table, str):
+      try:
+        cmti_df = pd.read_excel(input_table, header=0)
+      except:
+        cmti_df = pd.read_csv(input_table, header=0)
+    else:
+      cmti_df = input_table
+
+    # Drop rows that are missing critical values in the drop_NA_columns list before converting types
+    cmti_df = cmti_df.dropna(subset=drop_NA_columns)
+
+    # Apply converters for initial cleanup
+    for col, func in converters.items():
+      if cmti_df.get(col) is not None:
+        try:
+          cmti_df[col] = cmti_df[col].apply(func)
+        except ValueError as ve:
+          raise ve
+        except KeyError:
+          print(f&#34;Column {col} not found in input table.&#34;)
+          pass
+
+    # Final type coercion and special cases
+    # Assume Datum is 83
+    cmti_df[&#39;Datum&#39;] = cmti_df[&#39;Datum&#39;].fillna(&#34;NAD83&#34;)
+
+    # Calculate UTM Zone
+    if calculate_UTM:
+      for row in cmti_df.itertuples():
+        if pd.isna(row.Longitude):
+          cmti_df.at[row.Index, &#39;UTM_Zone&#39;] = None
+        elif pd.isna(row.UTM_Zone):
+          try:
+            cmti_df.at[row.Index, &#39;UTM_Zone&#39;] = tools.lon_to_utm_zone(row.Longitude)
+          except:
+            print(f&#34;Error calculating UTM Zone for row {row.Index}.&#34;)
+            raise
+
+    # Fill blank &#34;last revised&#34; with today&#39;s date. 
+      #   # Note: This should have been done in the converters but I couldn&#39;t get it to work. Probably a better option would be to allow Nulls for times.
+    cmti_df.Last_Revised = cmti_df.Last_Revised.fillna(datetime.now().date())
+    
+    # Coerce all dtypes
+    if force_dtypes:
+      cmti_df = self.coerce_dtypes(cmti_types_table, cmti_df)
+
+    return cmti_df
+
+  def create_row_records(self, row, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None, comm_col_count:int=8, source_col_count:int=4) -&gt; list[DeclarativeBase]:
+    &#34;&#34;&#34;
+    Processes a worksheet row based on its &#39;Site_Type&#39; and creates database records.
+
+    :param row: A pandas Series containing data from a worksheet row.
+    :type row: pd.Series
+
+    :param cm_list: Critical Minerals list
+    :type cm_list: list
+
+    :param metals_dict: Metals dictionary
+    :type metals_dict: dict
+
+    :param name_convert_dict: Name Convert dictionary
+    :type name_convert_dict: dict
+
+    :param comm_col_count: Commodity Column count to indicate amount of commodities in record
+    :type comm_col_count: int
+
+    :param source_col_count: Source Column count to indicate amount of sources in record
+    :type source_col_count: int
+
+    :return list: row_records
+    &#34;&#34;&#34;
+    # Data tables will default to WorksheetImporter attributes but can be overridden
+    if cm_list is None:
+      cm_list = self.cm_list
+    if metals_dict is None:
+      metals_dict = self.metals_dict
+    if name_convert_dict is None:
+      name_convert_dict = self.name_convert_dict
+      
+    # The worksheet is based on 3 types of records. The imported data will change based on record type:
+    site_type = row[&#39;Site_Type&#39;]
+    if site_type == &#34;Mine&#34;:
+      return self.process_mine(row, comm_col_count, source_col_count)
+
+  def process_mine(self, row:pd.Series, comm_col_count, source_col_count) -&gt; list[DeclarativeBase]:
+    &#34;&#34;&#34;
+    Processes mine-specific data and creates Mine, Owner, Alias, 
+    Commodity, Reference, and default TSF and Impoundment records.
+    &#34;&#34;&#34;
+
+    records = []
+    mine = self.series_to_table(Mine, row, mappings.worksheet_table_mapping)
+    
+    # Commodities
+    comm_columns = [f&#34;Commodity{i}&#34; for i in range(1, comm_col_count+1)]
+    for col in comm_columns:
+      if pd.notna(row[col]) and row[col] != &#34;Unknown&#34;:
+        commodity_record = tools.get_commodity(row, col, self.cm_list, self.name_convert_dict, self.metals_dict, mine)
+        records.append(commodity_record)
+  
+    # Aliases
+    # There are often multiple comma-separated aliases. Split them up
+    aliases = row.Site_Aliases
+    if pd.notna(aliases):
+      # Check if more than one
+      aliases_list = [alias.strip() for alias in aliases.split(&#34;,&#34;)]
+      for alias_name in aliases_list:
+        alias = Alias(alias=alias_name)
+        alias.mine=mine
+        records.append(alias)
+
+    # Owners
+    # This pattern is from the Basic Relationship Patterns guide in the SQLAlchemy documentation
+    if pd.notna(row.Owner_Operator):
+      owner = Owner(name=row.Owner_Operator)
+      owner_association = OwnerAssociation(owner=owner, mine= mine, is_current_owner=True)
+      mine.owners.append(owner_association)
+      records.append(owner_association)
+    
+    # Add past owners. Usually a comma-separated list of names
+    past_owners = row.Past_Owners
+    if pd.notna(past_owners):
+      past_owners_list = [past_owner.strip() for past_owner in past_owners.split(&#34;,&#34;)]
+      for past_owner in past_owners_list:
+        owner = Owner(name=past_owner)
+        past_owner_association = OwnerAssociation(owner=owner, mine= mine, is_current_owner=False)
+        past_owner_association.owner = owner
+        mine.owners.append(past_owner_association)
+        records.append(past_owner_association)
+
+    # References
+    source_columns = [f&#34;Source_{i}&#34; for i in range(1, source_col_count+1)]
+    for col in source_columns:
+      source = row[col]
+      if pd.notna(source) and source != &#34;Unknown&#34;:
+        source_id = str(row[f&#34;{col}_ID&#34;])
+        link = str(row[f&#34;{col}_Link&#34;])
+        reference = Reference(mine=mine, source=source, source_id=source_id, link=link)
+        records.append(reference)
+
+    # Default tailings facility. Every mine gets one
+    default_TSF = TailingsFacility(
+      name = f&#34;defaultTSF_{mine.name}&#34;.strip(),
+      cmti_id = mine.cmti_id,
+      status = row.Mine_Status,
+      hazard_class = row.Hazard_Class,
+      latitude = mine.latitude,
+      longitude = mine.longitude,
+      is_default = True,
+    )
+    default_TSF.mines.append(mine)
+    records.append(default_TSF)
+
+    # Default impoundment. Every default tailings facility gets one
+    impountment_name = f&#34;{mine.name.strip()}_defaultImpoundment&#34;
+    default_impoundment = Impoundment(
+      name=impountment_name,
+      parentTsf = default_TSF,
+      parent_tsf_id=default_TSF.cmti_id,
+      is_default = True,
+      area = row.Tailings_Area,
+      area_from_images = row.Tailings_Area_From_Images,
+      area_notes = row.Tailings_Area_Notes,
+      raise_type = row.Raise_Type,
+      volume = row.Tailings_Volume,
+      capacity = row.Tailings_Capacity,
+      storage_method = row.Tailings_Storage_Method,
+      max_height = row.Current_Max_Height,
+      acid_generating = row.Acid_Generating,
+      treatment = row.Treatment,
+      rating_index = row.Rating_Index,
+      stability_concerns = row.History_Stability_Concerns
+    )
+    records.append(default_impoundment)
+    records.append(mine)
+
+    return records
+
+  def process_tsf(self, row:pd.Series, parent_mines:Mine | list[Mine]):
+    tsf = TailingsFacility(
+      name = row.Site_Name,
+      cmti_id = row.CMTI_ID,
+      status = row.Mine_Status,
+      hazard_class = row.Hazard_Class,
+      latitude = row.Latitude,
+      longitude = row.Longitude,
+      is_default = False
+    )
+    if isinstance(parent_mines, list):
+      for mine in parent_mines:
+        tsf.mines.append(mine)
+    else:
+      tsf.mines.append(parent_mines)
+    return tsf
+  
+  def process_impoundment(self, row:pd.Series, parent_TSF:TailingsFacility):
+    impoundment = Impoundment(
+      name = row.Site_Name,
+      cmti_id = row.CMTI_ID,
+      is_default = False,
+      area = row.Tailings_Area,
+      volume = row.Tailings_Volume,
+      capacity = row.Tailings_Capacity,
+      max_height = row.Current_Max_Height,
+      acid_generating = row.Acid_Generating,
+      treatment = row.Treatment,
+      rating_index = row.Rating_Index,
+      stability_concerns = row.History_Stability_Concerns
+    )
+    impoundment.parentTsf = parent_TSF
+    return impoundment</code></pre>
+</details>
+<div class="desc"><p>Imports worksheet data into the database.</p>
+<p>Initializes the DataImporter class with optional configurations for
+name conversion, critical minerals, and metals classification.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="cmti_tools.importdata.importdata.DataImporter" href="../importdata.html#cmti_tools.importdata.importdata.DataImporter">DataImporter</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="cmti_tools.importdata.source_importers.importers.WorksheetImporter.clean_input_table"><code class="name flex">
+<span>def <span class="ident">clean_input_table</span></span>(<span>self,<br>input_table,<br>drop_NA_columns=['Site_Name', 'Site_Type', 'CMTI_ID', 'Latitude', 'Longitude'],<br>calculate_UTM=True,<br>force_dtypes=True,<br>convert_units: bool = True,<br>**kwargs)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def clean_input_table(
+    self,
+    input_table, 
+    drop_NA_columns=[&#39;Site_Name&#39;, &#39;Site_Type&#39;, &#39;CMTI_ID&#39;, &#39;Latitude&#39;, &#39;Longitude&#39;], 
+    calculate_UTM=True, 
+    force_dtypes=True, 
+    convert_units:bool=True,
+    **kwargs
+  ):
+
+  &#39;&#39;&#39;
+  :param input_table: The input table to be cleaned.
+  :type input_table: pd.DataFrame or str
+
+  :param drop_NA_columns: Columns where row should be dropped if value is missing. Provides a way of removing rows that lack required values before committing to database. 
+    Default: [&#39;Site_Name&#39;, &#39;Site_Type&#39;, &#39;CMTI_ID&#39;, &#39;Latitude&#39;, &#39;Longitude&#39;]
+  :type drop_NA_columns: list
+
+  :param calculate_UTM: If True, calculate UTM Zone based on Longitude. Default: True
+  :type calculate_UTM: bool
+
+  :param force_dtypes: If True, enforce data types for all columns. Default: True
+  :type force_dtypes: bool
+
+  :param convert_units_dict: Dictionary where key == column and value == desired unit. Leave empty to ignore. Default: {}
+  :type convert_units_dict: dict
+
+  :param kwargs: Additional keyword arguments for unit definitions:
+    :param unit_definitions: Dictionary of unit definitions to be added to Pint UnitRegistry. Values should follow pattern &#39;{unit} = {str of definition}&#39;. E.g.: &#39;m2 = meter ** 2&#39;.
+      Default: None
+    :type unit_definitions: dict
+
+    :param dimensionless_value_units: Dictionary of dimensionless value units. Key = column, value = unit. If None, a default list will be used. Set as {} to disable. Default: None
+    :type dimensionless_value_units: dict
+  &#39;&#39;&#39;
+    
+  cmti_dtypes = {&#39;Site_Name&#39;:&#39;U&#39;, &#39;Site_Type&#39;:&#39;U&#39;, &#39;CMTI_ID&#39;:&#39;U&#39;, &#39;Site_Aliases&#39;: &#39;U&#39;, &#39;Last_Revised&#39;: &#39;datetime64[ns]&#39;,
+    &#39;Datum&#39;: &#39;U&#39;, &#39;UTM_Zone&#39;:&#39;Int64&#39;, &#39;Easting&#39;:&#39;Int64&#39;, &#39;Northing&#39;:&#39;Int64&#39;, &#39;Latitude&#39;: &#39;f&#39;,
+    &#39;Longitude&#39;: &#39;f&#39;, &#39;Country&#39;:&#39;U&#39;,&#39;Province_Territory&#39;: &#39;U&#39;, &#39;NTS_Area&#39;:&#39;U&#39;, &#39;Mining_District&#39;: &#39;U&#39;, &#39;Parent&#39;: &#39;U&#39;, &#39;Parent_ID&#39;: &#39;U&#39;,
+    &#39;Commodity1&#39;:&#39;U&#39;, &#39;Commodity2&#39;:&#39;U&#39;, &#39;Commodity3&#39;: &#39;U&#39;, &#39;Commodity4&#39;: &#39;U&#39;, &#39;Commodity5&#39;: &#39;U&#39;, &#39;Commodity6&#39;:&#39;U&#39;,
+    &#39;Commodity7&#39;:&#39;U&#39;, &#39;Commodity8&#39;:&#39;U&#39;, &#39;Mine_Type&#39;:&#39;U&#39;,  &#39;Mining_Method&#39;:&#39;U&#39;, &#39;Mine_Status&#39;: &#39;U&#39;,
+    &#39;Owner_Operator&#39;: &#39;U&#39;, &#39;Past_Owners&#39;: &#39;U&#39;, &#39;Dev_Stage&#39;: &#39;U&#39;, &#39;DS_Comments&#39;: &#39;U&#39;, &#39;Site_Access&#39;: &#39;U&#39;,
+    &#39;SA_Comments&#39;: &#39;U&#39;,  &#39;Shaft_Depth&#39;:&#39;f&#39;, &#39;Construction_Year&#39;: &#39;Int64&#39;, &#39;Year_Opened&#39;: &#39;Int64&#39;, &#39;Year_Closed&#39;: &#39;Int64&#39;,
+    &#39;Reserves_Resources&#39;: &#39;f&#39;, &#39;SEDAR&#39;: &#39;U&#39;, &#39;Source_1&#39;: &#39;U&#39;, &#39;Source_1_ID&#39;: &#39;U&#39;, &#39;Source_1_Link&#39;: &#39;U&#39;,
+    &#39;Source_2&#39;: &#39;U&#39;, &#39;Source_2_ID&#39;: &#39;U&#39;, &#39;Source_2_Link&#39;: &#39;U&#39;, &#39;Source_3&#39;: &#39;U&#39;, &#39;Source_3_ID&#39;: &#39;U&#39;, &#39;Source_3_Link&#39;: &#39;U&#39;,
+    &#39;Source_4&#39;: &#39;U&#39;, &#39;Source_4_ID&#39;: &#39;U&#39;, &#39;Source_4_Link&#39;: &#39;U&#39;, &#39;Notes&#39;: &#39;U&#39;, &#39;Orebody_Type&#39;:&#39;U&#39;, &#39;Orebody_Class&#39;:&#39;U&#39;,
+    &#39;Ore_Minerals&#39;:&#39;U&#39;, &#39;Processing_Method&#39;:&#39;U&#39;,  &#39;Ore_Processed&#39;: &#39;f&#39;, &#39;Ore_Processed_Unit&#39;:&#39;U&#39;,
+    &#39;Other_Mineralization&#39;: &#39;U&#39;, &#39;Spectral_Mineralization&#39;: &#39;U&#39;, &#39;Forcing_Features&#39;: &#39;U&#39;, &#39;Feature_References&#39;: &#39;U&#39;,
+    &#39;NOAMI_Status&#39;: &#39;U&#39;, &#39;NOAMI_Site_Class&#39;: &#39;U&#39;, &#39;Hazard_Class&#39;:&#39;U&#39;, &#39;Hazard_System&#39;:&#39;U&#39;, &#39;PRP_Rating&#39;:&#39;U&#39;,
+    &#39;Rehab_Plan&#39;:&#39;U&#39;, &#39;EWS&#39;:&#39;U&#39;, &#39;EWS_Rating&#39;:&#39;U&#39;, &#39;Raise_Type&#39;:&#39;U&#39;, &#39;History_Stability_Concerns&#39;:&#39;U&#39;,
+    &#39;Rating_Index&#39;:&#39;U&#39;, &#39;Acid_Generating&#39;:&#39;U&#39;,  &#39;Treatment&#39;:&#39;U&#39;, &#39;Current_Max_Height&#39;: &#39;f&#39;, &#39;Tailings_Storage_Method&#39;: &#39;U&#39;,
+    &#39;Tailings_Volume&#39;: &#39;f&#39;, &#39;Tailings_Capacity&#39;:&#39;f&#39;, &#39;Tailings_Area&#39;:&#39;f&#39;, &#39;Tailings_Area_From_Images&#39;:&#39;f&#39;,
+    &#39;Tailings_Area_Notes&#39;: &#39;U&#39;, &#39;Orebody_Type&#39;:&#39;U&#39;, &#39;Orebody_Class&#39;:&#39;U&#39;, &#39;Orebody_Minerals&#39;:&#39;U&#39;, &#39;Ore_Processed&#39;:&#39;f&#39;}
+  grades = [&#39;Au_Grade&#39;, &#39;Au_Contained&#39;, &#39;Au_Produced&#39;, &#39;Ag_Grade&#39;, &#39;Ag_Contained&#39;, &#39;Ag_Produced&#39;, &#39;Barite_Grade&#39;,
+    &#39;Barite_Contained&#39;, &#39;Barite_Produced&#39;, &#39;Bi_Grade&#39;, &#39;Bi_Contained&#39;, &#39;Bi_Produced&#39;, &#39;Cd_Grade&#39;, &#39;Cd_Contained&#39;,
+    &#39;Cd_Produced&#39;, &#39;Coal_Type&#39;, &#39;Coal_Rank&#39;, &#39;Coal_Production&#39;, &#39;Coal_Produced&#39;, &#39;Co_Grade&#39;, &#39;Co_Contained&#39;,
+    &#39;Co_Produced&#39;, &#39;Cu_Grade&#39;, &#39;Cu_Contained&#39;, &#39;Cu_Produced&#39;, &#39;Diamond&#39;, &#39;Diamond_Grade&#39;, &#39;Fe_Grade&#39;, &#39;Fe_Produced&#39;,
+    &#39;Fe_Ore_Extracted&#39;, &#39;Fe_Ore_Smelted&#39;, &#39;Flourspar_Grade&#39;, &#39;Flourspar_Contained&#39;, &#39;Graphite_Grade&#39;, &#39;Graphite_Contained&#39;,
+    &#39;Gypsum_Produced&#39;, &#39;In_Grade&#39;, &#39;In_Contained&#39;, &#39;In_Produced&#39;, &#39;Mo_Grade&#39;, &#39;Mo_Contained&#39;, &#39;Mo_Produced&#39;,
+    &#39;Ni_Grade&#39;, &#39;Ni_Contained&#39;, &#39;Ni_Produced&#39;, &#39;Pb_Grade&#39;, &#39;Pb_Contained&#39;, &#39;Pb_Produced&#39;, &#39;Pd_Grade&#39;, &#39;Pd_Contained&#39;,
+    &#39;Pd_Produced&#39;, &#39;Potash_Grade&#39;, &#39;Potash_Contained&#39;, &#39;Potash_Produced&#39;, &#39;Pt_Grade&#39;, &#39;Pt_Contained&#39;, &#39;Pt_Produced&#39;,
+    &#39;Sb_Grade&#39;, &#39;Sb_Contained&#39;, &#39;Sb_Produced&#39;, &#39;Sn_Grade&#39;, &#39;Sn_Contained&#39;, &#39;Sn_Produced&#39;, &#39;U_Grade&#39;, &#39;U_Contained&#39;,
+    &#39;U_Produced&#39;, &#39;W_Grade&#39;, &#39;W_Contained&#39;, &#39;W_Produced&#39;, &#39;Zn_Grade&#39;, &#39;Zn_Contained&#39;, &#39;Zn_Produced&#39;]
+
+  for grade in grades:
+    cmti_dtypes[grade] = &#39;f&#39;
+  cmti_defaults = {}
+  for key, val in cmti_dtypes.items():
+    if val == &#39;Site_Aliases&#39;:
+      cmti_defaults[key] = None
+    elif val[0] in [&#39;i&#39;,&#39;I&#39;,&#39;u&#39;,&#39;f&#39;]:
+      cmti_defaults[key] = None
+    elif val == &#39;U&#39;:
+      cmti_defaults[key] = &#39;Unknown&#39;
+    elif val == &#39;datetime64[ns]&#39;:
+      cmti_defaults[key] = pd.NaT   
+      
+  cmti_types_table = pd.DataFrame(data={&#39;Column&#39;: list(cmti_dtypes.keys()), &#39;Type&#39;: list(cmti_dtypes.values()), &#39;Default&#39;: list(cmti_defaults.values())})
+  
+  if convert_units:
+
+    if &#39;dimensionless_value_units&#39; not in kwargs:
+      dimensionless_value_units = {}
+
+    def create_default_unit_conversion_dict():
+      &#34;&#34;&#34;
+      Creates a default unit conversion dictionary for the WorksheetImporter.
+      &#34;&#34;&#34;
+      unit_conversion_dict={
+      &#39;Tailings_Area&#39;: &#39;km2&#39;,
+      &#39;Tailings_Volume&#39;: &#39;m3&#39;,
+      &#39;Tailings_Capacity&#39;: &#39;m3&#39;,
+      &#39;Current_Max_Height&#39;: &#39;m&#39;,
+      &#39;Ore_Processed&#39;: &#39;t&#39;}
+      unit_conversion_dict.update(dict.fromkeys([col for col in input_table.columns if &#39;Produced&#39; in col], &#39;kg&#39;))
+      unit_conversion_dict.update(dict.fromkeys([col for col in input_table.columns if &#39;Contained&#39; in col], &#39;kg&#39;)) # Maybe redundant/inefficient to have each in their own loop, but makes it easier to change later.
+      # Also inefficient, but overwrite gold and silver values
+      unit_conversion_dict[&#39;Au_Produced&#39;] = &#39;oz&#39;
+      unit_conversion_dict[&#39;Au_Contained&#39;] = &#39;oz&#39;
+      unit_conversion_dict[&#39;Ag_Produced&#39;] = &#39;oz&#39;
+      unit_conversion_dict[&#39;Ag_Contained&#39;] = &#39;oz&#39;
+      
+      return unit_conversion_dict
+
+    # Get the unit conversion dictionary from the kwargs, if it exists or create a default one using the function above.
+    unit_conversion_dict = kwargs.get(&#39;unit_conversion_dict&#39;, create_default_unit_conversion_dict())
+    
+  else:
+    unit_conversion_dict = None
+    dimensionless_value_units = None
+
+  # Currently not dealing with grades. It&#39;s a bit of a mess in the CMTI data.
+
+  converters = converter_factory(cmti_types_table, unit_conversion_dict, dimensionless_value_units=dimensionless_value_units).create_converter_dict()
+
+  # If passing a directory for input_table, read the file. Otherwise, assume it&#39;s a DataFrame.
+  if isinstance(input_table, str):
+    try:
+      cmti_df = pd.read_excel(input_table, header=0)
+    except:
+      cmti_df = pd.read_csv(input_table, header=0)
+  else:
+    cmti_df = input_table
+
+  # Drop rows that are missing critical values in the drop_NA_columns list before converting types
+  cmti_df = cmti_df.dropna(subset=drop_NA_columns)
+
+  # Apply converters for initial cleanup
+  for col, func in converters.items():
+    if cmti_df.get(col) is not None:
+      try:
+        cmti_df[col] = cmti_df[col].apply(func)
+      except ValueError as ve:
+        raise ve
+      except KeyError:
+        print(f&#34;Column {col} not found in input table.&#34;)
+        pass
+
+  # Final type coercion and special cases
+  # Assume Datum is 83
+  cmti_df[&#39;Datum&#39;] = cmti_df[&#39;Datum&#39;].fillna(&#34;NAD83&#34;)
+
+  # Calculate UTM Zone
+  if calculate_UTM:
+    for row in cmti_df.itertuples():
+      if pd.isna(row.Longitude):
+        cmti_df.at[row.Index, &#39;UTM_Zone&#39;] = None
+      elif pd.isna(row.UTM_Zone):
+        try:
+          cmti_df.at[row.Index, &#39;UTM_Zone&#39;] = tools.lon_to_utm_zone(row.Longitude)
+        except:
+          print(f&#34;Error calculating UTM Zone for row {row.Index}.&#34;)
+          raise
+
+  # Fill blank &#34;last revised&#34; with today&#39;s date. 
+    #   # Note: This should have been done in the converters but I couldn&#39;t get it to work. Probably a better option would be to allow Nulls for times.
+  cmti_df.Last_Revised = cmti_df.Last_Revised.fillna(datetime.now().date())
+  
+  # Coerce all dtypes
+  if force_dtypes:
+    cmti_df = self.coerce_dtypes(cmti_types_table, cmti_df)
+
+  return cmti_df</code></pre>
+</details>
+<div class="desc"><p>:param input_table: The input table to be cleaned.
+:type input_table: pd.DataFrame or str</p>
+<p>:param drop_NA_columns: Columns where row should be dropped if value is missing. Provides a way of removing rows that lack required values before committing to database.
+Default: ['Site_Name', 'Site_Type', 'CMTI_ID', 'Latitude', 'Longitude']
+:type drop_NA_columns: list</p>
+<p>:param calculate_UTM: If True, calculate UTM Zone based on Longitude. Default: True
+:type calculate_UTM: bool</p>
+<p>:param force_dtypes: If True, enforce data types for all columns. Default: True
+:type force_dtypes: bool</p>
+<p>:param convert_units_dict: Dictionary where key == column and value == desired unit. Leave empty to ignore. Default: {}
+:type convert_units_dict: dict</p>
+<p>:param kwargs: Additional keyword arguments for unit definitions:
+:param unit_definitions: Dictionary of unit definitions to be added to Pint UnitRegistry. Values should follow pattern '{unit} = {str of definition}'. E.g.: 'm2 = meter ** 2'.
+Default: None
+:type unit_definitions: dict</p>
+<p>:param dimensionless_value_units: Dictionary of dimensionless value units. Key = column, value = unit. If None, a default list will be used. Set as {} to disable. Default: None
+:type dimensionless_value_units: dict</p></div>
+</dd>
+<dt id="cmti_tools.importdata.source_importers.importers.WorksheetImporter.create_row_records"><code class="name flex">
+<span>def <span class="ident">create_row_records</span></span>(<span>self,<br>row,<br>cm_list: list = None,<br>metals_dict: dict = None,<br>name_convert_dict: dict = None,<br>comm_col_count: int = 8,<br>source_col_count: int = 4) ‑> list[sqlalchemy.orm.decl_api.DeclarativeBase]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_row_records(self, row, cm_list:list=None, metals_dict:dict=None, name_convert_dict:dict=None, comm_col_count:int=8, source_col_count:int=4) -&gt; list[DeclarativeBase]:
+  &#34;&#34;&#34;
+  Processes a worksheet row based on its &#39;Site_Type&#39; and creates database records.
+
+  :param row: A pandas Series containing data from a worksheet row.
+  :type row: pd.Series
+
+  :param cm_list: Critical Minerals list
+  :type cm_list: list
+
+  :param metals_dict: Metals dictionary
+  :type metals_dict: dict
+
+  :param name_convert_dict: Name Convert dictionary
+  :type name_convert_dict: dict
+
+  :param comm_col_count: Commodity Column count to indicate amount of commodities in record
+  :type comm_col_count: int
+
+  :param source_col_count: Source Column count to indicate amount of sources in record
+  :type source_col_count: int
+
+  :return list: row_records
+  &#34;&#34;&#34;
+  # Data tables will default to WorksheetImporter attributes but can be overridden
+  if cm_list is None:
+    cm_list = self.cm_list
+  if metals_dict is None:
+    metals_dict = self.metals_dict
+  if name_convert_dict is None:
+    name_convert_dict = self.name_convert_dict
+    
+  # The worksheet is based on 3 types of records. The imported data will change based on record type:
+  site_type = row[&#39;Site_Type&#39;]
+  if site_type == &#34;Mine&#34;:
+    return self.process_mine(row, comm_col_count, source_col_count)</code></pre>
+</details>
+<div class="desc"><p>Processes a worksheet row based on its 'Site_Type' and creates database records.</p>
+<p>:param row: A pandas Series containing data from a worksheet row.
+:type row: pd.Series</p>
+<p>:param cm_list: Critical Minerals list
+:type cm_list: list</p>
+<p>:param metals_dict: Metals dictionary
+:type metals_dict: dict</p>
+<p>:param name_convert_dict: Name Convert dictionary
+:type name_convert_dict: dict</p>
+<p>:param comm_col_count: Commodity Column count to indicate amount of commodities in record
+:type comm_col_count: int</p>
+<p>:param source_col_count: Source Column count to indicate amount of sources in record
+:type source_col_count: int</p>
+<p>:return list: row_records</p></div>
+</dd>
+<dt id="cmti_tools.importdata.source_importers.importers.WorksheetImporter.process_impoundment"><code class="name flex">
+<span>def <span class="ident">process_impoundment</span></span>(<span>self,<br>row: pandas.core.series.Series,<br>parent_TSF: <a title="cmti_tools.tables.tables.TailingsFacility" href="../../tables/tables.html#cmti_tools.tables.tables.TailingsFacility">TailingsFacility</a>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def process_impoundment(self, row:pd.Series, parent_TSF:TailingsFacility):
+  impoundment = Impoundment(
+    name = row.Site_Name,
+    cmti_id = row.CMTI_ID,
+    is_default = False,
+    area = row.Tailings_Area,
+    volume = row.Tailings_Volume,
+    capacity = row.Tailings_Capacity,
+    max_height = row.Current_Max_Height,
+    acid_generating = row.Acid_Generating,
+    treatment = row.Treatment,
+    rating_index = row.Rating_Index,
+    stability_concerns = row.History_Stability_Concerns
+  )
+  impoundment.parentTsf = parent_TSF
+  return impoundment</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="cmti_tools.importdata.source_importers.importers.WorksheetImporter.process_mine"><code class="name flex">
+<span>def <span class="ident">process_mine</span></span>(<span>self, row: pandas.core.series.Series, comm_col_count, source_col_count) ‑> list[sqlalchemy.orm.decl_api.DeclarativeBase]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def process_mine(self, row:pd.Series, comm_col_count, source_col_count) -&gt; list[DeclarativeBase]:
+  &#34;&#34;&#34;
+  Processes mine-specific data and creates Mine, Owner, Alias, 
+  Commodity, Reference, and default TSF and Impoundment records.
+  &#34;&#34;&#34;
+
+  records = []
+  mine = self.series_to_table(Mine, row, mappings.worksheet_table_mapping)
+  
+  # Commodities
+  comm_columns = [f&#34;Commodity{i}&#34; for i in range(1, comm_col_count+1)]
+  for col in comm_columns:
+    if pd.notna(row[col]) and row[col] != &#34;Unknown&#34;:
+      commodity_record = tools.get_commodity(row, col, self.cm_list, self.name_convert_dict, self.metals_dict, mine)
+      records.append(commodity_record)
+
+  # Aliases
+  # There are often multiple comma-separated aliases. Split them up
+  aliases = row.Site_Aliases
+  if pd.notna(aliases):
+    # Check if more than one
+    aliases_list = [alias.strip() for alias in aliases.split(&#34;,&#34;)]
+    for alias_name in aliases_list:
+      alias = Alias(alias=alias_name)
+      alias.mine=mine
+      records.append(alias)
+
+  # Owners
+  # This pattern is from the Basic Relationship Patterns guide in the SQLAlchemy documentation
+  if pd.notna(row.Owner_Operator):
+    owner = Owner(name=row.Owner_Operator)
+    owner_association = OwnerAssociation(owner=owner, mine= mine, is_current_owner=True)
+    mine.owners.append(owner_association)
+    records.append(owner_association)
+  
+  # Add past owners. Usually a comma-separated list of names
+  past_owners = row.Past_Owners
+  if pd.notna(past_owners):
+    past_owners_list = [past_owner.strip() for past_owner in past_owners.split(&#34;,&#34;)]
+    for past_owner in past_owners_list:
+      owner = Owner(name=past_owner)
+      past_owner_association = OwnerAssociation(owner=owner, mine= mine, is_current_owner=False)
+      past_owner_association.owner = owner
+      mine.owners.append(past_owner_association)
+      records.append(past_owner_association)
+
+  # References
+  source_columns = [f&#34;Source_{i}&#34; for i in range(1, source_col_count+1)]
+  for col in source_columns:
+    source = row[col]
+    if pd.notna(source) and source != &#34;Unknown&#34;:
+      source_id = str(row[f&#34;{col}_ID&#34;])
+      link = str(row[f&#34;{col}_Link&#34;])
+      reference = Reference(mine=mine, source=source, source_id=source_id, link=link)
+      records.append(reference)
+
+  # Default tailings facility. Every mine gets one
+  default_TSF = TailingsFacility(
+    name = f&#34;defaultTSF_{mine.name}&#34;.strip(),
+    cmti_id = mine.cmti_id,
+    status = row.Mine_Status,
+    hazard_class = row.Hazard_Class,
+    latitude = mine.latitude,
+    longitude = mine.longitude,
+    is_default = True,
+  )
+  default_TSF.mines.append(mine)
+  records.append(default_TSF)
+
+  # Default impoundment. Every default tailings facility gets one
+  impountment_name = f&#34;{mine.name.strip()}_defaultImpoundment&#34;
+  default_impoundment = Impoundment(
+    name=impountment_name,
+    parentTsf = default_TSF,
+    parent_tsf_id=default_TSF.cmti_id,
+    is_default = True,
+    area = row.Tailings_Area,
+    area_from_images = row.Tailings_Area_From_Images,
+    area_notes = row.Tailings_Area_Notes,
+    raise_type = row.Raise_Type,
+    volume = row.Tailings_Volume,
+    capacity = row.Tailings_Capacity,
+    storage_method = row.Tailings_Storage_Method,
+    max_height = row.Current_Max_Height,
+    acid_generating = row.Acid_Generating,
+    treatment = row.Treatment,
+    rating_index = row.Rating_Index,
+    stability_concerns = row.History_Stability_Concerns
+  )
+  records.append(default_impoundment)
+  records.append(mine)
+
+  return records</code></pre>
+</details>
+<div class="desc"><p>Processes mine-specific data and creates Mine, Owner, Alias,
+Commodity, Reference, and default TSF and Impoundment records.</p></div>
+</dd>
+<dt id="cmti_tools.importdata.source_importers.importers.WorksheetImporter.process_tsf"><code class="name flex">
+<span>def <span class="ident">process_tsf</span></span>(<span>self,<br>row: pandas.core.series.Series,<br>parent_mines: <a title="cmti_tools.tables.tables.Mine" href="../../tables/tables.html#cmti_tools.tables.tables.Mine">Mine</a> | list[<a title="cmti_tools.tables.tables.Mine" href="../../tables/tables.html#cmti_tools.tables.tables.Mine">Mine</a>])</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def process_tsf(self, row:pd.Series, parent_mines:Mine | list[Mine]):
+  tsf = TailingsFacility(
+    name = row.Site_Name,
+    cmti_id = row.CMTI_ID,
+    status = row.Mine_Status,
+    hazard_class = row.Hazard_Class,
+    latitude = row.Latitude,
+    longitude = row.Longitude,
+    is_default = False
+  )
+  if isinstance(parent_mines, list):
+    for mine in parent_mines:
+      tsf.mines.append(mine)
+  else:
+    tsf.mines.append(parent_mines)
+  return tsf</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="cmti_tools.importdata.importdata.DataImporter" href="../importdata.html#cmti_tools.importdata.importdata.DataImporter">DataImporter</a></b></code>:
+<ul class="hlist">
+<li><code><a title="cmti_tools.importdata.importdata.DataImporter.coerce_dtypes" href="../importdata.html#cmti_tools.importdata.importdata.DataImporter.coerce_dtypes">coerce_dtypes</a></code></li>
+<li><code><a title="cmti_tools.importdata.importdata.DataImporter.map_to_worksheet" href="../importdata.html#cmti_tools.importdata.importdata.DataImporter.map_to_worksheet">map_to_worksheet</a></code></li>
+<li><code><a title="cmti_tools.importdata.importdata.DataImporter.series_to_table" href="../importdata.html#cmti_tools.importdata.importdata.DataImporter.series_to_table">series_to_table</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="cmti_tools.importdata.source_importers" href="index.html">cmti_tools.importdata.source_importers</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="cmti_tools.importdata.source_importers.importers.BCAHMImporter" href="#cmti_tools.importdata.source_importers.importers.BCAHMImporter">BCAHMImporter</a></code></h4>
+<ul class="">
+<li><code><a title="cmti_tools.importdata.source_importers.importers.BCAHMImporter.create_row_records" href="#cmti_tools.importdata.source_importers.importers.BCAHMImporter.create_row_records">create_row_records</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="cmti_tools.importdata.source_importers.importers.NSMTDImporter" href="#cmti_tools.importdata.source_importers.importers.NSMTDImporter">NSMTDImporter</a></code></h4>
+<ul class="">
+<li><code><a title="cmti_tools.importdata.source_importers.importers.NSMTDImporter.create_row_records" href="#cmti_tools.importdata.source_importers.importers.NSMTDImporter.create_row_records">create_row_records</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="cmti_tools.importdata.source_importers.importers.OAMImporter" href="#cmti_tools.importdata.source_importers.importers.OAMImporter">OAMImporter</a></code></h4>
+<ul class="">
+<li><code><a title="cmti_tools.importdata.source_importers.importers.OAMImporter.check_year" href="#cmti_tools.importdata.source_importers.importers.OAMImporter.check_year">check_year</a></code></li>
+<li><code><a title="cmti_tools.importdata.source_importers.importers.OAMImporter.create_row_records" href="#cmti_tools.importdata.source_importers.importers.OAMImporter.create_row_records">create_row_records</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="cmti_tools.importdata.source_importers.importers.OMIImporter" href="#cmti_tools.importdata.source_importers.importers.OMIImporter">OMIImporter</a></code></h4>
+<ul class="">
+<li><code><a title="cmti_tools.importdata.source_importers.importers.OMIImporter.create_row_records" href="#cmti_tools.importdata.source_importers.importers.OMIImporter.create_row_records">create_row_records</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="cmti_tools.importdata.source_importers.importers.WorksheetImporter" href="#cmti_tools.importdata.source_importers.importers.WorksheetImporter">WorksheetImporter</a></code></h4>
+<ul class="">
+<li><code><a title="cmti_tools.importdata.source_importers.importers.WorksheetImporter.clean_input_table" href="#cmti_tools.importdata.source_importers.importers.WorksheetImporter.clean_input_table">clean_input_table</a></code></li>
+<li><code><a title="cmti_tools.importdata.source_importers.importers.WorksheetImporter.create_row_records" href="#cmti_tools.importdata.source_importers.importers.WorksheetImporter.create_row_records">create_row_records</a></code></li>
+<li><code><a title="cmti_tools.importdata.source_importers.importers.WorksheetImporter.process_impoundment" href="#cmti_tools.importdata.source_importers.importers.WorksheetImporter.process_impoundment">process_impoundment</a></code></li>
+<li><code><a title="cmti_tools.importdata.source_importers.importers.WorksheetImporter.process_mine" href="#cmti_tools.importdata.source_importers.importers.WorksheetImporter.process_mine">process_mine</a></code></li>
+<li><code><a title="cmti_tools.importdata.source_importers.importers.WorksheetImporter.process_tsf" href="#cmti_tools.importdata.source_importers.importers.WorksheetImporter.process_tsf">process_tsf</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>
