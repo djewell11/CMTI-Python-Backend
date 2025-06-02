@@ -112,7 +112,7 @@ def build_cmti():
     omi_mapped['Site_Type'] = 'Mine'
     omi_mapped['Source_1'] = 'OMI'
 
-    cmti_df = pd.concat([cmti_df, omi_mapped])
+    output_df = pd.concat([cmti_df, omi_mapped])
     print("OMI imported.")
 
   #OAM
@@ -130,7 +130,7 @@ def build_cmti():
     oam_mapped['Site_Type'] = 'Mine'
     oam_mapped['Source_1'] = 'OAM'
 
-    cmti_df = pd.concat([cmti_df, oam_mapped])
+    output_df = pd.concat([output_df, oam_mapped])
     print("OAM imported.")
 
   # BC AHM
@@ -149,7 +149,7 @@ def build_cmti():
     bcahm_mapped['Site_Type'] = 'Mine'
     bcahm_mapped['Source_1'] = 'BC AHM'
 
-    cmti_df = pd.concat([cmti_df, bcahm_mapped])
+    output_df = pd.concat([output_df, bcahm_mapped])
     print("BC AHM imported.")
 
   # NSMTD
@@ -192,38 +192,38 @@ def build_cmti():
     nsmtd_mapped['Source_1'] = 'NSMTD'
     nsmtd_mapped['Mine_Status'] = "Inactive"
 
-    cmti_df = pd.concat([cmti_df, nsmtd_mapped])
+    output_df = pd.concat([output_df, nsmtd_mapped])
     print("NSMTD imported.")
 
   # There are currently some extra columns. Remove them
-  # cmti_df = cmti_df.drop(columns=['Tailings_Mass', 'Tailings_Image_Notes'])
+  # output_df = output_df.drop(columns=['Tailings_Mass', 'Tailings_Image_Notes'])
 
   # Perform some row-wise QA
 
-  # source_cols = [col for col in cmti_df.columns.tolist() if col.startswith("Source")]
+  # source_cols = [col for col in output_df.columns.tolist() if col.startswith("Source")]
 
   # Fill in IDs
   if args.create_ids:
     id_manager = ID_Manager()
-    id_vals = cmti_df['CMTI_ID'].dropna()
+    id_vals = output_df['CMTI_ID'].dropna()
     id_manager.update_prov_ids(id_vals)
-    cmti_df.reset_index(drop=True, inplace=True)
+    output_df.reset_index(drop=True, inplace=True)
 
-  for i, row in cmti_df.iterrows():
+  for i, row in output_df.iterrows():
     
     # # Shift source columns over
     # sources_shifted = shift_values(row, source_cols)
     # for s_col, val in sources_shifted.items():
-    #   cmti_df.at[i, s_col] = val
+    #   output_df.at[i, s_col] = val
 
     # Fill in IDs
     if args.create_ids and pd.isna(row.CMTI_ID) and pd.notna(row.Province_Territory):
       pt = row.Province_Territory
       prov_id = getattr(id_manager, pt)
       prov_id.generate_id()
-      cmti_df.at[i, 'CMTI_ID'] = prov_id.formatted_id
+      output_df.at[i, 'CMTI_ID'] = prov_id.formatted_id
 
-  cmti_df.to_csv(out, index=False)
+  output_df.to_csv(out, index=False)
   print(f"Output written to {out}")
 
 if __name__ == "__main__":
